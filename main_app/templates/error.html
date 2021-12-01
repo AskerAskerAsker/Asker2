@@ -1,0 +1,57 @@
+{% load main_app_extras %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Ops!</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style id="wait">
+        body {
+            visibility: hidden;
+            opacity: 0;
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/css/common.min.css">
+    <script src="/static/js/cookieman.js?v=1"></script>
+    <script>
+        var cssfn = 'light.css';
+        var cssversion = '?v=5';
+        if (getDarkCookie() == 'true') { cssfn = 'dark.css'; }
+        var link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.type = 'text/css';
+        link.href = '/static/css/' + cssfn + cssversion;
+        document.head.appendChild(link);
+
+	    document.getElementById('wait').remove();
+    </script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://kit.fontawesome.com/1f965a8b94.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.form/4.3.0/jquery.form.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/waypoints/4.0.1/jquery.waypoints.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/waypoints/4.0.1/shortcuts/infinite.min.js"></script>
+</head>
+<body>
+	{% include "includes/navbar.html" %}
+
+    <main>
+        <div class="err-msg card bg-main">
+            <div class="card-body">
+                <i class="fas fa-exclamation-triangle fa-4x"></i> <br><br>
+                <h5> {{ error }} </h5>
+                <p> {{ err_msg }} </p>
+                <a href="{{ redirect }}">Voltar</a>
+            </div>
+        </div>
+    </main>
+    <script>
+        if (getDarkCookie() == 'true') {
+            document.getElementsByClassName('navbar')[0].classList.remove("navbar-light");
+            document.getElementsByClassName('navbar')[0].classList.add("navbar-dark");
+        }
+	</script>
+
+</body>
+</html>

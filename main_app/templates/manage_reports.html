@@ -1,0 +1,70 @@
+{% load main_app_extras %}
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Gerenciar reportes</title>
+        
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css">
+        <style>
+            @media (min-width:801px) {
+                #reports {
+                    max-width: 50%;
+                    margin: auto;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        {% include "includes/navbar.html" %}
+        <div id="reports" class="card">
+        {% for report in reports %}
+            <div class="card-body" id="report-obj-{{ report.obj_id }}">
+                <p>
+                    Tipo: {{ report.type }}<br>
+                    ID: {{ report.obj_id }}<br>
+                    Total de denúncias: {{ report.total_reports }}<br>
+                    
+                    {% if report.type == 'q' %}
+                        {% question report.obj_id as QUESTION %}
+                        Título da pergunta: <a href="/question/{{ report.obj_id }}" target="_blank">{{ QUESTION.text }}</a><br>
+                        {% if QUESTION.description %}
+                            Descrição da pergunta: <b>{{ QUESTION.description }}</b><br>
+                        {% endif %}
+                        <button onclick="this.disabled = true; delete_obj_and_report({{ report.obj_id }})" class="btn btn-outline-danger btn-sm">Apagar pergunta e denúncia</button>
+                        <button onclick="delete_report({{ report.obj_id }});" class="btn btn-outline-info btn-sm">Apagar denúncia sem apagar a pergunta</button>
+                        <img id="loading-icon-report-obj-{{ report.obj_id }}" src="/static/images/loading.gif" width="40px" style="display: none">
+                    {% endif %}
+                </p>
+            </div>
+        {% endfor %}
+        </div>
+        
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script src="https://kit.fontawesome.com/1f965a8b94.js"></script>
+        <script>
+            function delete_obj_and_report(obj_id) {
+                document.getElementById('loading-icon-report-obj-' + obj_id).style.display = 'inline';
+                $.ajax({
+                    url: '/delete_report_and_obj?obj_id=' + obj_id,
+                    type: 'get',
+                    complete: function (data) {
+                        document.getElementById('report-obj-' + obj_id).remove();
+                    }
+                });
+            }
+            
+            function delete_report(obj_id) {
+                document.getElementById('loading-icon-report-obj-' + obj_id).style.display = 'inline';
+                $.ajax({
+                    url: '/delete_report?obj_id=' + obj_id,
+                    type: 'get',
+                    complete: function (data) {
+                        document.getElementById('report-obj-' + obj_id).remove();
+                    }
+                });
+            }
+        </script>
+    </body>
+</html>

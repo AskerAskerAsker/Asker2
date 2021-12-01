@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+
+<html lang="en" >
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <title>Menu</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css">
+
+<script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script> 
+<script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+</head>
+
+<style>
+
+*,
+
+*:after,
+
+*:before {
+
+  box-sizing: border-box;
+
+}
+
+:root {
+
+  --color-bg-primary: #d0d6df;
+
+  --color-bg-primary-offset: #f1f3f7;
+
+  --color-bg-secondary: #fff;
+
+  --color-text-primary: #3a3c42;
+
+  --color-text-primary-offset: #898c94;
+
+  --color-orange: #dc9960;
+
+  --color-green: #1eb8b1;
+
+  --color-purple: #657cc4;
+
+  --color-black: var(--color-text-primary);
+
+  --color-red: #d92027;
+
+}
+
+.menu {
+
+  display: flex;
+
+  flex-direction: column;
+
+  background-color: var(--color-bg-secondary);
+
+  border-radius: 10px;
+
+  box-shadow: 0 10px 20px rgba(64, 64, 64, 0.15);
+
+}
+
+.menu-list {
+
+  margin: 0;
+
+  display: block;
+
+  width: 100%;
+
+  padding: 8px;
+
+}
+
+.menu-list + .menu-list {
+
+  border-top: 1px solid #ddd;
+
+}
+
+
+.menu-item {
+
+  position: relative;
+
+}
+
+.menu-button {
+
+  font: inherit;
+
+  border: 0;
+
+  padding: 10px 10px;
+
+  padding-right: 10px;
+
+  width: 100%;
+
+  border-radius: 8px;
+
+  text-align: left;
+
+  display: flex;
+
+  align-items: center;
+
+  position: relative;
+
+  background-color: var(--color-bg-secondary);
+
+}
+
+.menu-button:hover {
+
+  background-color: var(--color-bg-primary-offset);
+
+}
+
+.menu-button:hover + .menu-sub-list {
+
+  display: flex;
+
+}
+
+.menu-button:hover svg {
+
+  stroke: var(--color-text-primary);
+
+}
+
+.menu-button svg {
+
+  flex-shrink: 0;
+
+  stroke: var(--color-text-primary-offset);
+
+}
+
+.menu-button svg:nth-of-type(2) {
+
+  margin-right: 0;
+
+  position: absolute;
+
+  right: 8px;
+
+}
+
+.menu-button--delete:hover {
+
+  color: var(--color-red);
+
+}
+
+.menu-button--delete:hover svg:first-of-type {
+
+  stroke: var(--color-red);
+
+}
+
+.menu-button--orange svg:first-of-type {
+
+  stroke: var(--color-orange);
+
+}
+
+.menu-button--green svg:first-of-type {
+
+  stroke: var(--color-green);
+
+}
+
+.menu-button--purple svg:first-of-type {
+
+  stroke: var(--color-purple);
+
+}
+
+.menu-button--black svg:first-of-type {
+
+  stroke: var(--color-black);
+
+}
+
+.menu-button--checked svg:nth-of-type(2) {
+
+  stroke: var(--color-purple);
+
+}
+
+.containerem {
+
+  position: fixed;
+
+  top: 10px;
+
+  left: 10px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+}
+
+</style>
+
+ 
+
+<body>
+
+
+<div class="containerem">
+
+  <!-- code here -->
+
+  <div class="menu">
+
+    <ul class="menu-list">
+    
+      <li class="menu-item"><button class="menu-button"> (  ) </button></li>
+
+    <a href="https://asker.fun"><li class="menu-item"><button class="menu-button"><ion-icon name="home-outline"></ion-icon></button></li></a>
+
+    <a href="https://asker.fun/rank"><li class="menu-item"><button class="menu-button"><ion-icon name="trophy-outline"></ion-icon></button></li></a>
+
+    </ul>
+
+    <ul class="menu-list">
+
+      <li class="menu-item"><button class="menu-button"><ion-icon name="person-outline"></ion-icon></button></li>
+
+  <a href="https://asker.fun/notifications"> <li class="menu-item"><button class="menu-button"><ion-icon name="earth-outline"></ion-icon></button></li></a>
+
+  <a href="https://asker.fun/ask"> <li class="menu-item"><button class="menu-button"><ion-icon name="pencil"></ion-icon></button></li></a>
+
+  <a href="https://asker.fun/rules"> <li class="menu-item"><button class="menu-button"><ion-icon name="alert-circle-outline"></ion-icon></button></li></a>
+
+  <a href="https://asker.fun/logout"> <li class="menu-item"><button class="menu-button"><font color="red" style="opacity: 0.7"><ion-icon name="log-out-outline"></ion-icon></font></button></li></a>
+
+    </ul>
+
+    <ul class="menu-list">
+
+ <a href="https://asker.fun/"> <li class="menu-item"><button class="menu-button menu-button--delete"><font color="#228B22" style="opacity: 0.7"><ion-icon name="refresh-circle"></ion-icon></font></button></li></a>
+
+    </ul>
+
+  </div>
+
+</div>
+
+</body>
+
+</html>
+

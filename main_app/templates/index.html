@@ -1,0 +1,403 @@
+{% load main_app_extras %}
+{% load humanize %}
+<!doctype html>
+<html lang="pt-br">
+<head>
+<title>Asker | Faça e Responda Perguntas na Comunidade!</title>
+<meta charset="UTF-8">
+
+<meta name="description" content="Faça e Responda Perguntas na Melhor e Mais Divertida 
+Comunidade de Perguntas e Respostas!">
+<meta name="keywords" content="br.asker.fun, asker.fun, perguntas, respostas, asker">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css">
+<meta name="theme-color" content="#68228B" />
+<meta name="apple-mobile-web-app-status-bar-style" content="#68228B" />
+<meta name="msapplication-navbutton-color" content="#68228B" />
+<script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script> 
+<script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css">
+<link rel="stylesheet" href="/static/css/common.css?v=5.15">
+<script src="/static/js/cookieman.js?v=1"></script>
+<script>
+    var csrf_token = "{{ csrf_token }}";
+    {% if user.is_anonymous %}
+        var user_status = "anonymous";
+    {% else %}
+        var user_status = "logged";
+        
+        {% if user_p.active %}
+            var conta_ativa = true;
+        {% else %}
+            var conta_ativa = false;
+        {% endif %}
+    {% endif %}
+</script>
+<script>
+    var popular_page = 1;
+</script>
+<style>body{display:none}.navegacao{margin-top:10px;margin-bottom:10px}.navegacao button{font-size:.8em}</style>
+<script>
+recent_questions=[{% for question in questoes_recentes %}{% if not question.creator.user in user_p.silenced_users.all %}{"id":{{ question.id }},"text":"{{ question.text }}","description":"{{ question.description|formatar_descricao|safe|linebreaksbr }}","total_answers":{{ question.total_responses }},"pub_date":"{% fix_naturaltime question.pub_date|naturaltime %}","creator":"{{ question.creator.user.username }}",{% answer user_p question as ANSWER %}"user_answer":"{{ ANSWER|linebreaksbr }}",},{% endif %}{% endfor %}];
+popular_questions_=[{% for question in popular_questions %}{% if not question.creator.user in user_p.silenced_users.all %}{"id":{{ question.id }},"text":"{{ question.text }}","description":"{{ question.description|formatar_descricao|safe|linebreaksbr }}","total_answers":{{ question.total_responses }},"pub_date":"{% fix_naturaltime question.pub_date|naturaltime %}","creator":"{{ question.creator.user.username }}",{% answer user_p question as ANSWER %}"user_answer":"{{ ANSWER|linebreaksbr }}",},{% endif %}{% endfor %}];
+</script>
+<meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, viewport-fit=cover">
+</head>
+
+
+<style>
+    *,
+
+*:after,
+
+*:before {
+
+  box-sizing: border-box;
+
+}
+
+:root {
+
+  --color-bg-primary: #d0d6df;
+
+  --color-bg-primary-offset: #f1f3f7;
+
+  --color-bg-secondary: #fff;
+
+  --color-text-primary: #3a3c42;
+
+  --color-text-primary-offset: #898c94;
+
+  --color-orange: #dc9960;
+
+  --color-green: #1eb8b1;
+
+  --color-purple: #657cc4;
+
+}
+
+.menu {
+
+  display: flex;
+
+  flex-direction: column;
+
+  background: linear-gradient(#FF00FF, #4876FF);
+
+  border-radius: 0px 20px 20px 0px;
+
+  box-shadow: 0 10px 20px rgba(64, 64, 64, 0.15);
+
+}
+
+.menu-list {
+
+  margin: 0;
+
+  display: block;
+
+  width: 100%;
+
+  padding: 5px;
+
+}
+
+.menu-list + .menu-list {
+
+  border-top: 1px solid #ddd;
+
+}
+
+
+.menu-item {
+
+  position: relative;
+
+}
+
+.menu-button {
+
+  font: inherit;
+
+  border: 0;
+
+  padding: 6px 6px;
+
+  padding-right: 4px;
+
+  width: 100%;
+
+  border-radius: 8px;
+
+  text-align: left;
+
+  display: flex;
+
+  align-items: center;
+
+  position: relative;
+
+  background: transparent;
+
+}
+
+.menu-button:hover {
+
+  background-color: rgb(0, 0, 0, 0.2);
+
+}
+
+.menu-button:hover + .menu-sub-list {
+
+  display: flex;
+
+}
+
+.menu-button:hover svg {
+
+  stroke: var(--color-text-primary);
+
+}
+
+.menu-button svg {
+
+  flex-shrink: 0;
+
+  stroke: var(--color-text-primary-offset);
+
+}
+
+.menu-button svg:nth-of-type(2) {
+
+  margin-right: 0;
+
+  position: absolute;
+
+  right: 6px;
+
+}
+
+.menu-button--delete:hover {
+
+  color: var(--color-red);
+
+}
+
+.menu-button--delete:hover svg:first-of-type {
+
+  stroke: var(--color-red);
+
+}
+
+.menu-button--orange svg:first-of-type {
+
+  stroke: var(--color-orange);
+
+}
+
+.menu-button--green svg:first-of-type {
+
+  stroke: var(--color-green);
+
+}
+
+.menu-button--purple svg:first-of-type {
+
+  stroke: var(--color-purple);
+
+}
+
+.menu-button--black svg:first-of-type {
+
+  stroke: var(--color-black);
+
+}
+
+.menu-button--checked svg:nth-of-type(2) {
+
+  stroke: var(--color-purple);
+
+}
+
+.containerem {
+
+  position: fixed;
+
+  top: 15%;
+
+  left: 0;
+
+  z-index: 999999999;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+}
+</style>
+
+
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
+  />
+
+{% if user.is_authenticated %}
+   <div class="containerem">
+
+  <!-- code here -->
+
+  <div class="menu">
+
+    <ul class="menu-list">
+    
+      <li class="menu-item"><input id="dark-mode" type="checkbox" style="margin-left: 7px; border-radius: 30px" name="dark-mode" /></li>
+
+    <a href="https://asker.fun"><li class="menu-item"><button class="menu-button"><font color="#fff" style="color: #fff; font-weight: 900"><ion-icon name="home"></ion-icon></font></button></li></a>
+
+    <a href="https://asker.fun/rank"><li class="menu-item"><button class="menu-button"><font color="#fff" style="color: #fff; font-weight: 900"><ion-icon name="trophy-outline"></ion-icon></font></button></li></a>
+
+    </ul>
+
+ <ul class="menu-list">
+
+  <a href="/user/{{ user.username }}"><li class="menu-item"><button class="menu-button">
+   <div style="margin-left: -7px; border-radius: 300px; background: url({{user_p.avatar.url}}); width: 35px; height: 35px; background-position: center center; background-size: cover; background-repeat: no-repeat"></div>		      
+	</button></li></a>
+
+  <a href="https://asker.fun/notifications"> <li class="menu-item"><button class="menu-button"><font color="#fff" style="color: #fff; font-weight: 900"><ion-icon name="earth-outline"></ion-icon></font></button></li></a>
+
+  <a href="https://asker.fun/ask"> <li class="menu-item"><button class="menu-button"><font color="#fff" style="color: #fff; font-weight: 900"><ion-icon name="pencil"></ion-icon></font></button></li></a>
+
+ <a href="https://asker.fun/rules"> <li class="menu-item"><button class="menu-button"><font color="#fff" style="color: #fff; font-weight: 900"><ion-icon name="alert-circle-outline"></ion-icon></font></button></li></a>
+ 
+</ul>
+
+    <ul class="menu-list">
+
+<a href="https://asker.fun/logout"> <li class="menu-item"><button class="menu-button"><font size="2" color="white" style="font-weight: 900">Sair</font></button></li></a>
+
+    </ul>
+
+  </div>
+
+</div>
+{% else %}
+{% endif %}   
+ 
+	<body>
+	{% include "includes/navbar.html" %}
+    {% if not user_p.active and not user.is_anonymous %}
+    
+
+        <style>
+            @media (min-width:801px) {
+                .user-nao-ativo {
+                    width: 50%;
+                }
+            }
+        </style>
+        <center><div class="alert alert-info user-nao-ativo; padding-right: 30px"><p>Confirme seu email abrindo o link enviado para ele.<br>Este é o email usado na tela de cadastro: {{ user.email }}</p><p>Caso não encontre o email, verifique na pasta de spam.</p></div></center>
+    {% endif %}
+<main>
+<script>
+	{% if POPULAR %}
+		var mostrar_primeiro = "popular";
+	{% else %}
+		var mostrar_primeiro = "recentes";
+	{% endif %}
+</script>
+
+
+<center>
+
+<div style="font-size: 15px; font-weight: 700; padding-bottom: 10px">
+
+
+<!-- Dark mode -->
+<script>
+	var cssfn = 'light.css';
+	var cssversion = '?v=5.14';
+	if (getDarkCookie() == 'true') { cssfn = 'dark.css'; }
+	var link = document.createElement('link');
+	link.id = 'theme-css';
+	link.rel = 'stylesheet';
+	link.type = 'text/css';
+	link.href = '/static/css/' + cssfn + cssversion;
+	document.head.appendChild(link);
+</script>
+<style>
+    *, .form-control {
+        transition: background-color 1s, color 1s, border 1s;
+    }
+</style>
+<script src="https://asker.fun/static/js/cookieman.js?v=1"></script>
+<script>
+    darkcheckbox = document.getElementById('dark-mode');
+    if (getDarkCookie() == 'true') {
+        darkcheckbox.checked = true;
+    }
+    darkcheckbox.addEventListener('change', function() {
+        if (this.checked) {
+            setDarkCookie(true);
+            document.getElementById('theme-css').href = '/static/css/' + 'dark.css' + cssversion;
+        } else {
+            setDarkCookie(false);
+            document.getElementById('theme-css').href = '/static/css/' + 'light.css' + cssversion;
+        }
+    });
+</script>
+
+</div>
+
+<div class="navegacao">
+
+<button class="btn btn-outline-primary text-uppercase" style="border-radius: 30px" id="botao-popular">popular</button>
+	
+<button class="btn btn-outline-primary text-uppercase left-spaced" style="border-radius: 30px" id="botao-recentes">recente</button>
+
+  {% if user_p.message == 'reward' %}
+    &nbsp;<a href="/rewards">Resgatar moedas</a>
+    <i class="fas fa-coins fa-sm"></i>
+  {% endif %}
+</div>
+</center>
+
+
+<script>-1!=window.location.href.indexOf("news")&&(document.getElementById("logo").href="/news");var botao_popular=document.getElementById("botao-popular"),botao_recentes=document.getElementById("botao-recentes");botao_popular.onclick=function(){document.getElementById("logo").href="/",botao_popular.style.borderBottomWidth="3px",botao_recentes.style.borderBottomWidth="1px",document.getElementById("questoes_populares").style.display="block",document.getElementById("novas_questoes").style.display="none",window.history.replaceState("object or string","Title","/")},botao_recentes.onclick=function(){document.getElementById("logo").href="/news",botao_popular.style.borderBottomWidth="1px",botao_recentes.style.borderBottomWidth="3px",document.getElementById("questoes_populares").style.display="none",document.getElementById("novas_questoes").style.display="block",window.history.replaceState("object or string","Title","/news")};</script>
+<!-- Questrecentes -->
+<section class="card" id="novas_questoes" style="margin-left: 30px; background: transparent; border: none">
+	<ul class="list-group-flush" id="lista_de_questoes_recentes" style="border: none">
+	</ul>
+	<button class="btn btn-outline-primary" onclick="load_more(this, this.nextElementSibling);" style="border-radius: 30px; font-size: 13px">Ver Mais +</button>
+	<center style="display: none"><i class="fas fa-spinner fa-3x fa-spin"></i></center>
+<br><br>
+</section>
+
+<!-- !Quests recentes -->
+<!-- Ques populares -->
+<section  id="questoes_populares" style="margin-left: 30px; background: transparent; border: none">
+	<ul class="list-group-flush" id="lista_de_questoes_populares" style="border: none">
+	</ul>
+	<button class="btn btn-outline-primary" onclick="popular_page++; load_more_popular(this, this.nextElementSibling, popular_page);" style="border-radius: 30px; font-size: 13px">Ver Mais +</button>
+	<center style="display: none"><i class="fas fa-spinner fa-3x fa-spin"></i></center>
+<br><br>
+</section>
+<!-- !Queses populares -->
+</main>
+
+
+
+
+
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+<script src="https://kit.fontawesome.com/1f965a8b94.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/linkifyjs@2.1.9/dist/linkify.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/linkifyjs@2.1.9/dist/linkify-jquery.min.js"></script>
+<script src="/static/js/index.js?v=9.7"></script>
+</body>
+</html>

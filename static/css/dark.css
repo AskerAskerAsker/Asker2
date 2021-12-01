@@ -1,0 +1,109 @@
+/* Navbar */
+.navbar-round {
+    border: solid 0px #555;
+}
+.navbar-avatar {
+    border: solid 1px #555 !important;
+}
+/* Navbar-end */
+
+/* General */
+body {
+  background-color: #222 !important;
+  color: #f8f9fa !important;
+}
+.bg-main {
+  background-color: transparent !important; /* 343a40 */
+  color: #f8f9fa;
+}
+.bg-main-tab.active {
+  background-color: #343a40 !important;
+  color: #f8f9fa !important;
+  border-color: rgba(0,0,0,.125) !important;
+}
+.bg-main-tab {
+  color: #f8f9fa !important;
+  border-color: rgba(0,0,0,.125) !important;
+}
+.bg-main-tab:hover {
+  border-color: rgba(0,0,0,.125) !important;
+  background-color: #394046 !important;
+}
+.bg-inner, .bg-inner-when-dark {
+  background-color: #394046 !important;
+  color: #f8f9fa;
+}
+.bg-innermost, .bg-innermost-when-dark {
+  background-color: #454d54 !important;
+  color: #f8f9fa;
+}
+.form-control {
+  border: 1px solid rgba(0,0,0,.125) !important;
+  background-color: #394046 !important;
+  color: #f8f9fa !important;
+}
+.form-control:focus {
+  background-color: #394046;
+  color: #f8f9fa;
+}
+.text-muted {
+  color: #f8f9fa !important;
+}
+hr {
+    border-color: #394046;
+}
+.clickable, .clickable:hover {
+    color: #f8f9fa !important;
+}
+.small-text, .light-text {
+    color: #888;
+}
+.modal-header {
+    border-bottom: 1px solid #394046;
+}
+.modal-footer {
+    border-top: 1px solid #394046;
+}
+/* General-end */
+
+/* Ask */
+#poll-box {
+  background-color: #343a40 !important;
+  color: #f8f9fa !important;
+}
+.poll-choice-text {
+  background-color: #454d54 !important;
+  color: #f8f9fa !important;
+}
+/* Ask-end */
+
+/* Question */
+.post-pub-date {
+  color: #888;
+}
+.poster-info {
+  color: #f8f9fa;
+}
+.poster-info:hover {
+  color: white;
+}
+.progress {
+  background-color: #454d54 !important;
+  border: none;
+}
+/* Question-end */
+
+/* Correção de "behavior" inoportuno do webkit,
+   que muda cor do input quando um auto-fill é
+   usado - sem o seletor abaixo, o form ficará
+   branco-azulado caso o user escolha um email
+   do auto-fill */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+    transition: background-color 5000s ease-in-out 0s;
+    -webkit-box-shadow: 0 0 0px 1000px #344a60 inset;
+    -webkit-text-fill-color: white !important;
+}
+/* Correção-end */

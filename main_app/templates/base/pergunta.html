@@ -1,0 +1,143 @@
+{% load humanize %}
+{% load main_app_extras %}
+
+
+{% if not question.creator.ban %}
+
+	{% if not question.creator.user in user_p.silenced_users.all %}
+	<li class="list-group-item bg-main questao" data-id="{{ question.id }}">
+		<div class="card-body">
+			<div class="flexbox">
+				<h2 class="question-title fg-1">
+					<a href="/question/{{ question.id }}">
+						{{ question.text }}
+					</a>
+				</h2>
+
+				{% if not user.is_anonymous %}
+					{% if user != question.creator.user %}
+					<a class="clickable" href="javascript:void(0);" data-toggle="modal" data-target="#question-modal" onclick="select_user('{{ question.creator}}');">
+						<i class="fas fa-ellipsis-h"></i>
+					</a>
+					{% endif %}
+				{% endif %}
+
+			</div>
+			
+			
+	<br><br>		
+			
+			{% if question.description %}
+				<p class='description'>{{ question.description }}</p>
+			{% endif %}
+			
+				<span>respostas: <span id="response-counter-{{ question.id }}">{{ question.total_responses }}</span></span>
+				<span>&nbsp;&middot;&nbsp;</span>
+				<span>perguntado {% fix_naturaltime question.pub_date|naturaltime %} por </span>
+				<a href="/user/{{ question.creator }}">{{ question.creator }}</a>
+		
+			<hr>
+
+			{% if user.is_anonymous %}
+				<p>Faça <a href="/signin?redirect=/question/{{ question.id }}">login</a> ou <a href="/signup?redirect=/question/{{ question.id }}">crie uma conta</a> para responder essa pergunta.</p>
+			{% else %}
+				{% answer user_p question as ANSWER %}
+				{% if ANSWER %}
+					{% include "base/response-content-index.html" %}
+				{% else %}
+					<div class="user-response" data-iddapergunta="{{ question.id }}">
+						<div>
+							<button class="btn btn-outline-primary btn-sm" onclick="$(this).toggle(0); $(this.parentElement.parentElement.nextElementSibling).toggle(0);">
+								<i class="fas fa-share"></i>
+								Responder
+							</button>
+						</div>
+					</div>
+<br><br>
+					<div style="display: none">
+						<form onsubmit="return enviar_resposta_pergunta(this);">
+							{% csrf_token %}
+							<input type="hidden" name="from" value="index">
+							<input name="question_id" type="hidden" value="{{ question.id }}">
+							
+		<br><br>
+		<textarea onclick="$(this).css('height', '140px');" name="text" maxlength="5000" class="form-control form-control-sm" placeholder="Sua Resposta:" required></textarea>
+<br><br>	
+     <button name="submit_btn" type="submit" style="border-radius: 30px" class="btn btn-outline-primary btn-sm">
+	     <i class="far fa-paper-plane"></i>
+		Enviar
+     </button>
+						</form>
+					</div>
+				{% endif %}
+			{% endif %}
+		</div>
+	</li>
+	{% endif %}
+
+{% else %}
+	{% if user_p == question.creator %}
+
+
+	<li class="list-group-item bg-main">
+		<div class="card-body">
+			<h2 class="question-title">
+				<a href="/question/{{ question.id }}">
+					{{ question.text }}
+				</a>
+			</h2>
+			{% if question.description %}
+				<p class='description'>{{ question.description }}</p>
+			{% endif %}
+			<small class="text-muted">
+				<span>respostas: <span id="response-counter-{{ question.id }}">{{ question.total_responses }}</span></span>
+				<span>&nbsp;&middot;&nbsp;</span>
+				<span>perguntado {% fix_naturaltime question.pub_date|naturaltime %} por </span>
+				<a href="/user/{{ question.creator }}">{{ question.creator }}</a>
+			</small>
+			<hr>
+
+			{% if user.is_anonymous %}
+				<p>Faça <a href="/signin?redirect=/question/{{ question.id }}">login</a> ou <a href="/signup?redirect=/question/{{ question.id }}">crie uma conta</a> para responder essa pergunta.</p>
+			{% else %}
+				{% answer user_p question as ANSWER %}
+				{% if ANSWER %}
+					{% include "base/response-content-index.html" %}
+				{% else %}
+					<div class="user-response" data-iddapergunta="{{ question.id }}">
+						<div>
+							<button class="btn btn-outline-primary btn-sm" onclick="$(this).toggle(0); $(this.parentElement.parentElement.nextElementSibling).toggle(0);">
+								<i class="fas fa-share"></i>
+								Responder
+							</button>
+						</div>
+					</div>
+					<i class="bi bi-three-dots"></i>
+		<br><br>			
+					<div style="display: none">
+						<form onsubmit="return enviar_resposta_pergunta(this);">
+							{% csrf_token %}
+							<input type="hidden" name="from" value="index">
+							<input name="question_id" type="hidden" value="{{ question.id }}">
+	
+	<br><br>
+	
+	<textarea onclick="$(this).css('height', '120px');" name="text" maxlength="5000" class="form-control form-control-sm" placeholder="Sua Resposta" required></textarea>
+							
+   <br><br>
+   
+  <button name="submit_btn" type="submit" style="border-radius: 30px" class="btn btn-outline-primary btn-sm">
+	<i class="far fa-paper-plane"></i>
+	Enviar
+  </button>
+
+</form>
+</div>
+				{% endif %}
+			{% endif %}
+		</div>
+	</li>
+	
+	
+	{% endif %}
+{% endif %}

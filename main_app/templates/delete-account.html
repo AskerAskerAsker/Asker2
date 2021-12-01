@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="pt-br">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta name="robots" content="noindex">
+		
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css">
+		
+		<title>Apagar sua conta</title>
+
+		<link rel="stylesheet" href="/static/css/common.min.css">
+		<script src="/static/js/cookieman.js?v=1"></script>
+		<script>
+			var cssfn = 'light.css';
+			var cssversion = '?v=5';
+			if (getDarkCookie() == 'true') { cssfn = 'dark.css'; }
+			var link = document.createElement('link');
+			link.rel = 'stylesheet';
+			link.type = 'text/css';
+			link.href = '/static/css/' + cssfn + cssversion;
+			document.head.appendChild(link);
+		</script>
+	</head>
+	<body><main><br><div class="card bg-main"><div class="card-body">
+		<p><b>Apagar sua conta</b></p>
+		<p>Olá {{ user.username }}, é realmente uma pena sua decisão de deixar o Asker. Você é muito importante para nós. Caso você volte, ficaremos muito felizes!</p>
+		<p>Use o botão abaixo para excluir sua conta.</p>
+		
+		<button id="delete-account-button" class="btn btn-danger" onclick="delete_question()">Excluir minha conta</button>
+		</div></div></main>
+		
+		<script>
+			function delete_question() {
+				if(confirm("Você tem certeza que deseja excluir sua conta?")) {
+					if(confirm("Hm... Você tem certeza ABSOLUTA que deseja excluir PERMANENTEMENTE sua conta?")) {
+						delete_button = document.getElementById("delete-account-button")
+						
+						delete_button.disabled = true
+						
+						$.ajax({
+							url: "/delete-account",
+							type: "post",
+							data: {
+								"csrfmiddlewaretoken": "{{ csrf_token }}",
+							},
+							complete: function(data) {
+								if(data.responseText == "False") {
+									alert("Ocorreu um erro. Tente novamente mais tarde.")
+									delete_button.disabled = false
+								} else {
+									alert("Conta deletada.")
+									delete_button.remove()
+									window.location.href = "/"
+								}
+							}
+						})
+					} else {
+						alert("Ufa!")
+					}
+				} else {
+					alert("Ufa!")
+				}
+			}
+		</script>
+		
+		<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+	/* script para mandar confirmação de online para o servidor a cada x segundos. */
+	/* a confirmação é enviada via ajax. */
+	/* é recomendado colocar este script em todas as páginas, menos na página de login ou */
+	/* de criar conta, por exemplo. */
+	setInterval(function() {
+		$.ajax({
+			url: "/i-am-online",
+			type: "get",
+		});
+	}, 30000);
+</script>
+
+	</body>
+</html>

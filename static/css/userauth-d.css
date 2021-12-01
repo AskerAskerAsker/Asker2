@@ -1,0 +1,47 @@
+body {
+  background-color: #222 !important;
+  color: #f8f9fa !important;
+}
+
+.signin-form, .signup-form {
+	width: 50%;
+	margin: 5% auto;
+}
+.error-alert {
+	margin: 1%;
+}
+.form-control {
+  background-color: #343a40 !important;
+  color: #f8f9fa !important;
+  border: 1px solid rgba(0,0,0,0) !important;
+}
+#logo {
+	margin-bottom: 5%;
+}
+
+@media (min-width: 320px) and (max-width: 480px) {
+	.signin-form, .signup-form {
+		width: 90%;
+	}
+}
+
+@-webkit-keyframes autofill {
+    0%,100% {
+        color: #666;
+        background: transparent;
+    }
+}
+
+/* Correção de "behavior" inoportuno do webkit,
+   que muda cor do input quando um auto-fill é
+   usado - sem o seletor abaixo, o form ficará
+   branco-azulado caso o user escolha um email
+   do auto-fill */
+input.bg-dark:-webkit-autofill,
+input.bg-dark:-webkit-autofill:hover,
+input.bg-dark:-webkit-autofill:focus,
+input.bg-dark:-webkit-autofill:active {
+    transition: background-color 5000s ease-in-out 0s;
+    -webkit-box-shadow: 0 0 0px 1000px #343a40 inset;
+    -webkit-text-fill-color: white !important;
+}

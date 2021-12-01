@@ -1,0 +1,24 @@
+<style>
+.animate__backInLeft {
+  display: inline-block;
+  margin: 0 0.5rem;
+  animation: bounce; /* referring directly to the animation's @keyframe declaration */
+  animation-duration: 2s; /* don't forget to set a duration! */
+}
+</style>
+
+
+<CENTER>
+<br>
+    <a id="logo" href="/" class="navbar-brand animate__backInLeft"><img src="/static/images/asker.png" height="40px" alt="Asker"></a>
+
+<BR>
+
+            {% if user.is_authenticated %}
+            {% else %}
+                <a class="nav-link" style="font-weight: 700" href="/signin?redirect={{ request.get_full_path }}">Fazer Login &#10152;</a>
+            {% endif %}
+ 
+  
+</CENTER>
+
