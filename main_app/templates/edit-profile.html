@@ -27,28 +27,28 @@
 	</style>
 </head>
 
-	<body><main>
+	<body style="padding: 50px"><main>
 
-
-		<hr>
-		<h2>Foto de perfil</h2>
+		<h4>Foto de Perfil:</h4>
 		<form method="post" enctype="multipart/form-data">
 			<input type="hidden" name="type" value="profile-pic">
 			{% csrf_token %}
 			<label for="image">Escolha uma imagem:</label>
 			<input type="file" class="form-control-file" id="image" name="file" required="required">
-			<input type="submit" class="btn btn-primary" value="Alterar foto">
+			<div style="padding-top: 5px"><input type="submit" class="btn btn-primary" style="border-radius: 30px" value="Alterar Foto"></div>
 		</form>
-		<hr>
-		<h2>Biografia</h2>
+		
+    <br>
+    
+		<h4>Biografia:</h4>
 		<form method="post">
 			<input type="hidden" name="type" value="bio">
 			{% csrf_token %}
 			<textarea class="form-control" name="bio" maxlength="3000" width="70%">{{ user_p.bio }}</textarea>
-			<input class="btn btn-primary" type="submit" value="Alterar biografia">
+			<div style="padding-top: 5px"><input class="btn btn-primary" type="submit" style="border-radius: 30px" value="Alterar Biografia"></div>
 		</form>
-		<hr>
-		<h2>Nome de usuário</h2>
+ <br>
+		<h4>Nome de Usuário:</h4>
 		{{ invalid_username_text|safe }}
 		<form accept-charset="utf-8" method="post" id="username_form">
 			<input type="hidden" name="type" value="username">
@@ -56,16 +56,16 @@
 
 			<div class="form-row">
 				<div class="col-md-4 mb-3">
-					<input name="password" placeholder="Digite sua senha" class="form-control{{ invalid_password }}" type="password">
+					<input name="password" placeholder="Digite sua Senha:" class="form-control{{ invalid_password }}" type="password">
 					<div class="invalid-feedback" style="display: {{ password_display }}">
-						Senha incorreta.
+						Senha Incorreta.
 					</div>
 				</div>
 			</div>
 
 			<div class="form-row">
 				<div class="col-md-4 mb-3">
-					<input maxlength="30" name="username" placeholder="Novo nome de usuário" class="form-control{{ invalid_username }}" value="{{ username }}" type="text">
+					<input maxlength="30" name="username" placeholder="Novo Nome de Usuário:" class="form-control{{ invalid_username }}" value="{{ username }}" type="text">
 					<div class="invalid-feedback" style="display: {{ username_display }}">
 						Nome de usuário em uso ou inválido.
 					</div>
@@ -74,33 +74,37 @@
 
 			<div class="form-row">
 				<div class="col-md-4 mb-3">
-					<input value="Alterar nome" placeholder="" class="btn btn-primary" type="submit">
+				<input value="Alterar Nome" placeholder="" class="btn btn-primary" style="border-radius: 30px" type="submit">
 				</div>
 			</div>
 		</form>
 
-		<hr>
-		<h2>Privacidade</h2>
+    <br>
+	
+		<h4>Privacidade:</h4>
 		<form method="post">
 			<input type="hidden" name="type" value="privacy">
 			{% csrf_token %}
 			{% if user_p.hide_activity %}
-				<input type="checkbox" name="hide-activity" id="hide-activity" checked> <label class="inline" for="hide-activity"> Esconder perguntas e respostas do meu perfil</label><br>
+				<input type="checkbox" name="hide-activity" id="hide-activity" checked> <label class="inline" for="hide-activity"> Esconder Perguntas e Respostas do Meu Perfil</label><br>
 			{% else %}
-				<input type="checkbox" name="hide-activity" id="hide-activity"> <label class="inline" for="hide-activity"> Esconder perguntas e respostas do meu perfil</label><br>
+				<input type="checkbox" name="hide-activity" id="hide-activity"> <label class="inline" for="hide-activity"> Esconder Perguntas e Respostas do Meu Perfil</label><br>
 			{% endif %}
-			<input class="btn btn-primary" type="submit" value="Alterar privacidade">
+			<input class="btn btn-primary" type="submit" style="border-radius: 30px; height: 13px" value="Alterar Privacidade">
 		</form>
 
-		<hr>
-		<h2>Layout</h2>
-		<input id="dark-mode" type="checkbox" name="dark-mode" /> <label class="inline" for="dark-mode"> Ativar modo escuro para este dispositivo</label><br>
+<br>
+		<h4>Layout</h4>
+		<input id="dark-mode" type="checkbox" name="dark-mode" /> <label class="inline" for="dark-mode"> Ativar Modo Escuro Para Este Dispositivo</label><br>
 
 		{% if user.username == user_p.user.username %}
 		<hr>
 		<p>Seu email: {{ user.email }}</p>
 		{% endif %}
-
+    
+<br><br>
+    <a class="btn btn-primary" href="https://asker.fun">Salvar Alterações</a>
+<br>
 	</main>
 
 	</body>

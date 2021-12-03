@@ -1,10 +1,3 @@
-if (getDarkCookie() == 'true') {
-	document.getElementsByClassName('navbar')[0].classList.remove("navbar-light");
-	document.getElementsByClassName('navbar')[0].classList.add("navbar-dark");
-}
-
-
-
 function enviar_resposta_pergunta(form) {
 	
 	form.style.opacity = 0.5;
