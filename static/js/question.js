@@ -226,8 +226,12 @@ function delete_question(id) {
 var formbgcolor='bg-white'; var bgcolor='bg-white'; var textcolor='text-dark';
 var commentformbgcolor='bg-white'; var commentbgcolor='bg-light';
 if (getDarkCookie() == 'true') {
-	document.getElementsByClassName('navbar')[0].classList.remove("navbar-light");
-	document.getElementsByClassName('navbar')[0].classList.add("navbar-dark");
+    try {
+        document.getElementsByClassName('navbar')[0].classList.remove("navbar-light");
+        document.getElementsByClassName('navbar')[0].classList.add("navbar-dark");
+    } catch (err) {
+        console.log(err);
+    }
 }
 
 
