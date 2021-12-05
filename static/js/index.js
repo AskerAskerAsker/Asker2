@@ -36,6 +36,9 @@ function renderizar_questoes(questions) {
 			questoes_recentes.innerHTML += '<li class="list-group-item questao" style="border: none; background: transparent" data-id="'+questions[index].id+'">' +
 																		'<div class="card-body" style="border: none; background: transparent">' +
 																			'<div class="flexox" style="border: none; background: transparent">' +
+                        
+            
+            
 																				'<h2 style="font-size: 17px" class="question-title fg-1">' +
 																					'<a class="q-title" style="text-decoration: none; outline: none" href="/question/'+questions[index].id+'">' +
 																						questions[index].text +
@@ -95,8 +98,7 @@ function renderizar_questoes_populares(popular_questions) {
                                                                         (popular_questions[index].description != '' ? '<p class="description">'+popular_questions[index].description+'</p>' : '') +
                                                            '<small class="text-muted" style="color: #40E0D0">' +
                                                                                 (popular_questions[index].total_answers == 1 ? '<span style="color: #00CD66; font-weight: 800" id="response-counter-'+popular_questions[index].id+'">1</span> <span style="color: #00CD66; font-weight: 800" id="response-sentence-'+popular_questions[index].id+'">Resposta</span>' : '<span style="color: #00CD66; font-weight: 800" id="response-counter-'+popular_questions[index].id+'">'+popular_questions[index].total_answers+'</span> <span id="response-sentence-'+popular_questions[index].id+'">Respostas</span>') + ' | ' + popular_questions[index].pub_date +
-                                                                            '</small>' +
-                                                                        '<hr>' +
+                                                                            '</small>' +                  
                                                                         (user_status == "anonymous" ? '<p>Faça <a href="/signin?redirect=/question/'+popular_questions[index].id+'">login</a> ou <a href="/signup?redirect=/question/'+popular_questions[index].id+'">crie uma conta</a> para responder essa pergunta.</p>' : '') +
                                                                         (popular_questions[index].user_answer != 'False' ? '<div class="user-response" data-iddapergunta="'+popular_questions[index].id+'"><p><b>Sua Resposta:</b><br>'+popular_questions[index].user_answer+'</p></div>' : '<div class="user-response" data-iddapergunta="'+popular_questions[index].id+'">'+
                                                                         '<div>' +

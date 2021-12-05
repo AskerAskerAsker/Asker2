@@ -274,7 +274,7 @@ def like(request):
 
 def delete_response(request):
     user_profile = UserProfile.objects.get(user=request.user)
-    r = Response.objects.get(id=request.GET.get('response_id'))
+    r = Response.objects.get(id=request.POST.get('response_id', request.GET.get('response_id')))
 
     if user_profile != r.creator:
         # checa se modera:
