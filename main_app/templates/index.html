@@ -37,9 +37,14 @@ Comunidade de Perguntas e Respostas!">
     var popular_page = 1;
 </script>
 <style>body{display:none}.navegacao{margin-top:10px;margin-bottom:10px}.navegacao button{font-size:.8em}</style>
+<style>
+    .profile-picture-index img {
+        max-width: 30px;
+    }
+</style>
 <script>
-recent_questions=[{% for question in questoes_recentes %}{% if not question.creator.user in user_p.silenced_users.all %}{"id":{{ question.id }},"text":"{{ question.text }}","description":"{{ question.description|formatar_descricao|safe|linebreaksbr }}","total_answers":{{ question.total_responses }},"pub_date":"{% fix_naturaltime question.pub_date|naturaltime %}","creator":"{{ question.creator.user.username }}",{% answer user_p question as ANSWER %}"user_answer":"{{ ANSWER|linebreaksbr }}",},{% endif %}{% endfor %}];
-popular_questions_=[{% for question in popular_questions %}{% if not question.creator.user in user_p.silenced_users.all %}{"id":{{ question.id }},"text":"{{ question.text }}","description":"{{ question.description|formatar_descricao|safe|linebreaksbr }}","total_answers":{{ question.total_responses }},"pub_date":"{% fix_naturaltime question.pub_date|naturaltime %}","creator":"{{ question.creator.user.username }}",{% answer user_p question as ANSWER %}"user_answer":"{{ ANSWER|linebreaksbr }}",},{% endif %}{% endfor %}];
+recent_questions=[{% for question in questoes_recentes %}{% if not question.creator.user in user_p.silenced_users.all %}{"question_creator_avatar": "{{ question.creator.avatar.url }}", "id":{{ question.id }},"text":"{{ question.text }}","description":"{{ question.description|formatar_descricao|safe|linebreaksbr }}","total_answers":{{ question.total_responses }},"pub_date":"{% fix_naturaltime question.pub_date|naturaltime %}","creator":"{{ question.creator.user.username }}",{% answer user_p question as ANSWER %}"user_answer":"{{ ANSWER|linebreaksbr }}",},{% endif %}{% endfor %}];
+popular_questions_=[{% for question in popular_questions %}{% if not question.creator.user in user_p.silenced_users.all %}{"question_creator_avatar": "{{ question.creator.avatar.url }}", "id":{{ question.id }},"text":"{{ question.text }}","description":"{{ question.description|formatar_descricao|safe|linebreaksbr }}","total_answers":{{ question.total_responses }},"pub_date":"{% fix_naturaltime question.pub_date|naturaltime %}","creator":"{{ question.creator.user.username }}",{% answer user_p question as ANSWER %}"user_answer":"{{ ANSWER|linebreaksbr }}",},{% endif %}{% endfor %}];
 </script>
 <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, viewport-fit=cover">
 </head>
@@ -402,6 +407,6 @@ popular_questions_=[{% for question in popular_questions %}{% if not question.cr
 <script src="https://kit.fontawesome.com/1f965a8b94.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/linkifyjs@2.1.9/dist/linkify.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/linkifyjs@2.1.9/dist/linkify-jquery.min.js"></script>
-<script src="/static/js/index.js?v5.16"></script>
+<script src="/static/js/index.js?v5.19"></script>
 </body>
 </html>

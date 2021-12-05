@@ -35,6 +35,7 @@ function renderizar_questoes(questions) {
 		try {
 			questoes_recentes.innerHTML += '<li class="list-group-item questao" style="border: none; background: transparent" data-id="'+questions[index].id+'">' +
 																		'<div class="card-body" style="border: none; background: transparent">' +
+                                                                        '<div class="profile-picture-index"><img src="'+questions[index].question_creator_avatar+'"><span>'+questions[index].creator+'</span></div>'+
 																			'<div class="flexox" style="border: none; background: transparent">' +
                         
             
