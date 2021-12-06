@@ -3,20 +3,18 @@
 
 {% if not response.creator.ban %}
 
-	<li class="list-group-item bg-main no-horiz-padding resposta">
-		<div class="card-body">
+	<li class="list-group-item bg-main no-horiz-padding resposta" style="border: none">
+		<div class="card-body" style="border: none">
 			<div class="poster-container">
-				<a class="poster-info" href="/user/{{ response.creator.user.username }}">
-					
-							
-<div class="poster-profile-pic-container" style="border-radius: 100px; width: 63px; height: 63px; background: url({{ response.creator.avatar.url }}); background-size: cover; background-repeat: no-repeat">
+				<a class="poster-info" href="/user/{{ response.creator.user.username }}">							
+<div class="poster-profile-pic-container" style="border-radius: 100px; width: 59px; height: 57px; background: url({{ response.creator.avatar.url }}); background-size: cover; background-repeat: no-repeat">
 </div>	
 					
 										
 					<div class="poster-text-container" style="padding-left: 10px">
 						<div>
 						   <span class="r-username">
-							<font style="font-weight: 700; font-size: 16px">
+							<font style="font-weight: 700; font-size: 14px">
 								{{ response.creator.user.username }}
 							</font>
 					           </span>
@@ -30,13 +28,13 @@
 			
 			{% if question.best_answer == response.id %}
 				<div class="best-answer-badge">
-					<span class="badge badge-pill badge-primary">
+					<span class="badge badge-pill badge-primary" style="font-weight: 800">
 						🏆 A Melhor Resposta!
 					</span>
 				</div>
 			{% endif %}
 			
-			<p id="response-{{ response.id }}">
+			<p id="response-{{ response.id }}" style="font-size: 15px; font-weight: 500">
 				{{ response.text|linebreaksbr }}
 			</p>
 			
@@ -74,12 +72,12 @@
 			{% endif %}
 
 
-			<div class="heart-comment">
-				<i><img width="18px" src="/static/images/comments.png?version=3" class="icon hc-icon" onclick="$(this.parentElement.nextElementSibling.nextElementSibling).toggle(200);"></i>
+			<div class="heart-comment" style="border: none">
+				<i><img width="16px" src="/static/images/comments.png?version=3" class="icon hc-icon" onclick="$(this.parentElement.nextElementSibling.nextElementSibling).toggle(200);"></i>
 				<span class="comment">{{ response.id|total_comments }}</span>
 				<!-- Comentários -->
-				<div class="card comments bg-inner" style="display: none">
-					<ul class="comments-ul list-group list-group-flush">
+				<div class="card comments bg-inner" style="display: none; border: none; ">
+					<ul class="comments-ul list-group list-group-flush" style="font-size: 14px; font-weight: 500">
 						{{ response.id|list_comments:request|safe }}
 					</ul>
 
@@ -91,8 +89,9 @@
 						{% csrf_token %}
 						<input type="hidden" name="response_id" value="{{ response.id }}">
 						<input type="hidden" name="question_id" value="{{ question.id }}">
-                        <textarea onclick="$(this).css('height', '110px');" class="form-control" maxlength="300" autocomplete="off" name="text" placeholder="Escreva seu comentário" required></textarea>
-						<input onclick="$(this.previousElementSibling).css('height', '60px');" class="btn btn-primary" type="submit" value="Comentar">
+                        <textarea onclick="$(this).css('height', '110px');" class="form-control" maxlength="300" autocomplete="off" name="text" style="font-size: 13px; font-weight: 700; border-radius: 10px" placeholder="Seu Comentário:" required></textarea>
+						<br><br>
+                        <input onclick="$(this.previousElementSibling).css('height', '60px');" class="btn btn-primary" type="submit" style="border-radius: 30px; font-size: 14px; font-weight: 700" value="Comentar">
 					</form>
 				</div>
 				
@@ -142,7 +141,7 @@
 				
 				{% if question.best_answer == response.id %}
 					<div class="best-answer-badge">
-						<span class="badge badge-pill badge-primary">
+						<span class="badge badge-pill badge-primary" style="font-weight: 800">
 							🏆 A Melhor Resposta!
 						</span>
 					</div>
@@ -168,7 +167,7 @@
 
 				<div class="heart-comment" id="like-counter-{{ response.id }}" onclick="like(this, {{ response.id }})">
 					<i>
-						<img width="18px" src="/static/images/{{ response.id|like_or_not:user.username }}?version=3" class="hc-icon">
+						<img width="16px" src="/static/images/{{ response.id|like_or_not:user.username }}?version=3" class="hc-icon">
 					</i>
 					<span>{{ response.total_likes }}</span>
 				</div>
@@ -188,13 +187,13 @@
 				{% endif %}
 
 
-				<div class="heart-comment">
+				<div class="heart-comment" style="border: none">
 					<i>
-						<img width="18px" src="/static/images/comments.png?version=3" class="icon hc-icon" onclick="$(this.parentElement.nextElementSibling.nextElementSibling).toggle(200);">
+						<img width="16px" src="/static/images/comments.png?version=3" class="icon hc-icon" onclick="$(this.parentElement.nextElementSibling.nextElementSibling).toggle(200);">
 					</i>
 					<span class="comment">{{ response.id|total_comments }}</span>
 					<!-- Comentários -->
-					<div class="card comments bg-inner" style="display: none">
+					<div class="card comments bg-inner" style="display: none; border: none">
 						<ul class="comments-ul list-group list-group-flush">
 							{{ response.id|list_comments:request|safe }}
 						</ul>
@@ -207,8 +206,8 @@
 							{% csrf_token %}
 							<input type="hidden" name="response_id" value="{{ response.id }}">
 							<input type="hidden" name="question_id" value="{{ question.id }}">
-							<input type="text" maxlength="300" autocomplete="off" class="form-control comment-form bg-innermost-when-dark" name="text" placeholder="Escreva seu comentário" required>
-							<input class="btn btn-primary" type="submit" value="Comentar">
+							<input type="text" maxlength="300" autocomplete="off" class="form-control comment-form bg-innermost-when-dark" name="text" placeholder="Seu Comentário:" required>
+							<br><br><input class="btn btn-primary" type="submit" style="border-radius: 30px" value="Comentar">
 						</form>
 					</div>
 					

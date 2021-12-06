@@ -35,11 +35,8 @@ function renderizar_questoes(questions) {
 		try {
 			questoes_recentes.innerHTML += '<li class="list-group-item questao" style="border: none; background: transparent" data-id="'+questions[index].id+'">' +
 																		'<div class="card-body" style="border: none; background: transparent">' +
-                                                                        '<div class="profile-picture-index"><img src="'+questions[index].question_creator_avatar+'"><span>'+questions[index].creator+'</span></div>'+
-																			'<div class="flexox" style="border: none; background: transparent">' +
-                        
-            
-            
+                                                                        '<div class="profile-picture-index" style="padding-bottom: 7px"><img style="width: 20px; height: 20px; border-radius: 100px" src="'+questions[index].question_creator_avatar+'"><span style="font-weight: 600; font-size: 12px; opacity: 0.7; padding-left: 7px">'+questions[index].creator+'</span></div>'+
+																			'<div class="flexox" style="border: none; background: transparent">' +  
 																				'<h2 style="font-size: 17px" class="question-title fg-1">' +
 																					'<a class="q-title" style="text-decoration: none; outline: none" href="/question/'+questions[index].id+'">' +
 																						questions[index].text +
@@ -98,32 +95,9 @@ function renderizar_questoes_populares(popular_questions) {
                                                                         '</div>' +
                                                                         (popular_questions[index].description != '' ? '<p class="description">'+popular_questions[index].description+'</p>' : '') +
                                                            '<small class="text-muted" style="color: #40E0D0">' +
-                                                                                (popular_questions[index].total_answers == 1 ? '<span style="color: #00CD66; font-weight: 800" id="response-counter-'+popular_questions[index].id+'">1</span> <span style="color: #00CD66; font-weight: 800" id="response-sentence-'+popular_questions[index].id+'">Resposta</span>' : '<span style="color: #00CD66; font-weight: 800" id="response-counter-'+popular_questions[index].id+'">'+popular_questions[index].total_answers+'</span> <span id="response-sentence-'+popular_questions[index].id+'">Respostas</span>') + ' | ' + popular_questions[index].pub_date +
+                                                                                (popular_questions[index].total_answers == 1 ? '<span style="color: #00CD66; font-weight: 800" id="response-counter-'+popular_questions[index].id+'">1</span> <span style="color: #00CD66; font-weight: 800" id="response-sentence-'+popular_questions[index].id+'">Resposta</span>' : '<span style="color: #00CD66; font-weight: 800" id="response-counter-'+popular_questions[index].id+'">'+popular_questions[index].total_answers+'</span> <span style="color: #00CD66" id="response-sentence-'+popular_questions[index].id+'">Respostas</span>') + ' | ' + popular_questions[index].pub_date +
                                                                             '</small>' +                  
-                                                                        (user_status == "anonymous" ? '<p>Faça <a href="/signin?redirect=/question/'+popular_questions[index].id+'">login</a> ou <a href="/signup?redirect=/question/'+popular_questions[index].id+'">crie uma conta</a> para responder essa pergunta.</p>' : '') +
-                                                                        (popular_questions[index].user_answer != 'False' ? '<div class="user-response" data-iddapergunta="'+popular_questions[index].id+'"><p><b>Sua Resposta:</b><br>'+popular_questions[index].user_answer+'</p></div>' : '<div class="user-response" data-iddapergunta="'+popular_questions[index].id+'">'+
-                                                                        '<div>' +
-                                                                        
-                                                                        (user_status != "anonymous" ?
-                                                                        
-                                                                            '<button class="btn btn-outline-primary btn-sm botao_responder" onclick="$(this).toggle(0); $(this.parentElement.parentElement.nextElementSibling).toggle(0);">' +
-                                                                                '<i class="fas fa-share"></i>' +
-                                                                                ' responder' : '') +
-                                                                            '</button>' +
-                                                                        '</div></div>' +
-                                                                        '<div style="display: none">' +
-                                                                            '<form onsubmit="return enviar_resposta_pergunta(this);">' +
-                                                                                '<input type="hidden" name="csrfmiddlewaretoken" value="'+csrf_token+'">' +
-                                                                                '<input type="hidden" name="from" value="index">' +
-                                                                                '<input name="question_id" type="hidden" value="'+popular_questions[index].id+'">' +
-                                                                                '<textarea onclick=\'$(this).css("height", "120px");\' name="text" maxlength="5000" class="form-control form-control-sm" placeholder="Sua Resposta" required></textarea>' +
-                                                                                '<br><button name="submit_btn" type="submit" class="btn btn-outline-primary btn-sm" style="border-radius: 30px">' +
-                                                                                '<i class="far fa-paper-plane"></i>' +
-                                                                                ' Enviar' +
-                                                                                '</button>' +
-                                                                            '</form>' +
-                                                                            '</div>') +
-                                                                    '</div>' +
+                                                                  
                                                                 '</li>'; } catch (e) {
                                                                 }
     }
