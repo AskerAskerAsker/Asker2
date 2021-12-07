@@ -124,7 +124,7 @@ def save_answer(request):
     if response_creator.user not in question.creator.silenced_users.all():
         notification = Notification.objects.create(receiver=question.creator.user,
                                                                                            type='question-answered')
-        notification.set_text(response.id)
+        notification.prepare(response.id)
         notification.save()
 
     form = UploadFileForm(request.POST, request.FILES)
@@ -266,7 +266,7 @@ def like(request):
                                             type='like-in-response',
                                             liker=request.user,
                                             response=r)
-            n.set_text(answer_id)
+            n.prepare(answer_id)
             n.save()
 
     return HttpResponse('OK', content_type='text/plain')
@@ -561,6 +561,10 @@ def notification(request):
             'notifications': p.page(page),
     }
 
+    up = UserProfile.objects.get(user=request.user)
+    up.new_notifications = 0
+    up.save()
+
     return render(request, 'notification.html', context)
 
 
@@ -575,9 +579,10 @@ def comment(request):
                                                                                              text=html.escape(request.POST.get('text')),
                                                                                              pub_date=timezone.now())
 
-    Notification.objects.create(receiver=comment.response.creator.user,
+    n = Notification.objects.create(receiver=comment.response.creator.user,
                                                                                                                     type='comment-in-response',
                                                                                                                     text='<p><a href="/user/{}">{}</a> comentou na sua resposta na pergunta: <a href="/question/{}">"{}"</a></p>'.format(comment.creator.username, comment.creator.username, comment.response.question.id, comment.response.question.text))
+    n.prepare()
 
     comment_creator_template = '''
             <li class="list-group-item c no-horiz-padding">
@@ -688,7 +693,7 @@ def edit_profile(request, username):
                 '''
                 file_name = '{}-{}-{}'.format(request.user.username, timezone.now().date(), timezone.now().time())
 
-                success = save_img_file(f, '/home/asker/asker/media/avatars/' + 
+                success = save_img_file(f, '/home/asker/asker/media/avatars/' +
 file_name, (192, 192))
                 if not success:
                     return redirect('/user/' + request.user.username + '/edit')
@@ -810,7 +815,7 @@ def choose_best_answer(request):
         q.best_answer = answer_id
         q.save()
         n = Notification.objects.create(receiver=r.creator.user, type='got-best-answer', response=r)
-        n.set_text(answer_id)
+        n.prepare(answer_id)
         n.save()
         rcuserp = UserProfile.objects.get(user=r.creator.user)
         quserp = UserProfile.objects.get(user=request.user)

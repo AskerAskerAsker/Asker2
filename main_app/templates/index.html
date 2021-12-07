@@ -17,7 +17,7 @@ Comunidade de Perguntas e Respostas!">
 <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css">
-<link rel="stylesheet" href="/static/css/common.css?v=5.15">
+<link rel="stylesheet" href="/static/css/common.css?v=6">
 <script src="/static/js/cookieman.js?v=1"></script>
 <script>
     var csrf_token = "{{ csrf_token }}";
@@ -49,247 +49,13 @@ popular_questions_=[{% for question in popular_questions %}{% if not question.cr
 <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, viewport-fit=cover">
 </head>
 
-
-<style>
-    *,
-
-*:after,
-
-*:before {
-
-  box-sizing: border-box;
-
-}
-
-:root {
-
-  --color-bg-primary: #d0d6df;
-
-  --color-bg-primary-offset: #f1f3f7;
-
-  --color-bg-secondary: #fff;
-
-  --color-text-primary: #3a3c42;
-
-  --color-text-primary-offset: #898c94;
-
-  --color-orange: #dc9960;
-
-  --color-green: #1eb8b1;
-
-  --color-purple: #657cc4;
-
-}
-
-.menu {
-
-  display: flex;
-
-  flex-direction: column;
-
-  background: linear-gradient(#FF00FF, #4876FF);
-
-  border-radius: 0px 20px 20px 0px;
-
-  box-shadow: 0 10px 20px rgba(64, 64, 64, 0.15);
-
-}
-
-.menu-list {
-
-  margin: 0;
-
-  display: block;
-
-  width: 100%;
-
-  padding: 5px;
-
-}
-
-.menu-list + .menu-list {
-
-  border-top: 1px solid #ddd;
-
-}
-
-
-.menu-item {
-
-  position: relative;
-
-}
-
-.menu-button {
-
-  font: inherit;
-
-  border: 0;
-
-  padding: 6px 6px;
-
-  padding-right: 4px;
-
-  width: 100%;
-
-  border-radius: 8px;
-
-  text-align: left;
-
-  display: flex;
-
-  align-items: center;
-
-  position: relative;
-
-  background: transparent;
-
-}
-
-.menu-button:hover {
-
-  background-color: rgb(0, 0, 0, 0.2);
-
-}
-
-.menu-button:hover + .menu-sub-list {
-
-  display: flex;
-
-}
-
-.menu-button:hover svg {
-
-  stroke: var(--color-text-primary);
-
-}
-
-.menu-button svg {
-
-  flex-shrink: 0;
-
-  stroke: var(--color-text-primary-offset);
-
-}
-
-.menu-button svg:nth-of-type(2) {
-
-  margin-right: 0;
-
-  position: absolute;
-
-  right: 6px;
-
-}
-
-.menu-button--delete:hover {
-
-  color: var(--color-red);
-
-}
-
-.menu-button--delete:hover svg:first-of-type {
-
-  stroke: var(--color-red);
-
-}
-
-.menu-button--orange svg:first-of-type {
-
-  stroke: var(--color-orange);
-
-}
-
-.menu-button--green svg:first-of-type {
-
-  stroke: var(--color-green);
-
-}
-
-.menu-button--purple svg:first-of-type {
-
-  stroke: var(--color-purple);
-
-}
-
-.menu-button--black svg:first-of-type {
-
-  stroke: var(--color-black);
-
-}
-
-.menu-button--checked svg:nth-of-type(2) {
-
-  stroke: var(--color-purple);
-
-}
-
-.containerem {
-
-  position: fixed;
-
-  top: 15%;
-
-  left: 0;
-
-  z-index: 999999999;
-
-  display: flex;
-
-  align-items: center;
-
-  justify-content: center;
-
-}
-</style>
-
-
   <link
     rel="stylesheet"
     href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
   />
 
 {% if user.is_authenticated %}
-   <div class="containerem">
-
-  <!-- code here -->
-
-  <div class="menu">
-
-    <ul class="menu-list">
-    
-      <li class="menu-item"><input id="dark-mode" type="checkbox" style="margin-left: 7px; border-radius: 30px" name="dark-mode" /></li>
-
-    <a href="https://asker.fun"><li class="menu-item"><button class="menu-button"><font color="#fff" style="color: #fff; font-weight: 900"><ion-icon name="home"></ion-icon></font></button></li></a>
-
-    <a href="https://asker.fun/rank"><li class="menu-item"><button class="menu-button"><font color="#fff" style="color: #fff; font-weight: 900"><ion-icon name="trophy-outline"></ion-icon></font></button></li></a>
-
-    </ul>
-
- <ul class="menu-list">
-
-  <a href="/user/{{ user.username }}"><li class="menu-item"><button class="menu-button">
-   <div style="margin-left: -7px; border-radius: 300px; background: url({{user_p.avatar.url}}); width: 35px; height: 35px; background-position: center center; background-size: cover; background-repeat: no-repeat"></div>		      
-	</button></li></a>
-
-  <a href="https://asker.fun/notifications"> <li class="menu-item"><button class="menu-button"><font color="#fff" style="color: #fff; font-weight: 900"><ion-icon name="earth-outline"></ion-icon></font></button></li></a>
-
-  <a href="https://asker.fun/ask"> <li class="menu-item"><button class="menu-button"><font color="#fff" style="color: #fff; font-weight: 900"><ion-icon name="pencil"></ion-icon></font></button></li></a>
-
- <a href="https://asker.fun/rules"> <li class="menu-item"><button class="menu-button"><font color="#fff" style="color: #fff; font-weight: 900"><ion-icon name="alert-circle-outline"></ion-icon></font></button></li></a>
- 
-</ul>
-
-    <ul class="menu-list">
-
-<a href="https://asker.fun/logout"> <li class="menu-item"><button class="menu-button"><font size="2" color="white" style="font-weight: 900">Sair</font></button></li></a>
-
-    </ul>
-
-  </div>
-
-</div>
-{% else %}
+	{% include "includes/menubar.html" %}
 {% endif %}   
  
 	<body>
@@ -320,47 +86,14 @@ popular_questions_=[{% for question in popular_questions %}{% if not question.cr
 
 <div style="font-size: 15px; font-weight: 700; padding-bottom: 10px">
 
-
-<!-- Dark mode -->
-<script>
-	var cssfn = 'light.css';
-	var cssversion = '?v=5.14';
-	if (getDarkCookie() == 'true') { cssfn = 'dark.css'; }
-	var link = document.createElement('link');
-	link.id = 'theme-css';
-	link.rel = 'stylesheet';
-	link.type = 'text/css';
-	link.href = '/static/css/' + cssfn + cssversion;
-	document.head.appendChild(link);
-</script>
-<style>
-    *, .form-control {
-        transition: background-color 1s, color 1s, border 1s;
-    }
-</style>
-<script src="https://asker.fun/static/js/cookieman.js?v=1"></script>
-<script>
-    darkcheckbox = document.getElementById('dark-mode');
-    if (getDarkCookie() == 'true') {
-        darkcheckbox.checked = true;
-    }
-    darkcheckbox.addEventListener('change', function() {
-        if (this.checked) {
-            setDarkCookie(true);
-            document.getElementById('theme-css').href = '/static/css/' + 'dark.css' + cssversion;
-        } else {
-            setDarkCookie(false);
-            document.getElementById('theme-css').href = '/static/css/' + 'light.css' + cssversion;
-        }
-    });
-</script>
+{% include "includes/themehandler.html" %}
 
 </div>
 
 <div class="navegacao">
 
 <a href="https://instagram.com/askerfun" style="padding-right: 5px" target="_blank">
-<img src="https://i2.wp.com/www.multarte.com.br/wp-content/uploads/2019/03/logo-instagram-png-fundo-transparente13.png?fit=696%2C696&ssl=1" width="20px" height="20px"></img>
+<img src="https://i2.wp.com/www.multarte.com.br/wp-content/uploads/2019/03/logo-instagram-png-fundo-transparente13.png?fit=696%2C696&ssl=1" width="20px" height="20px">
 </a>
 
 <button class="btn btn-outline-primary text-uppercase" style="border-radius: 30px" id="botao-popular">popular</button>
@@ -396,11 +129,6 @@ popular_questions_=[{% for question in popular_questions %}{% if not question.cr
 </section>
 <!-- !Queses populares -->
 </main>
-
-
-
-
-
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>

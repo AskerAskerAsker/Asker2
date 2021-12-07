@@ -97,6 +97,8 @@ class UserProfile(models.Model):
 
     # informações diversas:
     infos = models.TextField(default='{}') # <- JSON aqui.
+    
+    new_notifications = models.IntegerField(default=0, null=False, blank=False)
 
     def __str__(self):
         return self.user.username
@@ -198,7 +200,14 @@ class Notification(models.Model):
 
     read = models.BooleanField(default=False) # this.receiver clicou ou não na notificação.
 
-    def set_text(self, answer_id, comment_id=None):
+    def prepare(self, answer_id=None, comment_id=None):
+        receiver_p = UserProfile.objects.get(user=self.receiver)
+        receiver_p.new_notifications += 1
+        receiver_p.save()
+
+        if self.text:
+            return
+
         if self.type == 'like-in-response':
             self.text = '''
                             <p>Você recebeu um ❤️ na sua resposta <a href="/question/{}?n={}">"{}"</a>
@@ -233,7 +242,6 @@ class Notification(models.Model):
                         '''.format(response.question.id,
                                    self.id,
                                    response.question.text)
-
 
 class Ban(models.Model): # todos os IP's banidos:
     ip = models.TextField(null=False, primary_key=True)

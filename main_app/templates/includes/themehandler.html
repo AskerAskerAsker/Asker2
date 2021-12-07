@@ -1,0 +1,20 @@
+<script src="/static/js/cookieman.js?v=1"></script>
+<link rel="stylesheet" href="/static/css/common.css?v=6">
+<script>
+    var cssfn = 'light.css';
+    var cssversion = '?v=5';
+    if (getDarkCookie() == 'true') { cssfn = 'dark.css'; }
+    var link = document.createElement('link');
+    link.id = 'theme-css';
+    link.rel = 'stylesheet';
+    link.type = 'text/css';
+    link.href = '/static/css/' + cssfn + cssversion;
+    document.head.appendChild(link);
+
+    document.getElementById('wait').remove();
+</script>
+<style>
+    *, .form-control {
+        transition: background-color 1s, color 1s, border 1s;
+    }
+</style>
