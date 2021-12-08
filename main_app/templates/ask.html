@@ -41,7 +41,7 @@
             <form method="post" enctype="multipart/form-data" onsubmit="format_form(this)" id="form_pergunta">
                 {% csrf_token %}
                 <div class="form-group ask-form">
-                    <input class="form-control" type="text" name="question" style="border-radius: 20px; font-weight: 500" placeholder="Sua pergunta aqui:" autocomplete="off" maxlength="180">
+                    <input class="form-control" type="text" name="question" style="border-radius: 20px; font-weight: 500" placeholder="Título da Pergunta:" autocomplete="off" maxlength="180">
                     <textarea width="100px" maxlength="5000" class="form-control" style="min-height: 250px; border-radius: 20px; font-size: 12px; margin-top: 10px" placeholder="Descrição (opcional):" name="description"></textarea>
                 <br>
                     <label for="image"><b>Inserir Imagem:</b></label>
@@ -82,7 +82,7 @@
                         </a>
                     </div></div>
  
-                    <input class="btn btn-primary" type="submit" value="Publicar Pergunta" style="border-radius: 30px" id="botao_fazer_pergunta">
+                    <input class="btn btn-primary" type="submit" value="Publicar Pergunta" style="border-radius: 30px; font-weight: 800" id="botao_fazer_pergunta">
                 </div>
             </form>
      <br>

@@ -39,7 +39,7 @@
 		</form>
 		
     <br>
-    
+    <br>
 		<h4>Biografia:</h4>
 		<form method="post">
 			<input type="hidden" name="type" value="bio">
@@ -47,7 +47,7 @@
 			<textarea class="form-control" name="bio" maxlength="3000" width="70%">{{ user_p.bio }}</textarea>
 			<div style="padding-top: 5px"><input class="btn btn-primary" type="submit" style="border-radius: 30px" value="Alterar Biografia"></div>
 		</form>
- <br>
+ <br><br>
 		<h4>Nome de Usuário:</h4>
 		{{ invalid_username_text|safe }}
 		<form accept-charset="utf-8" method="post" id="username_form">
@@ -79,7 +79,7 @@
 			</div>
 		</form>
 
-    <br>
+    <br><br>
 	
 		<h4>Privacidade:</h4>
 		<form method="post">
@@ -90,10 +90,10 @@
 			{% else %}
 				<input type="checkbox" name="hide-activity" id="hide-activity"> <label class="inline" for="hide-activity"> Esconder Perguntas e Respostas do Meu Perfil</label><br>
 			{% endif %}
-			<input class="btn btn-primary" type="submit" style="border-radius: 30px; height: 13px" value="Alterar Privacidade">
+			<input class="btn btn-primary" type="submit" style="border-radius: 30px" value="Alterar Privacidade">
 		</form>
 
-<br>
+<br><br>
 		<h4>Layout</h4>
 		<input id="dark-mode" type="checkbox" name="dark-mode" /> <label class="inline" for="dark-mode"> Ativar Modo Escuro Para Este Dispositivo</label><br>
 

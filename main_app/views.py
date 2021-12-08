@@ -562,8 +562,9 @@ def notification(request):
     }
 
     up = UserProfile.objects.get(user=request.user)
-    up.new_notifications = 0
-    up.save()
+    if up.new_notifications > 0:
+        up.new_notifications = 0
+        up.save()
 
     return render(request, 'notification.html', context)
 
@@ -971,6 +972,7 @@ def more_questions(request):
                             "pub_date": fix_naturaltime(naturaltime(q.pub_date)),
                             "creator": q.creator.user.username,
                             "user_answer": "False",
+                            "question_creator_avatar": q.creator.avatar.url,
                     },
             )
     else:
@@ -987,6 +989,7 @@ def more_questions(request):
                             "pub_date": fix_naturaltime(naturaltime(q.pub_date)),
                             "creator": q.creator.user.username,
                             "user_answer": answer,
+                            "question_creator_avatar": q.creator.avatar.url,
                     },
             )
 
