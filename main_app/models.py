@@ -65,7 +65,7 @@ def make_embedded_content(text):
 class UserProfile(models.Model):
     ip = models.TextField(null=True)
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    avatar = models.ImageField(max_length=256, default='avatars/default-avatar.png', blank=True) # Max_length para postgres
+    avatar = models.ImageField(max_length=256, default='avatars/default-avatar.png', blank=True)
     bio = models.TextField(max_length=2048, blank=True)
     total_points = models.IntegerField(null=True, default=0, blank=True)
     
