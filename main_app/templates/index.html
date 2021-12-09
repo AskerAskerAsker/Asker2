@@ -17,7 +17,7 @@ Comunidade de Perguntas e Respostas!">
 <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css">
-<link rel="stylesheet" href="/static/css/common.css?v=6">
+<link rel="stylesheet" href="/static/css/common.css?v=6.1">
 <script src="/static/js/cookieman.js?v=1"></script>
 <script>
     var csrf_token = "{{ csrf_token }}";
@@ -98,6 +98,15 @@ Evento de Escritores!
 
 </center>
 
+{% if user.is_authenticated %}
+    <form action="/search" class="card-body" style="display: flex">
+        <input id="searchbar" class="form-control" type="text" name="q" style="flex-grow: 1; border-radius: 20px; font-weight: 500" placeholder="Busca:" autocomplete="off" maxlength="180">
+        <button class="btn btn-primary" style="height: 36px; width: 36px; padding: 6px; border-radius: 50px; margin-top: 1px; margin-left: 3px;" onclick='newSearch()'>
+            <ion-icon name="search"></ion-icon>
+        </button>
+    </form>
+{% endif %}   
+
 <div class="navegacao">
 
 <a href="https://instagram.com/askerfun" style="padding-right: 5px" target="_blank">
@@ -118,7 +127,7 @@ Evento de Escritores!
 
 <script>-1!=window.location.href.indexOf("news")&&(document.getElementById("logo").href="/news");var botao_popular=document.getElementById("botao-popular"),botao_recentes=document.getElementById("botao-recentes");botao_popular.onclick=function(){document.getElementById("logo").href="/",botao_popular.style.borderBottomWidth="3px",botao_recentes.style.borderBottomWidth="1px",document.getElementById("questoes_populares").style.display="block",document.getElementById("novas_questoes").style.display="none",window.history.replaceState("object or string","Title","/")},botao_recentes.onclick=function(){document.getElementById("logo").href="/news",botao_popular.style.borderBottomWidth="1px",botao_recentes.style.borderBottomWidth="3px",document.getElementById("questoes_populares").style.display="none",document.getElementById("novas_questoes").style.display="block",window.history.replaceState("object or string","Title","/news")};</script>
 <!-- Questrecentes -->
-<section class="card" id="novas_questoes" style="margin-left: 30px; background: transparent; border: none">
+<section class="card" id="novas_questoes" style="background: transparent; border: none">
 	<ul class="list-group-flush" id="lista_de_questoes_recentes" style="border: none">
 	</ul>
 	<button class="btn btn-outline-primary" onclick="load_more(this, this.nextElementSibling);" style="border-radius: 30px; font-size: 13px">Ver Mais +</button>
@@ -128,7 +137,7 @@ Evento de Escritores!
 
 <!-- !Quests recentes -->
 <!-- Ques populares -->
-<section  id="questoes_populares" style="margin-left: 30px; background: transparent; border: none">
+<section  id="questoes_populares" style="background: transparent; border: none">
 	<ul class="list-group-flush" id="lista_de_questoes_populares" style="border: none">
 	</ul>
 	<button class="btn btn-outline-primary" onclick="popular_page++; load_more_popular(this, this.nextElementSibling, popular_page);" style="border-radius: 30px; font-size: 13px">Ver Mais +</button>
@@ -138,7 +147,7 @@ Evento de Escritores!
 <!-- !Queses populares -->
 </main>
 
-<script src="/static/js/common.js?v=1"></script>
+<script src="/static/js/common.js?v=1.2"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
 <script src="https://kit.fontawesome.com/1f965a8b94.js"></script>

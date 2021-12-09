@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.utils import timezone
 from django.http import HttpResponse, JsonResponse
-from django.core.paginator import Paginator, EmptyPage
+from django.core.paginator import Paginator, EmptyPage, InvalidPage
 from django.contrib.auth import authenticate, login, logout as django_logout
 from django.contrib.auth.models import User
 from django.contrib.humanize.templatetags.humanize import naturalday, naturaltime
@@ -11,6 +11,7 @@ from main_app.templatetags.main_app_extras import fix_naturaltime, formatar_desc
 from main_app.forms import UploadFileForm
 from django_project import general_rules
 from urllib.parse import unquote
+from django.contrib.postgres.search import SearchVector, SearchRank, SearchQuery
 import random
 import json
 import time
@@ -1139,3 +1140,43 @@ def confirm_account(request):
         return redirect('/')
     
     return HttpResponse('Erro.')
+
+class SearchRankCD(SearchRank):
+    function = 'ts_rank_cd'
+
+    def __init__(self, vector, query, normalization=0, **extra):
+        super(SearchRank, self).__init__(
+            vector, query, normalization, **extra)
+
+def search(request):
+    userquery = request.GET.get('q')
+    page = request.GET.get('page', 1)
+
+    '''
+    # Mais resultados, menos omissões, porém usa mais recursos e resultados irrelevantes.
+    res_q = Question.objects.annotate(rank=SearchRank(SearchVector('text', 'description'), SearchQuery(userquery))).order_by('-rank')
+    res_r = Response.objects.annotate(rank=SearchRank(SearchVector('text'), SearchQuery(userquery))).order_by('-rank')
+    '''
+    # Menos resultados, mais omissões, porém usa menos recursos e menos resultados irrelevantes:
+    res_q = Question.objects.annotate(rank=SearchRank(SearchVector('text', weight='A') + SearchVector('description', weight='B'), SearchQuery(userquery))).filter(rank__gte=0.3).order_by('-rank')
+    res_r = Response.objects.annotate(rank=SearchRank(SearchVector('text', weight='A'), SearchQuery(userquery))).filter(rank__gte=0.3).order_by('-rank')
+
+    ITEMS_PER_PAGE = 40
+    qrcount = ITEMS_PER_PAGE//2
+
+    try:
+        pq = Paginator(res_q, qrcount).page(page)
+        pr = Paginator(res_r, qrcount).page(page)
+    except InvalidPage:
+        context = {'error': 'Esta página não existe', 'err_msg': 'A página da sua busca não existe.'}
+        return render(request, 'error.html', context)
+
+    context = {
+            'questions': pq,
+            'responses': pr,
+            'q': userquery,
+            'next': int(page) + 1,
+            'previous': int(page) - 1,
+    }
+    return render(request, 'search.html', context)
+

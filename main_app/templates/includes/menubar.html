@@ -1,4 +1,4 @@
-<div class="containerem">
+<div id="menubar" class="containerem">
     <div class="menu">
     <ul class="menu-list">
         <a href="/"><li class="menu-item"><button class="menu-button"><font color="#fff" style="color: #fff; font-weight: 900"><ion-icon name="home-outline"></ion-icon></font></button></li></a>
@@ -26,4 +26,28 @@
         <a href="/logout"> <li class="menu-item"><button class="menu-button"><font size="2" color="white" style="font-weight: 900">Sair</font></button></li></a>
     </ul>
     </div>
+    <div id="menuarrow">
+        <div id="closearr" class="arr" style="display: none"><ion-icon name="caret-back-outline"></ion-icon></div>
+        <div id="openarr" class="arr"><ion-icon name="caret-forward-outline"></ion-icon></div>
+    </div>
 </div>
+
+<script>
+
+var menu_status = 0;
+
+document.getElementById('menuarrow').addEventListener('click', function(e){   
+  if (menu_status == 0) {
+    document.getElementById("menubar").style.marginLeft = "0px";
+    document.getElementById("closearr").style.display = "block";
+    document.getElementById("openarr").style.display = "none";
+    menu_status = 1;
+  } else {
+    document.getElementById("menubar").style.marginLeft = "-60px";
+    document.getElementById("closearr").style.display = "none";
+    document.getElementById("openarr").style.display = "block";
+    menu_status = 0;
+  }
+});
+
+</script>

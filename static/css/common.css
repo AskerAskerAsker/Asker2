@@ -98,6 +98,8 @@ textarea.large-compact {
   align-items: center;
   justify-content: center;
   font-size: 1.1rem;
+  transition: 0.3s;
+  margin-left: -60px
 }
 .notif-badge {
   background-color: red;
@@ -114,6 +116,23 @@ textarea.large-compact {
 button font {
     width: 25px;
 }
+#menuarrow {
+    padding: 10px;
+}
+.arr ion-icon {
+    font-size: 24px;
+    color: #007bff;
+}
+
+@media (max-width: 320px) or (min-width: 580px) {
+    #menuarrow {
+        display: none;
+    }
+    #menubar {
+        margin-left: 0px !important; 
+    }
+}
+
 /* Menubar-end */
 
 /* Navbar */
