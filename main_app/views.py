@@ -1171,9 +1171,6 @@ def search(request):
         context = {'error': 'Esta página não existe', 'err_msg': 'A página da sua busca não existe.'}
         return render(request, 'error.html', context)
 
-    if not userquery:
-        userquery = 'Busca:'  # TODO: provisorio - posteriormente passar a resp ao template
-
     context = {
             'questions': pq,
             'responses': pr,

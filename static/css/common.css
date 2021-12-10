@@ -22,16 +22,19 @@ textarea.large-compact {
 }
 .menu {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   background: linear-gradient(#FF00FF, #4876FF);
-  border-radius: 0px 0px 20px 20px;
+  border-radius: 0px 20px 20px 0px;
   box-shadow: 0 10px 20px rgba(64, 64, 64, 0.15);
 }
 .menu-list {
   margin: 0;
-  display: flex;
-  flex-direction: row;
-  padding: 2px 5px;
+  display: block;
+  width: 100%;
+  padding: 5px;
+}
+.menu-list + .menu-list {
+  border-top: 1px solid #ddd;
 }
 .menu-item {
   position: relative;
@@ -88,16 +91,15 @@ textarea.large-compact {
 }
 .containerem {
   position: fixed;
+  top: 15%;
+  left: 0;
   z-index: 999999999;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.2rem;
+  font-size: 1.1rem;
   transition: 0.3s;
-  left: 0;
-  right: 0;
-  margin-left: auto;
-  margin-right: auto;
+  margin-left: -60px
 }
 .notif-badge {
   background-color: red;
@@ -113,11 +115,9 @@ textarea.large-compact {
 }
 button font {
     width: 25px;
-    margin-top: 2px;
 }
 #menuarrow {
     padding: 10px;
-    display: none;
 }
 .arr ion-icon {
     font-size: 24px;
@@ -125,25 +125,11 @@ button font {
 }
 
 @media (max-width: 320px) or (min-width: 580px) {
-    .menu-list + .menu-list {
-        border-top: 1px solid #ddd;
-    }
     #menuarrow {
         display: none;
     }
-    .containerem {
+    #menubar {
         margin-left: 0px !important; 
-	top: 15%;
-	left: 0;
-	right: auto;
-    }
-    .menu {
-	flex-direction: column;
-	border-radius: 0px 20px 20px 0px;
-    }
-    .menu-list {
-	display: block;
-	padding: 5px 5px;
     }
 }
 
