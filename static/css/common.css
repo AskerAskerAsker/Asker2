@@ -39,7 +39,7 @@ textarea.large-compact {
 .menu-button {
   font: inherit;
   border: 0;
-  padding: 6px 6px;
+  padding: 5px 6px;
   width: 100%;
   border-radius: 8px;
   display: flex;
@@ -124,7 +124,7 @@ button font {
     color: #007bff;
 }
 
-@media (max-width: 320px) or (min-width: 580px) {
+@media (min-width: 580px) {
     .menu-list + .menu-list {
         border-top: 1px solid #ddd;
     }

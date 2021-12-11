@@ -1,31 +1,55 @@
-<div id="menubar" class="containerem">
-    <div class="menu">
-    <ul class="menu-list">
-        <a href="/"><li class="menu-item"><button class="menu-button"><font color="#fff" style="color: #fff; font-weight: 900"><ion-icon name="home-outline"></ion-icon></font></button></li></a>
-        <li class="menu-item"><button id='dark-mode' class="menu-button"><font color="#fff" style="color: #fff; font-weight: 900"><ion-icon name="bulb-outline"></ion-icon></font></button></li>
-        <a href="/rank"><li class="menu-item"><button class="menu-button"><font color="#fff" style="color: #fff; font-weight: 900"><ion-icon name="trophy-outline"></ion-icon></font></button></li></a>
-        <a href="/search"><li class="menu-item"><button class="menu-button"><font color="#fff" style="color: #fff; font=weight: 900"><ion-icon name="search-outline"></ion-icon></font></button></li></a>
-    </ul>
-    <ul class="menu-list">
-        <a href="/user/{{ user.username }}"><li class="menu-item"><button class="menu-button">
-        <div style="margin-left: -2px; border-radius: 300px; background: url({{user_p.avatar.url}}); width: 30px; height: 30px; background-position: center center; background-size: cover; background-repeat: no-repeat"></div>
-        </button></li></a>
-        <a href="/notifications">
-            <li class="menu-item">
-                <button class="menu-button"><font color="#fff" style="color: #fff; font-weight: 900">
-                    <ion-icon name="earth-outline"></ion-icon>
-                    {% if user_p.new_notifications > 0 %}
-                        <div class="notif-badge">{{ user_p.new_notifications }}</div>
-                    {% endif %}
-                </font></button>
-            </li>
-        </a>
-        <a href="/ask"> <li class="menu-item"><button class="menu-button"><font color="#fff" style="color: #fff; font-weight: 900"><ion-icon name="pencil"></ion-icon></font></button></li></a>
-        <a href="/rules"> <li class="menu-item"><button class="menu-button"><font color="#fff" style="color: #fff; font-weight: 900"><ion-icon name="alert-circle-outline"></ion-icon></font></button></li></a>
-    </ul>
-    <ul class="menu-list">
-        <!--<a href="/logout"><li class="menu-item"><button class="menu-button"><font size="2" color="white" style="font-weight: 900">Sair</font></button></li></a>-->
-        <a href="/logout"><li class="menu-item"><button class="menu-button"><font color="#fff" style="color: #fff; font-weight: 900"><ion-icon name="exit-outline"></ion-icon></font></button></li></a>
-    </ul>
+<div id="barcontainer" style="transition: 0.3s; margin-top: -78px; position: fixed; z-index: 9999999; width: 100%">
+    <div id="searchcontainer" class="bg-outer" style="box-shadow: 0 10px 20px rgba(64, 64, 64, 0.15);">
+        <div id="searchcontainer">
+            <form action="/search" class="card-body" style="display: flex">
+                <input id="searchbar" class="form-control" type="text" name="q" style="flex-grow: 1; border-radius: 20px; font-weight: 500" placeholder="Busca:" autocomplete="off" maxlength="180">
+                <button class="btn btn-primary" style="height: 36px; width: 36px; padding: 6px; border-radius: 50px; margin-top: 1px; margin-left: 3px;" onclick='newSearch()'>
+                    <ion-icon name="search"></ion-icon>
+                </button>
+            </form>
+        </div>
+    </div>
+    <div id="menubar" class="containerem">
+        <div class="menu">
+        <ul class="menu-list">
+            <a href="/"><li class="menu-item"><button class="menu-button"><font color="#fff" style="color: #fff; font-weight: 900"><ion-icon name="home-outline"></ion-icon></font></button></li></a>
+            <li class="menu-item"><button id='dark-mode' class="menu-button"><font color="#fff" style="color: #fff; font-weight: 900"><ion-icon name="bulb-outline"></ion-icon></font></button></li>
+            <a href="/rank"><li class="menu-item"><button class="menu-button"><font color="#fff" style="color: #fff; font-weight: 900"><ion-icon name="trophy-outline"></ion-icon></font></button></li></a>
+            <li class="menu-item" id="searchbtn"><button class="menu-button"><font color="#fff" style="color: #fff; font=weight: 900"><ion-icon name="search-outline"></ion-icon></font></button></li>
+        </ul>
+        <ul class="menu-list">
+            <a href="/user/{{ user.username }}"><li class="menu-item"><button class="menu-button">
+            <div style="margin-left: -2px; border-radius: 300px; background: url({{user_p.avatar.url}}); width: 30px; height: 30px; background-position: center center; background-size: cover; background-repeat: no-repeat"></div>
+            </button></li></a>
+            <a href="/notifications">
+                <li class="menu-item">
+                    <button class="menu-button"><font color="#fff" style="color: #fff; font-weight: 900">
+                        <ion-icon name="earth-outline"></ion-icon>
+                        {% if user_p.new_notifications > 0 %}
+                            <div class="notif-badge">{{ user_p.new_notifications }}</div>
+                        {% endif %}
+                    </font></button>
+                </li>
+            </a>
+            <a href="/ask"> <li class="menu-item"><button class="menu-button"><font color="#fff" style="color: #fff; font-weight: 900"><ion-icon name="pencil"></ion-icon></font></button></li></a>
+            <a href="/rules"> <li class="menu-item"><button class="menu-button"><font color="#fff" style="color: #fff; font-weight: 900"><ion-icon name="alert-circle-outline"></ion-icon></font></button></li></a>
+        </ul>
+        <ul class="menu-list">
+            <!--<a href="/logout"><li class="menu-item"><button class="menu-button"><font size="2" color="white" style="font-weight: 900">Sair</font></button></li></a>-->
+            <a href="/logout"><li class="menu-item"><button class="menu-button"><font color="#fff" style="color: #fff; font-weight: 900"><ion-icon name="exit-outline"></ion-icon></font></button></li></a>
+        </ul>
+        </div>
     </div>
 </div>
+<script>
+    var menu_status = 0;
+    document.getElementById('searchbtn').addEventListener('click', function(e) {
+        if (menu_status == 0) {
+            document.getElementById('barcontainer').style.marginTop = '0px';
+            menu_status = 1;
+        } else {
+            document.getElementById('barcontainer').style.marginTop = '-78px';
+            menu_status = 0;
+        }
+    });
+</script>
