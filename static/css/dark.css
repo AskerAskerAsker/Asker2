@@ -29,6 +29,10 @@ body {
   border-color: rgba(0,0,0,.125) !important;
   background-color: #394046 !important;
 }
+.bg-outer {
+  background-color: #343a40 !important;
+  color: #f8f9fa;
+}
 .bg-inner, .bg-inner-when-dark {
   background-color: #394046 !important;
   color: #f8f9fa;
