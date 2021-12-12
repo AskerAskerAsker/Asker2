@@ -1,8 +1,9 @@
 '''Arquivo modelo de configurações do projeto.
-   renomeá-lo para settings.py e configurá-lo
-   conforme necessário. Não incluir o settings.py
-   em commits. Se alguma alteração importante
-   for realizada, ela deve ser incluída aqui.
+   Ao clonar a repo, copie o modelo, renomeando
+   para settings.py e o configure conforme necessário.
+   Não incluir o settings.py em commits, não excluir
+   settings.py.model do seu repo. Se alguma alteração
+   importante for realizada, ela deve ser incluída aqui.
 '''
 
 import os
