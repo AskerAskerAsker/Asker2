@@ -9,6 +9,7 @@ asker_uwsgi.ini
 secret.py
 static.bk
 uwsgi_params
+main_app/migrations
 
 ### Django ###
 *.log

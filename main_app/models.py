@@ -79,12 +79,9 @@ class UserProfile(models.Model):
     ''' total de visualizações desde o dia: 16/04/2021 '''
     total_views = models.IntegerField(default=0, blank=True)
 
-    rank = models.IntegerField(default=-1, null=True, blank=True)
-
     blocked_users = models.ManyToManyField(User, related_name='blocked_by', blank=True)
 
     active = models.BooleanField(default=False) # conta está ativa ou não.
-    verification_code = models.TextField(null=True) # código de verificação da conta.
 
     hide_activity = models.BooleanField(default=True)
 

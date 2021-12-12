@@ -65,7 +65,7 @@
 							{% for user in rank %}
 							<li class="list-group-item" style="background: transparent; border: none; padding-bottom: 35px">
 								<div>
-									<b class="right-spaced">{{ user.rank }}°</b> <a href="/user/{{ user.user.username }}" style="font-weight: 800">{{ user.user.username }}</a>
+									<b class="right-spaced">{{ user.pos }}°</b> <a href="/user/{{ user.user }}" style="font-weight: 800">{{ user.user }}</a>
 								</div>
 								<div class="ranked-u-stats">
 									<div>
@@ -73,7 +73,7 @@
 											Pontuação
 										</div>
 										<div>
-											{{ user.total_points }}
+											{{ user.user.total_points }}
 										</div>
 									</div>
 									<div>
@@ -81,7 +81,7 @@
 											Perguntas
 										</div>
 										<div>
-										{{ user.total_questions }}
+										{{ user.user.total_questions }}
 										</div>
 									</div>
 									<div>
@@ -89,7 +89,7 @@
 											Respostas
 										</div>
 										<div>
-										{{ user.total_responses }}
+										{{ user.user.total_responses }}
 										</div>
 									</div>
 								</div>

@@ -613,10 +613,7 @@ def comment(request):
 def rank(request):
     rank = UserProfile.objects.order_by('-total_points')[:50]
     count = 0
-    for user in rank:
-        count += 1
-        user.rank = count
-    return render(request,'rank.html',{'rank':rank})
+    return render(request,'rank.html', {'rank': [{'pos': i+1, 'user': rank[i]} for i in range(len(rank))]})
 
 
 def edit_response(request):
