@@ -10,6 +10,7 @@ secret.py
 static.bk
 uwsgi_params
 main_app/migrations
+django_project/settings.py
 
 ### Django ###
 *.log
