@@ -5,6 +5,9 @@ textarea.large-compact {
 }
 
 /* Menubar */
+ol, ul {
+    list-style: none;
+}
 *,
 *:after,
 *:before {

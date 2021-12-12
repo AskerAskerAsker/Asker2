@@ -80,7 +80,6 @@ popular_questions_=[{% for question in popular_questions %}{% if not question.cr
 	{% endif %}
 </script>
 
-
 <center>
 
 <div style="font-size: 15px; font-weight: 700; padding-bottom: 10px">
@@ -89,22 +88,9 @@ popular_questions_=[{% for question in popular_questions %}{% if not question.cr
 
 </div>
 
-<center>
-
-<a href="https://asker.fun/question/111914" style="color: #DAA520; cursor: pointer; text-decoration: none; outline: none; font-weight: 800">
-Evento de Escritores!
+<a href="https://asker.fun/question/113870" style="text-decoration: none; font-weight: 800; font-size: 14px">
+Promo de 8 Dias 🙀🔥
 </a>
-
-</center>
-
-{% if user.is_authenticated %}
-    <form action="/search" class="card-body" style="display: flex">
-        <input id="searchbar" class="form-control" type="text" name="q" style="flex-grow: 1; border-radius: 20px; font-weight: 500" placeholder="Busca:" autocomplete="off" maxlength="180">
-        <button class="btn btn-primary" style="height: 36px; width: 36px; padding: 6px; border-radius: 50px; margin-top: 1px; margin-left: 3px;" onclick='newSearch()'>
-            <ion-icon name="search"></ion-icon>
-        </button>
-    </form>
-{% endif %}   
 
 <div class="navegacao">
 
