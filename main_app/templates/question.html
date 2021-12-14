@@ -28,8 +28,8 @@
     
     
     
-<script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script> 
-<script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+    <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script> 
+    <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
     
 	</head>
 
@@ -153,15 +153,22 @@
 					{% if question.creator.user.username == user.username %}
 						<form method="post" action="/delete_question" onsubmit="if(confirm('Opa! Tem certeza que deseja apagar sua resposta?')) return true; else return false;">
 							{% csrf_token %}
-							<input type="hidden" name="question_id" 
-value="{{ question.id }}">
-				                        <button class="btn 
-btn-outline-danger" style="font-size: 11px; font-weight: 600; border-radius: 30px">Apagar Postagem</button><br><br>
+							<input type="hidden" name="question_id" value="{{ question.id }}">
+				            <button class="btn btn-outline-danger" style="font-size: 11px; font-weight: 600; border-radius: 30px">Apagar Postagem</button><br><br>
 						</form>
 					{% endif %}
-                    
-                    {% if user.is_authenticated and question.creator.id != user.id %}
-                        <i class="far fa-flag" data-toggle="popover" title="Reportar Pergunta?" data-content="<button class='btn btn-danger btn-sm' onclick='report_question({{ question.id }});'>Reportar Pergunta</button>" data-html="true"></i>
+
+                    {% if user.is_authenticated and question.creator.user.username != user.username %}
+                    <div class="vertical-spaced">
+                        {% if question in user_p.followed_questions.all %}
+                            <a id="unfqa" class="clickable" href="javascript:void(0);" onclick="unfollow_question({{ question.id }});"><ion-icon class="text-success" style="font-size: 24px" title="Deixar de seguir pergunta" name="checkmark-circle-outline"></ion-icon></a> 
+                            <a id="fqa" class="clickable hidden" href="javascript:void(0);" onclick="follow_question({{ question.id }});"><ion-icon style="font-size: 24px" title="Seguir pergunta" name="add-circle-outline"></ion-icon></a> 
+                        {% else %}
+                            <a id="unfqa" class="clickable hidden" href="javascript:void(0);" onclick="unfollow_question({{ question.id }});"><ion-icon class="text-success" style="font-size: 24px" title="Deixar de seguir pergunta" name="checkmark-circle-outline"></ion-icon></a> 
+                            <a id="fqa" class="clickable" href="javascript:void(0);" onclick="follow_question({{ question.id }});"><ion-icon style="font-size: 24px" title="Seguir pergunta" name="add-circle-outline"></ion-icon></a> 
+                        {% endif %}
+                        <a class="clickable" href="javascript:void(0);" onclick="report_question({{ question.id }});"><ion-icon style="font-size: 24px" title="Denunciar pergunta" name="flag-outline"></ion-icon></a>                      
+                    </div>
                     {% endif %}
                     {% if 'pap' in user_permissions %}
                        <br>
@@ -254,7 +261,7 @@ href="/signup?redirect=/question/{{ question.id }}">crie uma conta</a> para resp
         <script src="https://cdn.jsdelivr.net/npm/linkifyjs@2.1.9/dist/linkify.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/linkifyjs@2.1.9/dist/linkify-jquery.min.js"></script>
 		<script src="/static/js/general_functions.js?version=3"></script>
-		<script src="/static/js/question.min.js?v=1.1"></script>
+		<script src="/static/js/question.js?v=2"></script>
         <script>
             $('.description').linkify();
         </script>
@@ -268,23 +275,6 @@ href="/signup?redirect=/question/{{ question.id }}">crie uma conta</a> para resp
 $(function () {
     $('[data-toggle="popover"]').popover();
 });
-
-function report_question(id) {
-    var report = confirm('Você tem certeza de que deseja reportar esta pergunta?');
-    
-    if (report) {
-        $.ajax({
-            url: '/report?type=q&obj_id=' + id,
-            type: 'post',
-            data: {
-                csrfmiddlewaretoken: csrf_token,
-            },
-            complete: function () {
-                alert('Pergunta Reportada.');
-            }
-        });
-    }
-}
 </script>
 	</body>
 </html>

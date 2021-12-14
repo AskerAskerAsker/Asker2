@@ -237,14 +237,14 @@ button font {
     max-height: 30vh;
     display: block;
 }
-.blocked-user a {
+.listed-user a {
     float: left;
 }
-.blocked-user span {
+.listed-user span {
     float: right;
     cursor: pointer;
 }
-#responses-section, #blocked-section, #silenced-section {
+.hidden-section {
 	display: none;
 }
 /* Profile-end */
@@ -383,6 +383,9 @@ button font {
 /* Notification-end */
 
 /* General */
+.hidden {
+    display: none !important;
+}
 .no-horiz-padding {
     padding-left: 0px;
     padding-right: 0px;
@@ -431,7 +434,7 @@ main {
 .list-group-item {
   /*Corrige BS*/
   /*border-top: 1px solid rgba(0, 0, 0, .125);*/
-  border: none; /* Retira border-top */
+  border: none !important; /* Retira border-top */
 }
 
 .list-group-item:focus,
@@ -439,6 +442,12 @@ main {
   /*Corrige BS*/
   z-index: 0;
   text-decoration: none;
+}
+.btn-group.justified {
+    display: flex !important;
+}
+.btn-group.justified button {
+    width: 100%;
 }
 .float-right {
     float: right;

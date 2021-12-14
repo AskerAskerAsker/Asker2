@@ -245,6 +245,13 @@ def asilenceb(a, b):
 		return True # verdade: a bloqueou b
 	return False # mentira: a não bloqueou b
 
+@register.simple_tag
+def afollowb(a, b):
+	u_p = UserProfile.objects.get(user=User.objects.get(username=a))
+	if u_p.followed_users.filter(username=b).exists():
+		return True
+	return False
+
 
 def gci (O0O00OOOO00OOOOOO ):#line:1
     O0OO0000OO00O0OOO =O0O00OOOO00OOOOOO .META .get ('HTTP_X_FORWARDED_FOR')#line:2

@@ -35,6 +35,9 @@ function addTab(tabId, tabSectionId) {
 
 addTab('questions', 'questions-section');
 addTab('responses', 'responses-section');
+addTab('followed-q', 'followed-q-section');
+addTab('followed-u', 'followed-u-section');
+addTab('followers', 'followers-section');
 addTab('blocked', 'blocked-section');
 addTab('silenced', 'silenced-section');
 
@@ -76,6 +79,39 @@ function show_more_questions(button, uid) {
 	});
 }
 
+fq_page = 1;
+function show_more_f_questions(button, uid) {
+	questions = document.getElementById('fqs');
+	
+	$.ajax({
+		type: 'get',
+		dataType: 'json',
+		url: '/get_more_questions',
+		data: {
+			q_page: ++fq_page,
+			user_id: uid,
+            qtype: 'fq',
+		},
+		complete: function(data) {
+			
+			if (data.responseText == "False") {
+				button.style.display = "none";
+			}
+			
+			data = JSON.parse(data.responseText);
+			
+			$.each(data.questions, function(i, val) {
+			        var newLi = '<li class="list-group-item bg-main"><div class="question card-body"><a href="/question/'+val.id+'">'+val.text+'</a><br><span style="color: #888; font-size: 80%;">Perguntada '+val.naturalday+'</span></div></li>';
+				questions.innerHTML += newLi;
+			});
+			
+			if(!data.has_next) {
+				button.remove();
+			}
+		}
+	});
+}
+
 r_page = 1;
 function show_more_responses(button, uid) {
 	responses = document.getElementById('rs');
@@ -105,6 +141,109 @@ function show_more_responses(button, uid) {
 			}
 		}
 	});
+}
+
+/* Retirados de profile.html dia 11/12/2021 */
+function block_user(username) {
+    button = document.getElementById('block-button')
+    button.disabled = true
+    $.ajax({
+	    type: 'get',
+	    url: '/user/' + username + '/block',
+	    complete: function(data) {
+		    if(data.responseText == 'Bloqueado') {
+			    button.innerHTML = 'Bloqueado'
+		    } else
+			    button.innerHTML = 'Bloquear'
+		    button.disabled = false
+	    }
+    })
+}
+function silence_user(username) {
+    button = document.getElementById('silence-button')
+    button.disabled = true
+    $.ajax({
+	    type: 'get',
+	    url: '/user/' + username + '/silence',
+	    complete: function(data) {
+		    if (data.responseText == 'Removed') {
+			    button.innerHTML = 'Silenciar'
+		    } else
+			    button.innerHTML = 'Silenciado'
+		    button.disabled = false
+	    }
+    })
+}
+function follow_user(username) {
+    button = document.getElementById('follow-button')
+    button.disabled = true
+    $.ajax({
+	    type: 'get',
+	    url: '/user/' + username + '/follow',
+	    complete: function(data) {
+		    if (data.responseText == 'Removed') {
+			    button.innerHTML = 'Seguir'
+		    } else
+			    button.innerHTML = 'Seguindo'
+		    button.disabled = false
+	    }
+    })
+}
+function unblock_listed_user(listEl, username) {
+    if (confirm('Deseja desbloquear ' + username + '?')) {
+	    $.ajax({
+		    type: 'get',
+		    url: '/user/'+ username +'/block',
+		    complete: function(data) {
+			    listEl.remove();
+		    }
+	    })
+    }
+}
+function unsilence_listed_user(listEl, username) {
+    if (confirm('Deseja tirar o silêncio de ' + username + '?')) {
+	    $.ajax({
+		    type: 'get',
+		    url: '/user/'+ username +'/silence',
+		    complete: function(data) {
+			    listEl.remove();
+		    }
+	    })
+    }
+}
+function unfollow_listed_user(listEl, username) {
+    if (confirm('Deseja parar de seguir ' + username + '?')) {
+	    $.ajax({
+		    type: 'get',
+		    url: '/user/'+ username +'/follow',
+		    complete: function(data) {
+			    listEl.remove();
+		    }
+	    })
+    }
+}
+function make_unfollow_listed_user(listEl, username) {
+    if (confirm('Deseja que ' + username + ' pare de seguir você?')) {
+	    $.ajax({
+		    type: 'get',
+		    url: '/user/'+ username +'/make_unfollow',
+		    complete: function(data) {
+			    listEl.remove();
+		    }
+	    })
+    }
+}
+function unfollow_listed_question(listEl, qid) {
+    qtext = 'TEXTO DA PERGUNTA';
+    if (confirm('Deseja parar de seguir a pergunta:\n' + qtext + '?')) {
+	    $.ajax({
+		    type: 'get',
+		    url: '/question/'+ username +'/follow',
+		    complete: function(data) {
+			    listEl.remove();
+		    }
+	    })
+    }
 }
 
 /* Linkify */

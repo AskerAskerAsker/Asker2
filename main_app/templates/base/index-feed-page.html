@@ -1,0 +1,78 @@
+{% load humanize %}
+{% load main_app_extras %}
+
+{% for item in items %}
+    {% if item.type == 2 %}
+    <li class="list-group-item bg-main">
+        <div class="card-body">
+            <div class="profile-picture-index" style="padding-bottom: 15px">
+                <div class="profile-pic-small" style="width: 20px; height: 20px; border-radius: 100px; background: url('{{ item.obj.creator.avatar.url }}'); background-size: cover; background-repeat: no-repeat; vertical-align: middle; display:inline-block"></div>
+                <span class="left-spaced" style="font-weight: 600; font-size: 12px; opacity: 0.7; vertical-align: middle; padding-top: 2px;">
+                    {{ item.obj.creator }} perguntou:
+                </span>
+            </div>
+            <div style="border: none; background: transparent">
+                <h2 class="question-title fg-1" style="font-size: 17px">
+                    <a class="q-title" style="text-decoration: none; outline: none" href="/question/{{ item.obj.id }}">
+                        {{ item.obj.text }}
+                    </a>
+                </h2>
+            </div>
+            <p class="description">
+                {{ item.obj.description }}
+            </p>
+            <small class="text-muted">
+                {% fix_naturaltime item.obj.pub_date|naturaltime %}
+            </small>
+        </div>
+    </li>
+    {% else %}
+    <li class="list-group-item bg-main sres srr">
+        <div class="card-body">
+            {% if item.type == 1 %}
+            <div class="profile-picture-index" style="padding-bottom: 15px">
+                <div class="profile-pic-small" style="width: 20px; height: 20px; border-radius: 100px; background: url('{{ item.obj.creator.avatar.url }}'); background-size: cover; background-repeat: no-repeat; vertical-align: middle; display:inline-block"></div>
+                <span class="left-spaced" style="font-weight: 600; font-size: 12px; opacity: 0.7; vertical-align: middle; padding-top: 2px;">
+                    {{ item.obj.creator }} respondeu:
+                </span>
+            </div>
+            {% else %}
+            <div class="profile-picture-index" style="padding-bottom: 15px">
+                <span style="font-weight: 600; font-size: 12px; opacity: 0.7; vertical-align: middle; padding-top: 2px;">
+                    Uma pergunta que você seguiu recebeu uma nova resposta:
+                </span>
+            </div>
+            {% endif %}
+            <div style="border: none; background: transparent">
+                <h2 class="question-title fg-1" style="font-size: 17px">
+                    <a class="q-title" style="text-decoration: none; outline: none" href="/question/{{ item.obj.question.id }}">
+                        {{ item.obj.question.text }}
+                    </a>
+                </h2>
+            </div>
+            <br>
+            <div class="poster-container">
+                <a class="poster-info" href="/user/{{ item.obj.creator }}">
+                    <div class="poster-profile-pic-container" style="border-radius: 100px; width: 59px; height: 57px; background: url(https://asker.fun/{{ item.obj.creator.avatar.url }}); background-size: cover; background-repeat: no-repeat">
+                    </div>
+                    <div class="poster-text-container" style="padding-left: 10px">
+                        <div>
+                            <span class="r-username">
+                                <font style="font-weight: 700; font-size: 15px">
+                                    {{ item.obj.creator }}
+                                </font>
+                            </span>
+                            <span class="post-pub-date" title="{{ item.obj.pub_date }}">
+                                {% fix_naturaltime item.obj.pub_date|naturaltime %}
+                            </span>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <p style="font-size: 15px; font-weight: 500">
+                {{ item.obj.text }}
+            </p>
+        </div>
+    </li>
+    {% endif %}
+{% endfor %}

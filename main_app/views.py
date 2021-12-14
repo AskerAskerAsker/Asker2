@@ -23,7 +23,6 @@ import ast
 import io
 from PIL import Image, ImageFile, UnidentifiedImageError, ImageSequence
 
-
 def compress_animated(bio, max_size, max_frames):
     im = Image.open(bio)
     frames = list()
@@ -154,15 +153,16 @@ def save_answer(request):
             'response': response,
     })
 
-
 def index(request):
 
     context = {}
 
+    context['initial'] = 'popular'
     if request.path == '/news':
-        context['NEWS'] = True
-    else:
-        context['POPULAR'] = True
+        context['initial'] = 'recentes'
+    elif request.path == '/feed':
+        if request.user.is_authenticated:
+            context['initial'] = 'feed'
 
     context['questoes_recentes'] = Question.objects.order_by('-id')[:15]
 
@@ -176,7 +176,10 @@ def index(request):
         pass
 
     if request.user.is_authenticated:
-        context['user_p'] = UserProfile.objects.get(user=request.user)
+        up = UserProfile.objects.get(user=request.user)
+        context['user_p'] = up
+        
+        context['feed_questions'] = get_feed_content(up, 1, 0)
 
     return render(request, 'index.html', context)
 
@@ -451,6 +454,11 @@ def profile(request, username):
         user_p = UserProfile.objects.get(user=request.user)
         user_p.ip = get_client_ip(request)
         user_p.save()
+    
+        context['followers'] = user.followed_by.all()
+
+        fq_page = request.GET.get('fq-page', 1)
+        context['followed_questions'] = Paginator(user_p.followed_questions.all().order_by('-id'), 10).page(fq_page).object_list
 
     if request.user.username != username:
         up.total_views += 1
@@ -755,6 +763,10 @@ file_name, (192, 192))
                 u.hide_activity = True
             else:
                 u.hide_activity = False
+            if request.POST.get('followable') is not None:
+                u.followable = True
+            else:
+                u.followable = False
             u.save()
             return redirect('/user/' + username)
 
@@ -781,6 +793,44 @@ def silence(request, username):
     u_p.silenced_users.add(User.objects.get(username=username))
     return HttpResponse('Added', content_type='text/plain')
 
+def make_user_unfollow(request, username):
+    username = unquote(username)
+    u_p = UserProfile.objects.get(user=request.user)
+    target = UserProfile.objects.get(user=User.objects.get(username=username))
+
+    if target.followed_users.filter(username=request.user.username).exists():
+        target.followed_users.remove(u_p.user)
+        return HttpResponse('Removed', content_type='text/plain')
+    return HttpResponse('Proibido', content_type='text/plain')
+
+def follow_user(request, username):
+    username = unquote(username)
+    u_p = UserProfile.objects.get(user=request.user)
+    target = UserProfile.objects.get(user=User.objects.get(username=username))
+
+    if u_p.followed_users.filter(username=username).exists():
+        u_p.followed_users.remove(target.user)
+        return HttpResponse('Removed', content_type='text/plain')
+    if username == u_p.user.username or not target.followable:
+        return HttpResponse('Proibido', content_type='text/plain')
+    u_p.followed_users.add(target.user)
+    return HttpResponse('Added', content_type='text/plain')
+
+def follow_question(request, question_id):
+
+    q = Question.objects.get(id=question_id)
+    u_p = UserProfile.objects.get(user=request.user)
+    if u_p == q.creator:
+        return HttpResponse('Proibido', content_type='text/plain')
+
+    if u_p.followed_questions.filter(id=question_id).exists():
+        u_p.followed_questions.remove(q)
+
+        return HttpResponse('Removed', content_type='text/plain')
+
+    u_p.followed_questions.add(q)
+    return HttpResponse('Added', content_type='text/plain')
+
 ''' A função abaixo faz a validação das credenciais de novos usuários. '''
 def is_a_valid_user(username, email, password):
     if len(username) > 30:
@@ -797,7 +847,6 @@ def is_a_valid_comment(text):
     if len(text) > 300:
         return False
     return True
-
 
 def choose_best_answer(request):
 
@@ -898,7 +947,43 @@ def undo_vote_on_poll(request):
 
     return HttpResponse('Ok.', content_type='text/plain')
 
+def get_feed_content(user_p, page, subpage):
+    followed_users = UserProfile.objects.filter(user_id__in=user_p.followed_users.all())
+    
+    fuq_fur_fqr_proportion = (45, 15, 40)
+    followed_u_questions = Paginator(Question.objects.filter(creator__in=followed_users).order_by('-id'), fuq_fur_fqr_proportion[0]).page(page).object_list
+    followed_u_responses = Paginator(Response.objects.filter(creator__in=followed_users).order_by('-id'), fuq_fur_fqr_proportion[1]).page(page).object_list
+    followed_questions = user_p.followed_questions.all()
+    followed_q_responses = Paginator(Response.objects.filter(question__in=followed_questions).order_by('-id'), fuq_fur_fqr_proportion[2]).page(page).object_list
 
+    '''
+    0: Respostas de perguntas seguidas
+    1: Respostas de usuários seguidos
+    2: Perguntas de usuários seguidos
+    '''
+    feed_page = [{'type': 0, 'pub_date': r.pub_date, 'obj': r} for r in followed_q_responses] +  [{'type': 1, 'pub_date': r.pub_date, 'obj': r} for r in followed_u_responses] + [{'type': 2, 'pub_date': q.pub_date, 'obj': q} for q in followed_u_questions]
+    feed_page = sorted(feed_page, key=lambda x: x['pub_date'], reverse=True)
+
+    return feed_page[subpage*20:subpage*20+20]
+   
+def get_index_feed_page(request):
+    page = request.GET.get('page')
+    subpage = request.GET.get('sp')
+    up = UserProfile.objects.get(user=request.user)
+    try:
+        items = get_feed_content(up, int(page), int(subpage))
+    except EmptyPage:
+        return HttpResponse('-1', content_type='text/plain')
+        
+    if len(items) == 0:
+        return HttpResponse('0', content_type='text/plain')
+    
+    context = {
+        'items': items,
+    }
+
+    return render(request, 'base/index-feed-page.html', context)
+    
 def more_popular_questions(request):
 
     page = request.GET.get('page')
@@ -997,11 +1082,17 @@ def more_questions(request):
 def get_more_questions(request):
     page = request.GET.get('q_page', 2)
     user_id = request.GET.get('user_id')
+    qtype = request.GET.get('qtype')
+
     target = UserProfile.objects.get(user=User.objects.get(id=user_id))
     if target.hide_activity and not request.user.is_superuser and 'pap' not in ast.literal_eval(UserProfile.objects.get(user=request.user).permissions):
         if target.user.id != request.user.id:
             return 'Proibido.'
-    q = Question.objects.filter(creator=target).order_by('-pub_date')
+
+    if qtype == 'fq':
+        q = target.followed_questions.all().order_by('-id')
+    else:
+        q = Question.objects.filter(creator=target).order_by('-pub_date')
 
     p = Paginator(q, 10)
 

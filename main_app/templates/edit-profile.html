@@ -86,11 +86,16 @@
 			<input type="hidden" name="type" value="privacy">
 			{% csrf_token %}
 			{% if user_p.hide_activity %}
-				<input type="checkbox" name="hide-activity" id="hide-activity" checked> <label class="inline" for="hide-activity"> Esconder Perguntas e Respostas do Meu Perfil</label><br>
+				<input type="checkbox" name="hide-activity" id="hide-activity" checked> <label class="inline" for="hide-activity">Esconder atividade do perfil</label><br>
 			{% else %}
-				<input type="checkbox" name="hide-activity" id="hide-activity"> <label class="inline" for="hide-activity"> Esconder Perguntas e Respostas do Meu Perfil</label><br>
+				<input type="checkbox" name="hide-activity" id="hide-activity"> <label class="inline" for="hide-activity">Esconder atividade do perfil</label><br>
 			{% endif %}
-			<input class="btn btn-primary" type="submit" style="border-radius: 30px" value="Alterar Privacidade">
+			{% if user_p.followable %}
+				<input type="checkbox" name="followable" id="followable" checked> <label class="inline" for="followable">Permitir novos seguidores</label><br>
+			{% else %}
+				<input type="checkbox" name="followable" id="followable"> <label class="inline" for="followable">Permitir novos seguidores</label><br>
+			{% endif %}
+			<input class="btn btn-primary vertical-spaced" type="submit" style="border-radius: 30px" value="Alterar Privacidade">
 		</form>
 
 <br><br>

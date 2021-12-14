@@ -8,6 +8,12 @@
 
 <meta name="description" content="Faça e Responda Perguntas na Melhor e Mais Divertida 
 Comunidade de Perguntas e Respostas!">
+<style id="wait">
+	body {
+		visibility: hidden;
+		opacity: 0;
+	}
+</style>
 <meta name="keywords" content="br.asker.fun, asker.fun, askerfun, comunidade, perguntas, respostas, asker">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css">
 <meta name="theme-color" content="#68228B" />
@@ -16,6 +22,7 @@ Comunidade de Perguntas e Respostas!">
 <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
 <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
 
+{% include "includes/themehandler.html" %}
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css">
 <script src="/static/js/cookieman.js?v=1"></script>
 <script>
@@ -42,8 +49,38 @@ Comunidade de Perguntas e Respostas!">
     }
 </style>
 <script>
-recent_questions=[{% for question in questoes_recentes %}{% if not question.creator.user in user_p.silenced_users.all %}{"question_creator_avatar": "{{ question.creator.avatar.url }}", "id":{{ question.id }},"text":"{{ question.text }}","description":"{{ question.description|formatar_descricao|safe|linebreaksbr }}","total_answers":{{ question.total_responses }},"pub_date":"{% fix_naturaltime question.pub_date|naturaltime %}","creator":"{{ question.creator.user.username }}",{% answer user_p question as ANSWER %}"user_answer":"{{ ANSWER|linebreaksbr }}",},{% endif %}{% endfor %}];
-popular_questions_=[{% for question in popular_questions %}{% if not question.creator.user in user_p.silenced_users.all %}{"question_creator_avatar": "{{ question.creator.avatar.url }}", "id":{{ question.id }},"text":"{{ question.text }}","description":"{{ question.description|formatar_descricao|safe|linebreaksbr }}","total_answers":{{ question.total_responses }},"pub_date":"{% fix_naturaltime question.pub_date|naturaltime %}","creator":"{{ question.creator.user.username }}",{% answer user_p question as ANSWER %}"user_answer":"{{ ANSWER|linebreaksbr }}",},{% endif %}{% endfor %}];
+recent_questions=[
+    {% for question in questoes_recentes %}
+        {% if not question.creator.user in user_p.silenced_users.all %}
+            {"question_creator_avatar": "{{ question.creator.avatar.url }}",
+             "id":{{ question.id }},
+            "text":"{{ question.text }}",
+            "description":"{{ question.description|formatar_descricao|safe|linebreaksbr }}",
+            "total_answers":{{ question.total_responses }},
+            "pub_date":"{% fix_naturaltime question.pub_date|naturaltime %}",
+            "creator":"{{ question.creator.user.username }}",
+            {% answer user_p question as ANSWER %}
+            "user_answer":"{{ ANSWER|linebreaksbr }}",
+        },
+        {% endif %}
+    {% endfor %}
+];
+popular_questions_=[
+    {% for question in popular_questions %}
+        {% if not question.creator.user in user_p.silenced_users.all %}
+            {"question_creator_avatar": "{{ question.creator.avatar.url }}",
+             "id":{{ question.id }},
+            "text":"{{ question.text }}",
+            "description":"{{ question.description|formatar_descricao|safe|linebreaksbr }}",
+            "total_answers":{{ question.total_responses }},
+            "pub_date":"{% fix_naturaltime question.pub_date|naturaltime %}",
+            "creator":"{{ question.creator.user.username }}",
+            {% answer user_p question as ANSWER %}
+            "user_answer":"{{ ANSWER|linebreaksbr }}",
+        },
+        {% endif %}
+    {% endfor %}
+];
 </script>
 <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, viewport-fit=cover">
 </head>
@@ -73,63 +110,57 @@ popular_questions_=[{% for question in popular_questions %}{% if not question.cr
     {% endif %}
 <main>
 <script>
-	{% if POPULAR %}
-		var mostrar_primeiro = "popular";
-	{% else %}
-		var mostrar_primeiro = "recentes";
-	{% endif %}
+	var mostrar_primeiro = "{{ initial }}";
 </script>
 
 <center>
+    <div style="font-size: 15px; font-weight: 700; padding-bottom: 10px">
 
-<div style="font-size: 15px; font-weight: 700; padding-bottom: 10px">
+    </div>
 
-{% include "includes/themehandler.html" %}
+    <a href="https://asker.fun/question/113870" style="text-decoration: none; font-weight: 800; font-size: 14px">
+    Promo de 8 Dias 🙀🔥
+    </a>
 
-</div>
-
-<a href="https://asker.fun/question/113870" style="text-decoration: none; font-weight: 800; font-size: 14px">
-Promo de 8 Dias 🙀🔥
-</a>
-
-<div class="navegacao">
-
-<a href="https://instagram.com/askerfun" style="padding-right: 5px" target="_blank">
-<img src="https://i2.wp.com/www.multarte.com.br/wp-content/uploads/2019/03/logo-instagram-png-fundo-transparente13.png?fit=696%2C696&ssl=1" width="20px" height="20px">
-</a>
-
-<button class="btn btn-outline-primary text-uppercase" style="border-radius: 30px" id="botao-popular">popular</button>
-	
-<button class="btn btn-outline-primary text-uppercase left-spaced" style="border-radius: 30px" id="botao-recentes">recente</button>
-
-  {% if user_p.message == 'reward' %}
-    &nbsp;<a href="/rewards">Resgatar moedas</a>
-    <i class="fas fa-coins fa-sm"></i>
-  {% endif %}
-</div>
+    <div class="navegacao">
+        <a href="https://instagram.com/askerfun" style="padding-right: 5px" target="_blank">
+            <img src="https://i2.wp.com/www.multarte.com.br/wp-content/uploads/2019/03/logo-instagram-png-fundo-transparente13.png?fit=696%2C696&ssl=1" width="20px" height="20px">
+        </a>
+        <button class="btn btn-outline-primary text-uppercase" style="border-radius: 30px" id="botao-popular">popular</button>
+        <button class="btn btn-outline-primary text-uppercase left-spaced" style="border-radius: 30px" id="botao-recentes">recente</button>
+        {% if user.is_authenticated %}
+        <button class="btn btn-outline-primary text-uppercase left-spaced" style="border-radius: 30px" id="botao-seguindo">seguindo</button>
+        {% else %}
+        <button class="btn btn-outline-primary text-uppercase hidden" style="border-radius: 30px" id="botao-seguindo">seguindo</button>
+        {% endif %}
+        {% if user_p.message == 'reward' %}
+            &nbsp;<a href="/rewards">Resgatar moedas</a>
+            <i class="fas fa-coins fa-sm"></i>
+        {% endif %}
+    </div>
 </center>
 
-
-<script>-1!=window.location.href.indexOf("news")&&(document.getElementById("logo").href="/news");var botao_popular=document.getElementById("botao-popular"),botao_recentes=document.getElementById("botao-recentes");botao_popular.onclick=function(){document.getElementById("logo").href="/",botao_popular.style.borderBottomWidth="3px",botao_recentes.style.borderBottomWidth="1px",document.getElementById("questoes_populares").style.display="block",document.getElementById("novas_questoes").style.display="none",window.history.replaceState("object or string","Title","/")},botao_recentes.onclick=function(){document.getElementById("logo").href="/news",botao_popular.style.borderBottomWidth="1px",botao_recentes.style.borderBottomWidth="3px",document.getElementById("questoes_populares").style.display="none",document.getElementById("novas_questoes").style.display="block",window.history.replaceState("object or string","Title","/news")};</script>
-<!-- Questrecentes -->
 <section class="card" id="novas_questoes" style="background: transparent; border: none">
-	<ul class="list-group-flush" id="lista_de_questoes_recentes" style="border: none">
-	</ul>
+	<ul class="list-group-flush" id="lista_de_questoes_recentes" style="border: none"></ul>
 	<button class="btn btn-outline-primary" onclick="load_more(this, this.nextElementSibling);" style="border-radius: 30px; font-size: 13px">Ver Mais +</button>
 	<center style="display: none"><i class="fas fa-spinner fa-3x fa-spin"></i></center>
-<br><br>
+    <br><br>
 </section>
 
-<!-- !Quests recentes -->
-<!-- Ques populares -->
-<section  id="questoes_populares" style="background: transparent; border: none">
-	<ul class="list-group-flush" id="lista_de_questoes_populares" style="border: none">
-	</ul>
+<section id="questoes_populares" style="background: transparent; border: none">
+	<ul class="list-group-flush" id="lista_de_questoes_populares" style="border: none"></ul>
 	<button class="btn btn-outline-primary" onclick="popular_page++; load_more_popular(this, this.nextElementSibling, popular_page);" style="border-radius: 30px; font-size: 13px">Ver Mais +</button>
 	<center style="display: none"><i class="fas fa-spinner fa-3x fa-spin"></i></center>
-<br><br>
+    <br><br>
 </section>
-<!-- !Queses populares -->
+
+<section id="feed" style="background: transparent; border: none">
+	<ul class="list-group-flush" id="feed_list" style="border: none"></ul>
+	<button id="load-more-feed-btn" class="btn btn-outline-primary" onclick="load_more_feed(this, this.nextElementSibling);" style="border-radius: 30px; font-size: 13px">Ver Mais +</button>
+	<center style="display: none"><i class="fas fa-spinner fa-3x fa-spin"></i></center>
+    <br><br>
+</section>
+
 </main>
 
 <script src="/static/js/common.js?v=1.2"></script>
@@ -138,6 +169,11 @@ Promo de 8 Dias 🙀🔥
 <script src="https://kit.fontawesome.com/1f965a8b94.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/linkifyjs@2.1.9/dist/linkify.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/linkifyjs@2.1.9/dist/linkify-jquery.min.js"></script>
-<script src="/static/js/index.js?v5.19"></script>
+<script src="/static/js/index.js?v6.1"></script>
+{% if initial == 'feed' %}
+<script>
+    load_more_feed();
+</script>
+{% endif %}
 </body>
 </html>

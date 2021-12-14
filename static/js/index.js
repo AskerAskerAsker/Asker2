@@ -1,5 +1,4 @@
 function enviar_resposta_pergunta(form) {
-	
 	form.style.opacity = 0.5;
 	form.submit_btn.disabled = true;
 	
@@ -20,13 +19,14 @@ function enviar_resposta_pergunta(form) {
 			form.parentElement.innerHTML = data.responseText;
 		},
 	});
-	
 	return false;
 }
 
+var botao_popular = document.getElementById("botao-popular");
+var botao_recentes = document.getElementById("botao-recentes");
+var botao_seguindo = document.getElementById("botao-seguindo");
 
-/*
- * Renderiza as questÃµes recentes. */
+// Renderiza as questões recentes
 
 var questoes_recentes = document.getElementById("lista_de_questoes_recentes");
 
@@ -79,7 +79,7 @@ function renderizar_questoes(questions) {
 
 renderizar_questoes(recent_questions);
 
-/* Renderiza as questÃµes populares. */
+// Renderiza as questões populares
 var questoes_populares = document.getElementById("lista_de_questoes_populares");
 
 function renderizar_questoes_populares(popular_questions) {
@@ -106,12 +106,18 @@ function renderizar_questoes_populares(popular_questions) {
 renderizar_questoes_populares(popular_questions_);
 
 
-
 if (mostrar_primeiro == 'popular') {
+    document.getElementById("feed").style.display = "none";
 	document.getElementById('novas_questoes').style.display = 'none';
 	document.getElementById('questoes_populares').style.display = 'block';
 	document.getElementById('botao-popular').style.borderBottomWidth = '3px';
+} else if (mostrar_primeiro == 'feed') {
+    document.getElementById("feed").style.display = "block";
+	document.getElementById('novas_questoes').style.display = 'none';
+	document.getElementById('questoes_populares').style.display = 'none';
+	document.getElementById('botao-seguindo').style.borderBottomWidth = '3px';
 } else {
+    document.getElementById("feed").style.display = "none";
 	document.getElementById('novas_questoes').style.display = 'block';
 	document.getElementById('questoes_populares').style.display = 'none';
 	document.getElementById('botao-recentes').style.borderBottomWidth = '3px';
@@ -168,6 +174,73 @@ function load_more_popular(button, icon, page) {
 	});
 }
 
+feed_page = 1;
+feed_sp = 0;
+
+function load_more_feed() {
+    button = document.getElementById('load-more-feed-btn');
+    icon = button.nextElementSibling;
+	button.style.display = 'none';
+	icon.style.display = 'block';
+	$.ajax({
+			url: "/get_index_feed_page",
+			type: "get",
+			dataType: "html",
+			data: {
+					page: feed_page,
+                    sp: feed_sp,
+			},
+			complete: function(data) {
+                if (data.responseText == '0') {
+                    feed_page += 1;
+                    feed_sp = 0;
+                    load_more_feed(button, icon)
+                } else if (data.responseText == '-1') {
+                    icon.style.display = 'none';
+                    button.style.display = 'none';
+                    document.getElementById('feed').innerHTML += '<div class="end"><p>Fim! <i class="far fa-sad-cry" aria-hidden="true"></i><br>Você ainda pode responder às <a href="/news">perguntas recentes.</a></p></div>'
+                } else {
+                    icon.style.display = 'none';
+                    button.style.display = 'block'; 
+                    feedlist = document.getElementById('feed_list');
+                    feedlist.innerHTML += data.responseText;
+                    feed_sp += 1;
+                }
+			},
+	});
+}
+
+botao_popular.onclick = function () {
+    document.getElementById("logo").href = "/";
+    botao_popular.style.borderBottomWidth = "3px";
+    botao_recentes.style.borderBottomWidth = "1px";
+    botao_seguindo.style.borderBottomWidth = "1px";
+    document.getElementById("questoes_populares").style.display = "block";
+    document.getElementById("novas_questoes").style.display = "none";
+    document.getElementById("feed").style.display = "none";
+    window.history.replaceState("object or string", "Title", "/");
+}
+botao_recentes.onclick = function () {
+    document.getElementById("logo").href = "/news";
+    botao_popular.style.borderBottomWidth = "1px";
+    botao_recentes.style.borderBottomWidth = "3px";
+    botao_seguindo.style.borderBottomWidth = "1px";
+    document.getElementById("questoes_populares").style.display = "none";
+    document.getElementById("novas_questoes").style.display = "block";
+    document.getElementById("feed").style.display = "none";
+    window.history.replaceState("object or string", "Title", "/news");
+}
+botao_seguindo.onclick = function () {
+    document.getElementById("logo").href = "/feed";
+    botao_popular.style.borderBottomWidth = "1px";
+    botao_recentes.style.borderBottomWidth = "1px";
+    botao_seguindo.style.borderBottomWidth = "3px";
+    document.getElementById("questoes_populares").style.display = "none";
+    document.getElementById("novas_questoes").style.display = "none";
+    document.getElementById("feed").style.display = "block";
+    window.history.replaceState("object or string", "Title", "/feed");
+    if (feed_page == 1 && feed_sp == 0) { load_more_feed(); }
+}
 
 /* Desativa o botão de responder para quem não confirmou o e-mail. */
 if (!conta_ativa) {

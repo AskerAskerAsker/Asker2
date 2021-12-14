@@ -268,3 +268,54 @@ try {
 } catch (e) {
     console.log(e);
 }
+
+function report_question(id) {
+    var report = confirm('Você tem certeza de que deseja reportar esta pergunta?');
+    
+    if (report) {
+        $.ajax({
+            url: '/report?type=q&obj_id=' + id,
+            type: 'post',
+            data: {
+                csrfmiddlewaretoken: csrf_token,
+            },
+            complete: function () {
+                alert('Pergunta Reportada.');
+            }
+        });
+    }
+}
+
+function follow_question(id) {
+    $.ajax({
+        url: '/question/' + id + '/follow',
+        type: 'post',
+        data: {
+            csrfmiddlewaretoken: csrf_token,
+        },
+        complete: function (data) {
+            if (data.responseText == 'Removed') {
+                alert('Você já estava seguindo a pergunta. Você deixou de segui-la.');
+            }
+            document.getElementById('unfqa').classList.remove('hidden');
+            document.getElementById('fqa').classList.add('hidden');
+        }
+    });
+}
+
+function unfollow_question(id) {
+    $.ajax({
+        url: '/question/' + id + '/follow',
+        type: 'post',
+        data: {
+            csrfmiddlewaretoken: csrf_token,
+        },
+        complete: function (data) {
+            if (data.responseText == 'Added') {
+                alert('Você não estava seguindo a pergunta. Você passou a segui-la.');
+            }
+            document.getElementById('unfqa').classList.add('hidden');
+            document.getElementById('fqa').classList.remove('hidden');
+        }
+    });
+}
