@@ -120,8 +120,7 @@ CACHES = {
     }
 }
 
-if not DEBUG:
-	SECURE_SSL_REDIRECT = True
+SECURE_SSL_REDIRECT = True
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
