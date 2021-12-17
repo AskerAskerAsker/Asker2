@@ -119,9 +119,8 @@ def save_answer(request):
     question.total_responses += 1
     question.save()
 
-    if datetime.now().hour > 10 and datetime.now().hour < 16:
+    if datetime.now().hour > 7 and datetime.now().hour < 13:
         # Automaticamente ativa a promocao (nao precisa mexer diariamente)
-        # OBS.: 10h no server equivale a 7h brasilia, 16h server a 13h brasilia
         response_creator.total_points += 30
     else:
         response_creator.total_points += 2
@@ -874,8 +873,7 @@ def choose_best_answer(request):
         rcuserp = UserProfile.objects.get(user=r.creator.user)
         quserp = UserProfile.objects.get(user=request.user)
 
-        if datetime.now().hour > 10 and datetime.now().hour < 16:
-            # OBS.: 10h server = 7h brasil, 16h server = 13h brasil
+        if datetime.now().hour > 7 and datetime.now().hour < 13:
             # Automaticamente ativa a promocao no horario (nao precisa mexer diariamente)
             rcuserp.total_points += 110
         else:
