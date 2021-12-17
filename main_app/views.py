@@ -12,6 +12,7 @@ from main_app.forms import UploadFileForm
 from django_project import general_rules
 from urllib.parse import unquote
 from django.contrib.postgres.search import SearchVector, SearchRank, SearchQuery
+from datetime import datetime
 import random
 import json
 import time
@@ -118,8 +119,13 @@ def save_answer(request):
     question.total_responses += 1
     question.save()
 
-    response_creator.total_points += 2
-    response_creator.save()
+    if datetime.now().hour > 10 and datetime.now().hour < 16:
+        # Automaticamente ativa a promocao (nao precisa mexer diariamente)
+        # OBS.: 10h no server equivale a 7h brasilia, 16h server a 13h brasilia
+        response_creator.total_points += 30
+    else:
+        response_creator.total_points += 2
+        response_creator.save()
 
     if response_creator.user not in question.creator.silenced_users.all():
         notification = Notification.objects.create(receiver=question.creator.user,
@@ -867,7 +873,13 @@ def choose_best_answer(request):
         n.save()
         rcuserp = UserProfile.objects.get(user=r.creator.user)
         quserp = UserProfile.objects.get(user=request.user)
-        rcuserp.total_points += 10
+
+        if datetime.now().hour > 10 and datetime.now().hour < 16:
+            # OBS.: 10h server = 7h brasil, 16h server = 13h brasil
+            # Automaticamente ativa a promocao no horario (nao precisa mexer diariamente)
+            rcuserp.total_points += 110
+        else:
+            rcuserp.total_points += 10
         quserp.total_points += 2
         rcuserp.save()
         quserp.save()
