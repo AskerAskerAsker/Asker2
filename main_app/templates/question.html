@@ -182,7 +182,7 @@
 			</div>
 
             {% if user.is_anonymous %}
-                <div class="text-center bg-light" style="margin: 15px">
+                <div class="text-center bg-main" style="margin: 15px">
                     Faça <a href="/signin?redirect=/question/{{ question.id }}">login</a> ou <a 
 href="/signup?redirect=/question/{{ question.id }}">crie uma conta</a> para responder essa pergunta.
                 </div>
@@ -250,7 +250,7 @@ href="/signup?redirect=/question/{{ question.id }}">crie uma conta</a> para resp
 			{% endif %}
             
             {% if user.is_anonymous %}
-                <div class="text-center bg-light" style="margin: 15px">
+                <div class="text-center bg-main" style="margin: 15px">
                     Faça <a href="/signin?redirect=/question/{{ question.id }}">login</a> ou <a 
 href="/signup?redirect=/question/{{ question.id }}">crie uma conta</a> para responder essa pergunta.
                 </div>
