@@ -97,7 +97,7 @@ class UserProfile(models.Model):
     
     new_notifications = models.IntegerField(default=0, null=False, blank=False)
 
-    followable = models.BooleanField(default=False)
+    followable = models.BooleanField(default=True)
     followed_users = models.ManyToManyField(User, related_name='followed_by', blank=True)
     followed_questions = models.ManyToManyField('Question', related_name='q_followed_by', blank=True)
 

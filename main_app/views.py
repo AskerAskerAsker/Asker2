@@ -12,7 +12,6 @@ from main_app.forms import UploadFileForm
 from django_project import general_rules
 from urllib.parse import unquote
 from django.contrib.postgres.search import SearchVector, SearchRank, SearchQuery
-from datetime import datetime
 import random
 import json
 import time
@@ -119,12 +118,8 @@ def save_answer(request):
     question.total_responses += 1
     question.save()
 
-    if datetime.now().hour > 7 and datetime.now().hour < 13:
-        # Automaticamente ativa a promocao (nao precisa mexer diariamente)
-        response_creator.total_points += 30
-    else:
-        response_creator.total_points += 2
-        response_creator.save()
+    response_creator.total_points += 2
+    response_creator.save()
 
     if response_creator.user not in question.creator.silenced_users.all():
         notification = Notification.objects.create(receiver=question.creator.user,
@@ -873,11 +868,7 @@ def choose_best_answer(request):
         rcuserp = UserProfile.objects.get(user=r.creator.user)
         quserp = UserProfile.objects.get(user=request.user)
 
-        if datetime.now().hour > 7 and datetime.now().hour < 13:
-            # Automaticamente ativa a promocao no horario (nao precisa mexer diariamente)
-            rcuserp.total_points += 110
-        else:
-            rcuserp.total_points += 10
+        rcuserp.total_points += 10
         quserp.total_points += 2
         rcuserp.save()
         quserp.save()
