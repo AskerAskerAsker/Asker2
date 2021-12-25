@@ -6,7 +6,7 @@ from django.contrib.auth import authenticate, login, logout as django_logout
 from django.contrib.auth.models import User
 from django.contrib.humanize.templatetags.humanize import naturalday, naturaltime
 from django.core.cache import cache
-from main_app.models import UserProfile, Question, Response, Comment, Notification, Poll, PollChoice, PollVote, Ban, Report, ConfirmationCode
+from main_app.models import UserProfile, Question, Response, Comment, Notification, Poll, PollChoice, PollVote, Ban, Report, ConfirmationCode, ModActivity
 from main_app.templatetags.main_app_extras import fix_naturaltime, formatar_descricao, get_total_answers
 from main_app.forms import UploadFileForm
 from django_project import general_rules
@@ -279,14 +279,24 @@ def like(request):
 def delete_response(request):
     user_profile = UserProfile.objects.get(user=request.user)
     r = Response.objects.get(id=request.POST.get('response_id', request.GET.get('response_id')))
+    creator = r.creator
+    q = r.question
 
     if user_profile != r.creator:
         # checa se modera:
-        if 'pap' not in ast.literal_eval(user_profile.permissions):
+        if 'pap' in ast.literal_eval(user_profile.permissions):
+            ModActivity.objects.create(obj_id=r.id,
+                                        obj_creator=creator.user,
+                                        mod=user_profile.user,
+                                        type='r',
+                                        obj_text=r.text,
+                                        obj_extra=q.text)
+        else:
             return HttpResponse('NOK', content_type='text/plain')
+            
+    
 
     ''' Tira 2 pontos do criador da resposta, já que a resposta vai ser apagada por ele mesmo. '''
-    creator = r.creator
     creator.total_points -= 3 # por enquanto vai tirar 3, para alertar trolls.
     creator.save()
 
@@ -296,7 +306,6 @@ def delete_response(request):
     except:
         pass
 
-    q = r.question
     q.total_responses -= 1
     q.save()
     r.delete()
@@ -632,39 +641,31 @@ def edit_response(request):
 
     return redirect('/question/' + str(response.question.id))
 
-
 def delete_question(request):
-    
     user_profile = UserProfile.objects.get(user=request.user)
-    
     question = Question.objects.get(id=request.POST.get('question_id'))
-    if (question.creator.user == request.user) or ('pap' in ast.literal_eval(user_profile.permissions)):
 
-        '''
-        Deleta também a imagem do sistema de arquivos:
-        '''
+    if user_profile != question.creator:
+        if 'pap' in ast.literal_eval(user_profile.permissions):
+            ModActivity.objects.create(obj_id=question.id,
+                                        obj_creator=question.creator.user,
+                                        mod=user_profile.user,
+                                        type='q',
+                                        obj_text=question.text,
+                                        obj_extra=question.description)
+        else:
+            return HttpResponse('NOK', content_type='text/plain')
+        
+    '''
+    Deleta também a imagem do sistema de arquivos:
+    '''
 
-        if question.image:
-            os.system('rm ' + question.image.path)
+    if question.image:
+        os.system('rm ' + question.image.path)
 
-        question.delete()
+    question.delete()
+
     return redirect('/news')
-
-
-def delete_response_pap(request):
-    # delete_response alternativo, so funciona se for pap, caso contrario, buga
-
-    user_profile = UserProfile.objects.get(user=request.user)
-
-    q_id = r.question.id
-
-    if 'pap' in ast.literal_eval(user_profile.permissions):
-
-        r = Response.objects.get(id=request.POST.get('response_id'))
-        r.delete()
-
-    return redirect(f'/question/{q_id}')
-
 
 def delete_comment(request):
     c = Comment.objects.get(id=request.GET.get('comment_id'))
@@ -700,8 +701,7 @@ def edit_profile(request, username):
                 '''
                 file_name = '{}-{}-{}'.format(request.user.username, timezone.now().date(), timezone.now().time())
 
-                success = save_img_file(f, '/home/asker/asker/media/avatars/' +
-file_name, (192, 192))
+                success = save_img_file(f, '/home/asker/asker/media/avatars/' + file_name, (192, 192))
                 if not success:
                     return redirect('/user/' + request.user.username + '/edit')
 
@@ -1271,4 +1271,29 @@ def search(request):
             'previous': int(page) - 1,
     }
     return render(request, 'search.html', context)
+
+
+def modactivity(request):
+    if request.user.id != 82:
+        # Nega acesso a usuários
+        return redirect('/news')
+
+    page = request.GET.get('page', 1)
+    
+    activities = ModActivity.objects.order_by('-action_date')
+
+    ITEMS_PER_PAGE = 40
+
+    try:
+        paged_act = Paginator(activities, ITEMS_PER_PAGE).page(page)
+    except InvalidPage:
+        context = {'error': 'Esta página não existe', 'err_msg': 'A página da sua busca não existe.'}
+        return render(request, 'error.html', context)
+
+    context = {
+            'activities': paged_act,
+            'next': int(page) + 1,
+            'previous': int(page) - 1,
+    }
+    return render(request, 'modactivity.html', context)
 

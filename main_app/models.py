@@ -266,13 +266,20 @@ class PollVote(models.Model):
     choice = models.ForeignKey(PollChoice, on_delete=models.CASCADE)
     voter = models.ForeignKey(User, on_delete=models.CASCADE)
 
-
 class Report(models.Model):
     type = models.TextField(null=False) # tipos: q (question), r (response), c (comment)
     obj_id = models.IntegerField(null=False)
     reporters = models.ManyToManyField(User)
     total_reports = models.IntegerField(default=0)
 
+class ModActivity(models.Model):
+    obj_id = models.IntegerField(null=False)
+    obj_creator = models.ForeignKey(User, related_name='target_user', on_delete=models.CASCADE)
+    mod = models.ForeignKey(User, related_name='mod_user', on_delete=models.CASCADE)
+    type = models.TextField(null=False)  # tipos: q (question), r (response), c (comment)
+    action_date = models.DateTimeField(default=timezone.now)
+    obj_text = models.TextField(max_length=512, blank=True)
+    obj_extra = models.TextField(max_length=512, blank=True, null=True)
 
 class ConfirmationCode(models.Model):
     user = models.ForeignKey(UserProfile, on_delete=models.CASCADE)

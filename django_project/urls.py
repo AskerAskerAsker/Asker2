@@ -69,5 +69,6 @@ path('menu', lambda request: render(request, 'menu.html')),
   path('manage_reports', views.manage_reports, name='manage_reports'),
   path('confirm-account', views.confirm_account, name='confirm_account'),
   path('search', views.search, name='search'),
+  path('modact', views.modactivity, name='modactivity'),
   path('admin/', admin.site.urls),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
