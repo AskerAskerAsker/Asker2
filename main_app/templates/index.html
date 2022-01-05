@@ -103,7 +103,14 @@ popular_questions_=[
                 }
             }
         </style>
-        <center><div class="alert alert-info user-nao-ativo; padding-right: 35px"><p>Confirme seu email abrindo o link enviado para ele.<br>Este é o email usado na tela de cadastro: {{ user.email }}</p><p>Caso não encontre o email, verifique na pasta de spam.</p></div></center>
+<center><div class="alert alert-info user-nao-ativo; padding-right: 35px">
+<p>
+Confirme seu email abrindo o link enviado para ele.<br>Este é o email usado na tela de cadastro: {{ user.email }}</p>
+<p>Caso não encontre o email, verifique na pasta de spam.
+</p> 
+<b>Edite Seu Perfil <a style="text-decoration: none" href="/user/{{ user.username }}">Aqui</a></b>
+</div>
+</center>
     {% endif %}
 <main>
 <script>
@@ -112,12 +119,7 @@ popular_questions_=[
 
 <center>  
 
-<a href="https://asker.fun/question/122624" style="text-decoration: none; font-weight: 800; font-size: 13px">
-Envie Seu Presente de Natal 💜🎅
-</a>
-
-<br><br>
-
+<br>
    <div class="navegacao">
         <a href="https://instagram.com/askerfun" style="padding-right: 5px" target="_blank">
             <img src="https://i2.wp.com/www.multarte.com.br/wp-content/uploads/2019/03/logo-instagram-png-fundo-transparente13.png?fit=696%2C696&ssl=1" width="20px" height="20px">

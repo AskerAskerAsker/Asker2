@@ -54,21 +54,33 @@
 {% include "includes/navbar.html" %}		
 <br>		
     
-    <main>
-			<div class="card bg-main">
-				<div class="card-body">
+    <main style="border: none">
+			<div class="card bg-main" style="border: none">
+				<div class="card-body" style="border: none">
 				<center>
 					<h5 style="font-weight: 900"><b>Tabela de Classificação</b></h5>
 					
+                <br>
+                
+       <div style="width: 80%; max-width: 300px">
+             <font size="2">   
+             Fazer uma Pergunta: <b>+1 Ponto</b>. <br>
+             Responder uma Pergunta: <b>+2 Pontos</b><br>
+             Ganhar Melhor Resposta: <b>+10 Pontos</b> 🏆!
+             </font>
+       </div>
+                
+               <br>     
 				       <a href="https://asker.fun/user/Asker"> 
 				       <font style="font-weight: 600; outline: none; text-decoration: none">@Asker</font> 
 				       </a>
-		                </center>
+		     </center>
+                
 		                <br>
 					<div class="card" style="background: transparent; border: none">
 						<div class="list-group list-group-flush" style="background: transparent; border: none">
 							{% for user in rank %}
-							<li class="list-group-item" style="background: transparent; border: none; padding-bottom: 35px">
+							<li class="list-group-item" style="background: transparent; border: none; padding-bottom: 40px">
 								<div>
 									<b class="right-spaced">{{ user.pos }}°</b> <a href="/user/{{ user.user }}" style="font-weight: 800">{{ user.user }}</a>
 								</div>
@@ -78,7 +90,7 @@
 											Pontuação
 										</div>
 										<div>
-											{{ user.user.total_points }}
+                                        <b style="font-weight: 800">{{ user.user.total_points }} </b>
 										</div>
 									</div>
 									<div>
@@ -86,7 +98,7 @@
 											Perguntas
 										</div>
 										<div>
-										{{ user.user.total_questions }}
+                                        {{ user.user.total_questions }}
 										</div>
 									</div>
 									<div>
@@ -94,7 +106,7 @@
 											Respostas
 										</div>
 										<div>
-										{{ user.user.total_responses }}
+                                       {{ user.user.total_responses }}
 										</div>
 									</div>
 								</div>
@@ -102,13 +114,7 @@
 							{% endfor %}
 						</div>
 					</div>
-					<br>
-                <p><b>Para conseguir pontos você pode:</b></p>
-					<ul>
-                    <li><b>Responder:</b> 2 Pontos por Resposta</li>
-                    <li><b>Perguntar:</b> 1 Ponto por Pergunta</li>
-					</ul>
-					<p>Você também ganha 10 pontos ao receber melhor resposta e 2 ao dar melhor resposta 🏆</p>
+				        
 				</div>
 			</div>
 		</main>

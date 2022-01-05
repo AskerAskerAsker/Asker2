@@ -28,8 +28,8 @@
 	{% include "includes/navbar.html" %}
 	<br>
 	
-	<main><div class="card bg-main" id="uinfo">
-	    <div class="card-body">
+	<main style="border: none"><div class="card bg-main" style="border: none" id="uinfo">
+	    <div class="card-body" style="border: none">
 		<center id="center1">
 		  <div style="border-radius: 300px; background: url({{user_p.avatar.url}}); width: 220px; height: 220px; background-position: center center; background-repeat: no-repeat">		      
 		  </div>
@@ -120,7 +120,7 @@
 			</li>
 			{% if user_p.user.username == user.username %}
 			<li class="nav-item">
-				<a class="nav-link bg-main-tab activity-tab disabled" id="followed-q">Perguntas seguidas</a>
+				<a class="nav-link bg-main-tab activity-tab disabled" id="followed-q">Perguntas Seguidas</a>
 			</li>
 			<li class="nav-item">
 				<a class="nav-link bg-main-tab activity-tab disabled" id="followed-u">Seguindo</a>
@@ -129,16 +129,16 @@
 				<a class="nav-link bg-main-tab activity-tab disabled" id="followers">Seguidores</a>
 			</li>
 			<li class="nav-item">
-				<a class="nav-link bg-main-tab activity-tab disabled" id="blocked">Usuários bloqueados</a>
+				<a class="nav-link bg-main-tab activity-tab disabled" id="blocked">Bloqueados</a>
 			</li>
 			<li class="nav-item">
-				<a class="nav-link bg-main-tab activity-tab disabled" id="silenced">Usuários silenciados</a>
+				<a class="nav-link bg-main-tab activity-tab disabled" id="silenced">Silenciados</a>
 			</li>
 			{% endif %}
 		</ul>
 
-		<section id="questions-section">
-			<div class="questions-card card bg-main">
+		<section id="questions-section" style="border: none">
+			<div class="questions-card card bg-main" style="border: none">
 				<ul class="list-group list-group-flush" id="qs">
 					{% for question in questions %}
 					<li class="list-group-item bg-main">
@@ -165,8 +165,8 @@
 			</div>
 		</section>
 
-		<section id="responses-section" class="hidden-section">
-			<div class="responses-card card bg-main">
+		<section id="responses-section" class="hidden-section" style="border: none">
+			<div class="responses-card card bg-main" style="border: none">
 				<ul class="list-group list-group-flush" id="rs">
 					{% for response in responses %}
 					<li class="list-group-item bg-main">
@@ -195,8 +195,8 @@
 
 		{% if user_p.user.username == user.username %}
 
-		<section id="followed-q-section" class="hidden-section">
-			<div class="responses-card card bg-main">
+		<section id="followed-q-section" class="hidden-section" style="border: none">
+			<div class="responses-card card bg-main" style="border: none">
 				<ul class="list-group list-group-flush" id="fqs">
 					{% for question in followed_questions %}
 					<li class="list-group-item bg-main">
@@ -219,8 +219,8 @@
 			</div>
 		</section>
 
-		<section id="followed-u-section" class="hidden-section">
-			<div class="responses-card card bg-main">
+		<section id="followed-u-section" class="hidden-section" style="border: none">
+			<div class="responses-card card bg-main" style="border: none">
 				<ul class="list-group list-group-flush" id="fus">
 					{% for followed_user in user_p.followed_users.all %}
 					<li class="list-group-item bg-main listed-user">
@@ -236,8 +236,8 @@
 			</div>
 		</section>
 
-		<section id="followers-section" class="hidden-section">
-			<div class="responses-card card bg-main">
+		<section id="followers-section" class="hidden-section" style="border: none">
+			<div class="responses-card card bg-main" style="border: none">
 				<ul class="list-group list-group-flush" id="fs">
 					{% for follower in followers.all %}
 					<li class="list-group-item bg-main listed-user">
@@ -248,8 +248,8 @@
 			</div>
 		</section>
 
-		<section id="blocked-section" class="hidden-section">
-			<div class="responses-card card bg-main">
+		<section id="blocked-section" class="hidden-section" style="border: none">
+			<div class="responses-card card bg-main" style="border: none">
 				<ul class="list-group list-group-flush" id="bs">
 					{% for blocked_user in user_p.blocked_users.all %}
 					<li class="list-group-item bg-main listed-user">
@@ -260,8 +260,8 @@
 			</div>
 		</section>
 
-		<section id="silenced-section" class="hidden-section">
-			<div class="responses-card card bg-main">
+		<section id="silenced-section" class="hidden-section" style="border: none">
+			<div class="responses-card card bg-main" style="border: none">
 				<ul class="list-group list-group-flush" id="ss">
 					{% for silenced_user in user_p.silenced_users.all %}
 					<li class="list-group-item bg-main listed-user">
