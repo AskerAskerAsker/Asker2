@@ -1094,6 +1094,10 @@ def more_questions(request):
 
     context = {'questions': questions, }
 
+    if request.user.is_authenticated:
+        up = UserProfile.objects.get(user=request.user)
+        context['user_p'] = up
+
     return render(request, 'base/index-recent-q-page.html', context)
 
 def get_more_questions(request):
