@@ -1,0 +1,88 @@
+{% load humanize %}
+{% load main_app_extras %}
+
+<!-- kfO1wMuva3hNgh0AhIviPyhEGyoRjDdX -->
+
+{% for question in questions %}
+    {% if not question.creator.ban or question.creator.ban and user != question.creator.user %}
+	    {% if not question.creator.user in user_p.silenced_users.all %}
+	    <li class="list-group-item bg-main" data-id="{{ question.id }}">
+		    <div class="card-body">
+                <div class="profile-picture-index" style="padding-bottom: 7px">
+                    <div class="profile-pic-small" style="width: 20px; height: 20px; border-radius: 100px; background: url('{{ question.creator.avatar.url }}'); background-size: cover; background-repeat: no-repeat; vertical-align: middle; display:inline-block">
+                    </div>
+                    <span class="left-spaced" style="font-weight: 600; font-size: 12px; opacity: 0.7; vertical-align: middle; padding-top: 2px;">
+                        {{ question.creator }}
+                    </span>
+                </div>
+			    <h2 class="question-title fg-1" style="font-size: 17px">
+				    <a class="q-title" href="/question/{{ question.id }}">
+					    {{ question.text }}
+				    </a>
+			    </h2>
+			    
+			    {% if question.description %}
+				    <p class='description'>{{ question.description }}</p>
+			    {% endif %}
+
+                {% if question.image %}
+					<div>
+                        <br>
+						<img style="display: block; margin-left: auto; margin-right: auto; max-height: 330px; object-fit: scale-down" width="75%" src="{{ question.image.url }}">
+						<br>
+					</div>
+                {% endif %}
+            
+                <small class="text-muted">
+                    <span id="response-counter-{{ question.id }}" style="color: #00CD66; font-weight: 500">
+                        {{ question.total_responses }}
+                    </span>
+
+                    <span id="response-sentence-{{ question.id }}" style="color: #00CD66; font-weight: 500">
+                        Respostas
+                    </span>
+
+                    <span>
+                        | {% fix_naturaltime question.pub_date|naturaltime %}
+                    </span>
+                </small>
+
+			    {% if user.is_anonymous %}
+				    <p>Faça <a href="/signin?redirect=/question/{{ question.id }}">login</a> ou <a href="/signup?redirect=/question/{{ question.id }}">crie uma conta</a> para responder essa pergunta.</p>
+			    {% else %}
+				    {% answer user question as ANSWER %}
+				    {% if ANSWER %}
+                        <div class="vertical-spaced user-response" data-iddapergunta="{{ question.id }}">
+	                        <p>
+		                        <b>Sua Resposta:</b><br>
+		                        {{ ANSWER }}
+	                        </p>
+                        </div>
+				    {% else %}
+                        <div class="vertical-spaced user-response" data-iddapergunta="{{ question.id }}">
+						    <button class="vertical-spaced btn btn-outline-primary btn-sm" onclick="$(this).toggle(0); $('#answer-box-{{ question.id }}').toggle(0);" style="border-radius: 30px; margin-top: -5px;">
+							    <i class="fas fa-share"></i>
+							    Responder
+						    </button>
+					    </div>					    <div id="answer-box-{{ question.id }}" style="display: none">
+						    <form onsubmit="return enviar_resposta_pergunta(this);">
+							    {% csrf_token %}
+							    <input type="hidden" name="from" value="index">
+							    <input name="question_id" type="hidden" value="{{ question.id }}">
+							    
+		                        <textarea onclick="$(this).css('height', '140px');" name="text" maxlength="5000" class="form-control form-control-sm" placeholder="Sua Resposta:" required></textarea>
+                                <br>
+                                <button name="submit_btn" type="submit" style="border-radius: 30px" class="btn btn-outline-primary btn-sm">
+	                                 <i class="far fa-paper-plane"></i>
+		                             Enviar
+                                 </button>
+						    </form>
+					    </div>
+				    {% endif %}
+			    {% endif %}
+		    </div>
+	    </li>
+	    {% endif %}
+    {% endif %}
+{% endfor %}
+

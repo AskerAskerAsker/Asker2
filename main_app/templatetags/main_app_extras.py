@@ -137,7 +137,7 @@ def answered(username, qid):
 @register.simple_tag
 def answer(creator, question):
 	try:
-		return Response.objects.get(creator=creator, question=question).text
+		return Response.objects.get(creator=UserProfile.objects.get(user=creator), question=question).text
 	except:
 		return False
 

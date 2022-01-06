@@ -135,8 +135,7 @@ def save_answer(request):
 
         file_name = 'rpic-{}{}'.format(now.date(), now.time())
 
-        success = save_img_file(f, '/home/asker/asker/media/responses/' + file_name, 
-(850, 850))
+        success = save_img_file(f, 'media/responses/' + file_name, (850, 850))
         if success:
             response.image = 'responses/' + file_name
 
@@ -531,8 +530,7 @@ def ask(request):
 
             file_name = 'qpic-{}{}'.format(timezone.now().date(), timezone.now().time())
 
-            success = save_img_file(f, '/home/asker/asker/media/questions/' + 
-file_name, (850, 850))
+            success = save_img_file(f, 'media/questions/' + file_name, (850, 850))
             if success:
                 q.image = 'questions/' + file_name
 
@@ -701,7 +699,7 @@ def edit_profile(request, username):
                 '''
                 file_name = '{}-{}-{}'.format(request.user.username, timezone.now().date(), timezone.now().time())
 
-                success = save_img_file(f, '/home/asker/asker/media/avatars/' + file_name, (192, 192))
+                success = save_img_file(f, 'media/avatars/' + file_name, (192, 192))
                 if not success:
                     return redirect('/user/' + request.user.username + '/edit')
 
@@ -1037,7 +1035,8 @@ def more_popular_questions(request):
     return JsonResponse(para_retornar, safe=False)
 
 
-def more_questions(request):
+def more_questions_old(request):
+    #original version - for json
 
     id_de_inicio = int(request.GET.get('id_de_inicio')) - 20
     questions = list(Question.objects.filter(id__range=(id_de_inicio, id_de_inicio + 20)))
@@ -1080,7 +1079,25 @@ def more_questions(request):
     return JsonResponse(para_retornar, safe=False)
 
 
+def more_questions(request):
+    # Para a página inicial
+    id_de_inicio = int(request.GET.get('id_de_inicio'))
+    print('inicio: ', id_de_inicio)
+    if id_de_inicio > 0:
+        questions = list(Question.objects.filter(id__range=(id_de_inicio-20, id_de_inicio)))
+        questions.reverse()
+
+        for q in questions:
+            print(q.id)
+    else:
+        questions = Question.objects.order_by('-id')[:20]
+
+    context = {'questions': questions, }
+
+    return render(request, 'base/index-recent-q-page.html', context)
+
 def get_more_questions(request):
+    # Para o profile.html
     page = request.GET.get('q_page', 2)
     user_id = request.GET.get('user_id')
     qtype = request.GET.get('qtype')

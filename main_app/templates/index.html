@@ -118,7 +118,7 @@ Confirme seu email abrindo o link enviado para ele.<br>Este é o email usado na 
 </script>
 
 <center>  
-<a href="https://asker.fun/user/%F0%9F%8C%9F%F0%9D%97%A0%F0%9D%97%B6%F0%9D%97%B9%F0%9D%97%AE%F0%9D%97%B1%F0%9D%98%86%F0%9F%8C%9F" style="text-decoration: none"> errpop! </a>
+
 <br><br>
    <div class="navegacao">
         <a href="https://instagram.com/askerfun" style="padding-right: 5px" target="_blank">
@@ -140,14 +140,14 @@ Confirme seu email abrindo o link enviado para ele.<br>Este é o email usado na 
 
 <section class="card" id="novas_questoes" style="background: transparent; border: none">
 	<ul class="list-group-flush" id="lista_de_questoes_recentes" style="border: none"></ul>
-	<button class="btn btn-outline-primary" onclick="load_more(this, this.nextElementSibling);" style="border-radius: 30px; font-size: 13px">Ver Mais +</button>
+	<button id="load-more-recent-btn" class="btn btn-outline-primary" onclick="load_more_recent();" style="border-radius: 30px; font-size: 13px">Ver Mais +</button>
 	<center style="display: none"><i class="fas fa-spinner fa-3x fa-spin"></i></center>
     <br><br>
 </section>
 
 <section id="questoes_populares" style="background: transparent; border: none">
 	<ul class="list-group-flush" id="lista_de_questoes_populares" style="border: none"></ul>
-	<button class="btn btn-outline-primary" onclick="popular_page++; load_more_popular(this, this.nextElementSibling, popular_page);" style="border-radius: 30px; font-size: 13px">Ver Mais +</button>
+	<button id="load-more-popular-btn" class="btn btn-outline-primary" onclick="popular_page++; load_more_popular(this, this.nextElementSibling, popular_page);" style="border-radius: 30px; font-size: 13px">Ver Mais +</button>
 	<center style="display: none"><i class="fas fa-spinner fa-3x fa-spin"></i></center>
     <br><br>
 </section>
@@ -167,10 +167,14 @@ Confirme seu email abrindo o link enviado para ele.<br>Este é o email usado na 
 <script src="https://kit.fontawesome.com/1f965a8b94.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/linkifyjs@2.1.9/dist/linkify.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/linkifyjs@2.1.9/dist/linkify-jquery.min.js"></script>
-<script src="/static/js/index.js?v6.1"></script>
+<script src="/static/js/index.js?v=7.0"></script>
 {% if initial == 'feed' %}
 <script>
     load_more_feed();
+</script>
+{% elif initial == 'recentes' %}
+<script>
+    load_more_recent();
 </script>
 {% endif %}
 </body>
