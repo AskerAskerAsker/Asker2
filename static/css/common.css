@@ -176,6 +176,43 @@ button font {
 /* Navbar-end */
 
 /* Index */
+.index-qimg {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 100%;
+}
+.index-qimg-off, .index-qimg-on {
+    border-radius: 10px;
+    overflow: hidden;
+}
+.index-qimg-off {
+    max-height: 500px;
+}
+.index-qimg-on {
+    max-height: 100%;
+}
+.index-qimg-btn {
+    border: 0;
+    background: transparent;
+    padding: 0px;
+    display: block;
+    width: 100%;
+    margin-top: -100px;
+    cursor: default !important;
+}
+.index-qimg-container {
+    overflow: hidden;
+}
+.overflow-guide {
+    opacity: 0;
+    position: relative;
+    top: 500px;
+    background: linear-gradient(rgba(0,0,0,0), rgba(255,255,255,40%));
+    width: 100%;
+    height: 100%;
+}
+
 #reload {
 	width: 35px;
 	height: 35px;
@@ -196,7 +233,6 @@ button font {
     transform: rotate(359deg);
   }
 }
-
 
 .question-title {
 	font-size: 1em;
@@ -422,6 +458,9 @@ button font {
 }
 .right-spaced {
     margin-right: 10px;
+}
+.separator-100 {
+    height: 100px;
 }
 main {
     width: 60%;

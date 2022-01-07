@@ -26,11 +26,17 @@
 			    {% endif %}
 
                 {% if question.image %}
-					<div>
-                        <br>
-						<img style="display: block; margin-left: auto; margin-right: auto; max-height: 330px; object-fit: scale-down" width="75%" src="{{ question.image.url }}">
-						<br>
-					</div>
+                <div class="index-qimg-container">
+                    <button class="index-qimg-btn" onclick="image_toggle(this);">
+                        <div class="overflow-guide">
+                            <div class="separator-100"></div>
+                            <ion-icon name="chevron-down-outline"></ion-icon>
+                        </div>
+					    <div class="index-qimg-off">
+        						<img class="index-qimg" src="{{ question.image.url }}">
+					    </div>
+                    </button>
+                </div>
                 {% endif %}
             
                 <small class="text-muted">
