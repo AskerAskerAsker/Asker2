@@ -1,5 +1,36 @@
 var success_str = 'kfO1wMuva3hNgh0AhIviPyhEGyoRjDdX';
 
+function image_toggle(el) {
+    var ovf_guide = el.getElementsByClassName('overflow-guide')[0];
+    var img_off = el.getElementsByClassName('index-qimg-off');
+    if (img_off.length > 0) {
+        ovf_guide.style.opacity = 0;
+        img_off[0].className = 'index-qimg-on';
+    } else {
+        el.getElementsByClassName('index-qimg-on')[0].className = 'index-qimg-off';
+        if (!(el.scrollHeight > el.clientHeight)) {
+            el.getElementsByClassName('overflow-guide')[0].style.opacity = 100;
+            el.scrollIntoView();
+        }
+    }
+}
+
+function activate_img_btns() {
+    let btns = document.getElementsByClassName('index-qimg-btn');
+    console.log(btns.length + ' buttons to load');
+    for (var i = 0; i < btns.length; i++) {
+        var el = btns[i];
+        var el_img = el.getElementsByClassName('index-qimg-off')[0].children[0];
+
+        el_img.onload = function(e) {
+            btn_el = e.currentTarget.parentNode.parentNode;
+            if (!(btn_el.scrollHeight > btn_el.clientHeight)) {
+                btn_el.getElementsByClassName('overflow-guide')[0].style.opacity = 100;
+            }
+        }
+    }
+}
+
 function enviar_resposta_pergunta(form) {
 	form.style.opacity = 0.5;
 	form.submit_btn.disabled = true;
@@ -105,6 +136,7 @@ function load_more_recent() {
                 }
 				icon.style.display = 'none';
 				button.style.display = 'block';
+                activate_img_btns();
 			},
 	});
 }
