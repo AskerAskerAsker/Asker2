@@ -843,7 +843,7 @@ def is_a_valid_user(username, email, password):
     end = email.index('.')
     email = email[start:end]
     if not email in emails:
-        return false
+        return False
 
     return True
 
