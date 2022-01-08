@@ -38,7 +38,7 @@
     <main>
         {% if user_p.active %}
         <div id="inner" style="padding: 20px">
-            <form method="post" enctype="multipart/form-data" onsubmit="format_form(this)" id="form_pergunta">
+            <form method="post" enctype="multipart/form-data" onsubmit="enviar_pergunta(this)" id="form_pergunta">
                 {% csrf_token %}
                 <div class="form-group ask-form">
                     <input class="form-control" type="text" name="question" style="border-radius: 20px; font-weight: 500" placeholder="Título da Pergunta:" autocomplete="off" maxlength="180">
@@ -150,8 +150,9 @@ if (getDarkCookie() == 'true') {
 <script src="/static/js/general_functions.js?version=2"></script>
  
 <script>
-    function enviar_pergunta() {
-        document.getElementById("form_pergunta").submit();
+    function enviar_pergunta(form) {
+        form.submit();
+        format_form(form);
         botao_perguntar = document.getElementById("botao_fazer_pergunta");
         botao_perguntar.disabled = true;
     }
