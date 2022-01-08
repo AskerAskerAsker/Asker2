@@ -82,7 +82,7 @@
                         </a>
                     </div></div>
  
-                    <input class="btn btn-primary" type="submit" value="Publicar Pergunta" style="border-radius: 30px; font-weight: 800" id="botao_fazer_pergunta">
+                    <input class="btn btn-primary" type="submit" value="Publicar Pergunta" style="border-radius: 30px; font-weight: 800" id="botao_fazer_pergunta" onclick="enviar_pergunta();">
                 </div>
             </form>
      <br>
@@ -152,6 +152,8 @@ if (getDarkCookie() == 'true') {
 <script>
     function enviar_pergunta() {
         document.getElementById("form_pergunta").submit();
+        botao_perguntar = document.getElementById("botao_fazer_pergunta");
+        botao_perguntar.disabled = true;
     }
 </script>
  
@@ -164,8 +166,6 @@ if (getDarkCookie() == 'true') {
     /* Analisador de imagem (nsfw) */
     function analisar_imagem() {
         /* Desativa o botão de perguntar */
-        botao_perguntar = document.getElementById("botao_fazer_pergunta");
-        botao_perguntar.disabled = true;
         
         /* Ativa o aviso "carregando imagem" */
         document.getElementById("carregando-imagem").style.display = "block";
