@@ -848,7 +848,7 @@ def is_a_valid_user(username, email, password):
     elif len(password) < 6 or len(password) > 256:
         return False
 
-    emails = ['mail','hotmail','outlook','yahoo','icloud','gmail','bol','aol']
+    emails = ['mail','hotmail','outlook','live','msn','yahoo','icloud','gmail','bol','aol','uol','terra','protonmail','tutanota','yandex','net']
     start = email.index('@') + 1
     end = email.index('.')
     email = email[start:end]
