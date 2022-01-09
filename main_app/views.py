@@ -1092,11 +1092,9 @@ def more_questions(request):
     id_de_inicio = int(request.GET.get('id_de_inicio'))
     print('inicio: ', id_de_inicio)
     if id_de_inicio > 0:
-        questions = list(Question.objects.filter(id__range=(id_de_inicio-20, id_de_inicio)))
+        questions = list(Question.objects.filter(id__range=(id_de_inicio-50, id_de_inicio)))
         questions.reverse()
-
-        for q in questions:
-            print(q.id)
+        questions = questions [:20]
     else:
         questions = Question.objects.order_by('-id')[:20]
 
