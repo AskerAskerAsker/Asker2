@@ -472,7 +472,10 @@ def profile(request, username):
         up.total_views += 1
         up.save()
 
-    context['user_p'] = up
+    if request.user.is_authenticated:
+        context['user_p'] = UserProfile.objects.get(user=request.user)
+
+    context['target_user_p'] = up
     context['change_profile_picture_form'] = UploadFileForm()
 
     try:
