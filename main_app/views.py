@@ -573,14 +573,15 @@ def notification(request):
 
     page = request.GET.get('page', 1)
 
-    context = {
-            'notifications': p.page(page),
-    }
-
     up = UserProfile.objects.get(user=request.user)
     if up.new_notifications > 0:
         up.new_notifications = 0
         up.save()
+
+    context = {
+            'notifications': p.page(page),
+            'user_p': up,
+    }
 
     return render(request, 'notification.html', context)
 
@@ -628,7 +629,13 @@ def comment(request):
 def rank(request):
     rank = UserProfile.objects.order_by('-total_points')[:50]
     count = 0
-    return render(request,'rank.html', {'rank': [{'pos': i+1, 'user': rank[i]} for i in range(len(rank))]})
+    context = {'rank': [{'pos': i+1, 'user': rank[i]} for i in range(len(rank))]}
+
+    if request.user.is_authenticated:
+        up = UserProfile.objects.get(user=request.user)
+        context['user_p'] = up
+
+    return render(request,'rank.html', context)
 
 
 def edit_response(request):
@@ -900,7 +907,13 @@ def delete_account(request):
 
 
 def rules(request):
-    return render(request, 'rules.html')
+    context = {}
+
+    if request.user.is_authenticated:
+        up = UserProfile.objects.get(user=request.user)
+        context['user_p'] = up
+
+    return render(request, 'rules.html', context)
 
 
 def activity(request):
@@ -1092,11 +1105,9 @@ def more_questions(request):
     id_de_inicio = int(request.GET.get('id_de_inicio'))
     print('inicio: ', id_de_inicio)
     if id_de_inicio > 0:
-        questions = list(Question.objects.filter(id__range=(id_de_inicio-20, id_de_inicio)))
+        questions = list(Question.objects.filter(id__range=(id_de_inicio-50, id_de_inicio)))
         questions.reverse()
-
-        for q in questions:
-            print(q.id)
+        questions = questions [:20]
     else:
         questions = Question.objects.order_by('-id')[:20]
 
@@ -1299,8 +1310,12 @@ def search(request):
             'next': int(page) + 1,
             'previous': int(page) - 1,
     }
-    return render(request, 'search.html', context)
 
+    if request.user.is_authenticated:
+        up = UserProfile.objects.get(user=request.user)
+        context['user_p'] = up
+
+    return render(request, 'search.html', context)
 
 def modactivity(request):
     if request.user.id != 82:

@@ -24,6 +24,10 @@
     </head>
 
     <body>
+        {% if user.is_authenticated %}
+	        {% include "includes/menubar.html" %}
+        {% endif %}
+
 		{% include "includes/navbar.html" %} <br>
         <main>
             <section class="card results bg-main">
