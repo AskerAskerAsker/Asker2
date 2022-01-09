@@ -3,7 +3,7 @@
 <!doctype html>
 <html lang="pt-br">
 	<head>
-		<title>{{user_p.user.username}} | Asker</title>
+		<title>{{target_user_p.user.username}} | Asker</title>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<style id="wait">
@@ -38,21 +38,21 @@
 	<main style="border: none"><div class="card bg-main" style="border: none" id="uinfo">
 	    <div class="card-body" style="border: none">
 		<center id="center1">
-		  <div style="border-radius: 300px; background: url({{user_p.avatar.url}}); width: 220px; height: 220px; background-position: center center; background-repeat: no-repeat">		      
+		  <div style="border-radius: 300px; background: url({{target_user_p.avatar.url}}); width: 220px; height: 220px; background-position: center center; background-repeat: no-repeat">		      
 		  </div>
 		    
        <br>
         <h3 style="margin-top: -5px; font-size: 2.5vh">
-            <b>{{ user_p.user.username }}</b>
+            <b>{{ target_user_p.user.username }}</b>
         </h3>
 			<p id="bio" style="line-height: 16px; font-size: 16px">
 			   
-			     {{ user_p.bio|linebreaksbr }}
+			     {{ target_user_p.bio|linebreaksbr }}
 
 			</p>
 			
 			<p style="font-size: 13px; font-weight: 700">
-			 No Asker desde <span class="font-italic">{{ user_p.user.date_joined.date }}.</span>
+			 No Asker desde <span class="font-italic">{{ target_user_p.user.date_joined.date }}.</span>
 			</p>
 			
 		</center>
@@ -60,45 +60,45 @@
 			<div class="card bg-inner-when-dark" style="border: none; background: linear-gradient(#FF00FF, #4876FF)">
 				<div class="card-body">
                 <h5><font color="white"><b>Perguntas</b></font></h5>
-                <p><font color="white" style="font-weight: 800">{{user_p.total_questions}}</font></p>
+                <p><font color="white" style="font-weight: 800">{{target_user_p.total_questions}}</font></p>
 				</div>
 			</div>
 			<div class="card bg-inner-when-dark" style="border: none; background: linear-gradient(#FF00FF, #4876FF)">
 				<div class="card-body">
                 <h5><font color="white"><b>Respostas</b></font></h5>
-                <p><font color="white" style="font-weight: 800">{{user_p.total_responses}}</font></p>
+                <p><font color="white" style="font-weight: 800">{{target_user_p.total_responses}}</font></p>
 				</div>
 			</div>
 			<div class="card bg-inner-when-dark" style="border: none; background: linear-gradient(#FF00FF, #4876FF)">
 				<div class="card-body">
                 <h5><font color="white"><b>Pontos</b></font></h5>
-                <p><font color="white" style="font-weight: 800">{{user_p.total_points}}</font></p>
+                <p><font color="white" style="font-weight: 800">{{target_user_p.total_points}}</font></p>
 				</div>
 			</div>
 		</div>
 
-		{% if user_p.user.username != user.username %}
+		{% if target_user_p.user.username != user.username %}
 
             {% if not user.is_anonymous %}
-		        {% afollowb user.username user_p.user.username as FOLLOWED %}
-		        {% ablockb user.username user_p.user.username as BLOCKED %}
-		        {% asilenceb user.username user_p.user.username as SILENCED %}
+		        {% afollowb user.username target_user_p.user.username as FOLLOWED %}
+		        {% ablockb user.username target_user_p.user.username as BLOCKED %}
+		        {% asilenceb user.username target_user_p.user.username as SILENCED %}
 
                 <center class="btn-group justified vertical-spaced" role="group">
-                    {% if user_p.followable %}
-			        <button id="follow-button" class="btn btn-outline-primary" onclick="follow_user('{{ user_p.user.username }}')">
+                    {% if target_user_p.followable %}
+			        <button id="follow-button" class="btn btn-outline-primary" onclick="follow_user('{{ target_user_p.user.username }}')">
                             {% if FOLLOWED %}
                                 Seguindo
                             {% else %}
                                 Seguir
                             {% endif %}
-			        </button>{% endif %}<button id="block-button" class="btn btn-outline-primary" onclick="block_user('{{ user_p.user.username }}')">
+			        </button>{% endif %}<button id="block-button" class="btn btn-outline-primary" onclick="block_user('{{ target_user_p.user.username }}')">
                             {% if BLOCKED %}
                                 Bloqueado
                             {% else %}
                                 Bloquear
                             {% endif %}
-			        </button><button id="silence-button" class="btn btn-outline-primary" onclick="silence_user('{{ user_p.user.username }}')">
+			        </button><button id="silence-button" class="btn btn-outline-primary" onclick="silence_user('{{ target_user_p.user.username }}')">
                             {% if SILENCED %}
                                 Silenciado
                             {% else %}
@@ -111,12 +111,12 @@
 
         <br>
 
-		{% if user_p.user.username == user.username %}
+		{% if target_user_p.user.username == user.username %}
             <center>
 		    <div id="edit-profile" class="vertical-spaced"><a href="/user/{{ user.username }}/edit" style="text-decoration: none; outline: none"><b>Editar Perfil</b></a></div>
             <br></center>
 		{% endif %}
-		{% if user_p.user.username == user.username or not user_p.hide_activity or 'pap' in permissoes_usuario_logado or user.is_superuser %}
+		{% if target_user_p.user.username == user.username or not target_user_p.hide_activity or 'pap' in permissoes_usuario_logado or user.is_superuser %}
 		
 		<ul class="nav nav-tabs" id="tabs">
 			<li class="nav-item">
@@ -125,7 +125,7 @@
 			<li class="nav-item">
 				<a class="nav-link bg-main-tab activity-tab disabled" id="responses">Respostas</a>
 			</li>
-			{% if user_p.user.username == user.username %}
+			{% if target_user_p.user.username == user.username %}
 			<li class="nav-item">
 				<a class="nav-link bg-main-tab activity-tab disabled" id="followed-q">Perguntas Seguidas</a>
 			</li>
@@ -152,19 +152,19 @@
 						<div class="question card-body">
 							<a href="/question/{{ question.id }}">{{ question.text }}</a><br>
 							<span class="small-text">Perguntada em: {{ question.pub_date|naturalday }}</span>
-							{% if question.best_answer == None and user_p.user.username == user.username %}
+							{% if question.best_answer == None and target_user_p.user.username == user.username %}
 								<br><span class="small-text">Sem melhor resposta</span>
 							{% endif %}
 						</div>
 					</li>
 					{% endfor %}
 				</ul>
-				{% if user_p.total_questions > 0 %}
-					<button class="btn btn-outline-primary" onclick="show_more_questions(this, {{ user_p.user.id }})">mais</button>
+				{% if target_user_p.total_questions > 0 %}
+					<button class="btn btn-outline-primary" onclick="show_more_questions(this, {{ target_user_p.user.id }})">mais</button>
 				{% else %}
 					<p align="center" style="padding: 5px; font-size: 1.8vh">
 					   <center>
-					   {{ user_p.user.username }}
+					   {{ target_user_p.user.username }}
 					    ainda não fez nenhuma pergunta.
 					   </center> 
 					</p>
@@ -190,17 +190,17 @@
 					</li>
 					{% endfor %}
 				</ul>
-				{% if user_p.total_responses != 0 %}
-					<button class="btn btn-outline-primary" onclick="show_more_responses(this, {{ user_p.user.id }})">mais</button>
+				{% if target_user_p.total_responses != 0 %}
+					<button class="btn btn-outline-primary" onclick="show_more_responses(this, {{ target_user_p.user.id }})">mais</button>
 				{% else %}
 					<p align="center" style="padding: 5px; font-size: 1.8vh"><center>
-					    {{ user_p.user.username }} ainda não respondeu nenhuma pergunta.
+					    {{ target_user_p.user.username }} ainda não respondeu nenhuma pergunta.
 					</center></p>
 				{% endif %}
 			</div>
 		</section>
 
-		{% if user_p.user.username == user.username %}
+		{% if target_user_p.user.username == user.username %}
 
 		<section id="followed-q-section" class="hidden-section" style="border: none">
 			<div class="responses-card card bg-main" style="border: none">
@@ -214,8 +214,8 @@
 					</li>
 					{% endfor %}
 				</ul>
-				{% if user_p.total_questions > 0 %}
-					<button class="btn btn-outline-primary" onclick="show_more_f_questions(this, {{ user_p.user.id }})">mais</button>
+				{% if target_user_p.total_questions > 0 %}
+					<button class="btn btn-outline-primary" onclick="show_more_f_questions(this, {{ target_user_p.user.id }})">mais</button>
 				{% else %}
 					<p align="center" style="padding: 5px; font-size: 1.8vh">
 					   <center>
@@ -229,15 +229,15 @@
 		<section id="followed-u-section" class="hidden-section" style="border: none">
 			<div class="responses-card card bg-main" style="border: none">
 				<ul class="list-group list-group-flush" id="fus">
-					{% for followed_user in user_p.followed_users.all %}
+					{% for followed_user in target_user_p.followed_users.all %}
 					<li class="list-group-item bg-main listed-user">
 						<a href="/user/{{ followed_user }}">{{ followed_user }}</a> <span onclick="unfollow_listed_user(this.parentNode, '{{ followed_user }}');">❌</span>
 					</li>
 					{% endfor %}
 				</ul>
-                {% if user_p.total_followed_users == 0 %}
+                {% if target_user_p.total_followed_users == 0 %}
 				    <p align="center" style="padding: 5px; font-size: 1.8vh"><center>
-				        {{ user_p.user.username }} ainda não respondeu nenhuma pergunta.
+				        {{ target_user_p.user.username }} ainda não respondeu nenhuma pergunta.
 				    </center></p>
                 {% endif %}
 			</div>
@@ -258,7 +258,7 @@
 		<section id="blocked-section" class="hidden-section" style="border: none">
 			<div class="responses-card card bg-main" style="border: none">
 				<ul class="list-group list-group-flush" id="bs">
-					{% for blocked_user in user_p.blocked_users.all %}
+					{% for blocked_user in target_user_p.blocked_users.all %}
 					<li class="list-group-item bg-main listed-user">
 						<a href="/user/{{ blocked_user }}">{{ blocked_user }}</a> <span onclick="unblock_listed_user(this.parentNode, '{{ blocked_user }}');">❌</span>
 					</li>
@@ -270,7 +270,7 @@
 		<section id="silenced-section" class="hidden-section" style="border: none">
 			<div class="responses-card card bg-main" style="border: none">
 				<ul class="list-group list-group-flush" id="ss">
-					{% for silenced_user in user_p.silenced_users.all %}
+					{% for silenced_user in target_user_p.silenced_users.all %}
 					<li class="list-group-item bg-main listed-user">
 						<a href="/user/{{ silenced_user }}">{{ silenced_user }}</a> <span onclick="unsilence_listed_user(this.parentNode, '{{ silenced_user }}');">❌</span>
 					</li>
