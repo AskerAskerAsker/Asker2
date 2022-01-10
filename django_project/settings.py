@@ -11,7 +11,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = secret.SECRET_KEY
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['asker.fun', 'br.asker.fun', '0.0.0.0', '5.183.9.58']
 
@@ -61,9 +61,9 @@ WSGI_APPLICATION = 'django_project.wsgi.application'
 
 
 # Database
-DATABASES = {'default': {'ENGINE': 'django.db.backends.postgresql_psycopg2','NAME': 'asker2', 'USER': 'asker', 'PASSWORD': secret.POSTGRESQL_DATABASE_PW, 'HOST': 'localhost', 'PORT': '5432',}}
+#DATABASES = {'default': {'ENGINE': 'django.db.backends.postgresql_psycopg2','NAME': 'asker2', 'USER': 'asker', 'PASSWORD': secret.POSTGRESQL_DATABASE_PW, 'HOST': 'localhost', 'PORT': '5432',}}
 
-#DATABASES = {'default': {'ENGINE': 'django.db.backends.sqlite3', 'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),}}
+DATABASES = {'default': {'ENGINE': 'django.db.backends.sqlite3', 'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),}}
 
 # Password validation
 
@@ -120,7 +120,7 @@ CACHES = {
     }
 }
 
-SECURE_SSL_REDIRECT = True
+SECURE_SSL_REDIRECT = False
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'

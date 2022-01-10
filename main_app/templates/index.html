@@ -57,6 +57,7 @@ recent_questions=[
             "text":"{{ question.text }}",
             "description":"{{ question.description|formatar_descricao|safe|linebreaksbr }}",
             "total_answers":{{ question.total_responses }},
+            "total_views": {{ question.total_views }},
             "pub_date":"{% fix_naturaltime question.pub_date|naturaltime %}",
             "creator":"{{ question.creator.user.username }}",
             {% answer user_p question as ANSWER %}
@@ -73,6 +74,7 @@ popular_questions_=[
             "text":"{{ question.text }}",
             "description":"{{ question.description|formatar_descricao|safe|linebreaksbr }}",
             "total_answers":{{ question.total_responses }},
+            "total_views": {{ question.total_views }},
             "pub_date":"{% fix_naturaltime question.pub_date|naturaltime %}",
             "creator":"{{ question.creator.user.username }}",
             {% answer user_p question as ANSWER %}
@@ -167,7 +169,7 @@ Confirme seu email abrindo o link enviado para ele.<br>Este é o email usado na 
 <script src="https://kit.fontawesome.com/1f965a8b94.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/linkifyjs@2.1.9/dist/linkify.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/linkifyjs@2.1.9/dist/linkify-jquery.min.js"></script>
-<script src="/static/js/index.js?v=7.1"></script>
+<script src="/static/js/index.js?v=7.3"></script>
 {% if initial == 'feed' %}
 <script>
     load_more_feed();

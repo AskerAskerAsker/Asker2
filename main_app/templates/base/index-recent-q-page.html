@@ -40,6 +40,8 @@
                 {% endif %}
             
                 <small class="text-muted">
+                    <ion-icon name="eye-outline"></ion-icon>{{ question.total_views }}
+                    <span> | </span>
                     <span id="response-counter-{{ question.id }}" style="color: #00CD66; font-weight: 500">
                         {{ question.total_responses }}
                     </span>
