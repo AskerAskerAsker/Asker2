@@ -1,5 +1,31 @@
 var success_str = 'kfO1wMuva3hNgh0AhIviPyhEGyoRjDdX';
 
+function hide_questions() {
+    qtitles = document.getElementsByClassName('q-title');
+    for (var i = 0; i < qtitles.length; i++) {
+        var qid = qtitles[i].href.slice(qtitles[i].href.lastIndexOf('/')+1);
+
+        var total_responses = document.getElementById('response-counter-' + qid).innerHTML;
+        if (Number(total_responses) < 10) {
+            qtitles[i].href = 'javascript:void(0);'
+            qtitles[i].setAttribute('onclick', 'login_toggle();');
+        }
+    }
+}
+
+function login_toggle() {
+    var popup_bg = document.getElementById('popup-bg');
+    if (popup_bg.style.display == 'none') {
+        popup_bg.style.display = 'block';
+        document.getElementById('new-user-pp-container').style.display = 'block';
+        document.body.style.overflow = 'hidden';
+    } else {
+        popup_bg.style.display = 'none';
+        document.getElementById('new-user-pp-container').style.display = 'none';
+        document.body.style.overflow = 'auto';
+    }
+}
+
 function image_toggle(el) {
     var ovf_guide = el.getElementsByClassName('overflow-guide')[0];
     var img_off = el.getElementsByClassName('index-qimg-off');

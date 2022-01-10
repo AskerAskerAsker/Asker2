@@ -163,21 +163,45 @@ Confirme seu email abrindo o link enviado para ele.<br>Este é o email usado na 
 
 </main>
 
+<div id="popup-bg" style="display: none; position: fixed; top: 0; bottom: 0; left: 0; right: 0; z-index: 9" onclick="login_toggle();">
+    <div style="position: sticky; background-color: rgba(0,0,0,50%); height: 100%;">
+        
+    </div>
+</div>
+<div id="new-user-pp-container" style="display: none; position: fixed; width: 100%; bottom: 2rem; z-index: 10;">
+  <div id="new-user-popup" style="color: white; background: linear-gradient(#f16fa1, #9056f1); box-shadow: 0 10px 20px rgba(64, 64, 64, 0.15); border-radius: 5px; padding: 1rem; margin: 0 auto; width: 95%;">
+    <button style="float: right; border: none; background-color: transparent; color: white; font-size: 20px; margin-top: -3px;" onclick="login_toggle();">
+        <ion-icon name="close-outline"></ion-icon>
+    </button>
+    
+    <h5>Seja bem vindo(a) ao Asker!</h5>
+    <p>Faça login ou cadastre-se para responder essa pergunta e muitas outras!</p>
+    <div style="height: 40px;">
+        <a href="/signup"><button class="btn bg-white" style="border-radius: 30px; float: right; margin-left: 10px; width: 125px;">Cadastrar-se</button></a>
+        <a href="/signin"><button class="btn bg-white" style="border-radius: 30px; float: right; width: 125px;">Fazer login</button></a>
+    </div>
+  </div>
+</div>
+
 <script src="/static/js/common.js?v=1.4"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
 <script src="https://kit.fontawesome.com/1f965a8b94.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/linkifyjs@2.1.9/dist/linkify.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/linkifyjs@2.1.9/dist/linkify-jquery.min.js"></script>
-<script src="/static/js/index.js?v=7.3"></script>
+<script src="/static/js/index.js?v=7.4"></script>
+
+<script>
 {% if initial == 'feed' %}
-<script>
     load_more_feed();
-</script>
 {% elif initial == 'recentes' %}
-<script>
     load_more_recent();
-</script>
 {% endif %}
+
+{% if not user.is_authenticated %}
+    hide_questions();
+{% endif %}
+</script>
+
 </body>
 </html>
