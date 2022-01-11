@@ -169,7 +169,7 @@ Confirme seu email abrindo o link enviado para ele.<br>Este é o email usado na 
     </div>
 </div>
 <div id="new-user-pp-container" style="display: none; position: fixed; width: 100%; bottom: 2rem; z-index: 10;">
-  <div id="new-user-popup" style="color: white; background: linear-gradient(#f16fa1, #9056f1); box-shadow: 0 10px 20px rgba(64, 64, 64, 0.15); border-radius: 5px; padding: 1rem; margin: 0 auto; width: 95%;">
+  <div id="new-user-popup" class="bg-faint-gradient" style="box-shadow: 0 10px 20px rgba(64, 64, 64, 0.15); border-radius: 5px; padding: 1rem; margin: 0 auto; width: 95%;">
     <button style="float: right; border: none; background-color: transparent; color: white; font-size: 20px; margin-top: -3px;" onclick="login_toggle();">
         <ion-icon name="close-outline"></ion-icon>
     </button>
@@ -189,7 +189,7 @@ Confirme seu email abrindo o link enviado para ele.<br>Este é o email usado na 
 <script src="https://kit.fontawesome.com/1f965a8b94.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/linkifyjs@2.1.9/dist/linkify.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/linkifyjs@2.1.9/dist/linkify-jquery.min.js"></script>
-<script src="/static/js/index.js?v=7.4"></script>
+<script src="/static/js/index.js?v=7.45"></script>
 
 <script>
 {% if initial == 'feed' %}
@@ -199,6 +199,7 @@ Confirme seu email abrindo o link enviado para ele.<br>Este é o email usado na 
 {% endif %}
 
 {% if not user.is_authenticated %}
+    should_hide = true;
     hide_questions();
 {% endif %}
 </script>

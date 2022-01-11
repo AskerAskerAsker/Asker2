@@ -1,14 +1,17 @@
 var success_str = 'kfO1wMuva3hNgh0AhIviPyhEGyoRjDdX';
+var should_hide = false;
 
 function hide_questions() {
     qtitles = document.getElementsByClassName('q-title');
     for (var i = 0; i < qtitles.length; i++) {
         var qid = qtitles[i].href.slice(qtitles[i].href.lastIndexOf('/')+1);
 
-        var total_responses = document.getElementById('response-counter-' + qid).innerHTML;
-        if (Number(total_responses) < 10) {
-            qtitles[i].href = 'javascript:void(0);'
-            qtitles[i].setAttribute('onclick', 'login_toggle();');
+        if (qid != 'javascript:void(0);') {
+            var total_responses = document.getElementById('response-counter-' + qid).innerHTML;
+            if (Number(total_responses) < 10) {
+                qtitles[i].href = 'javascript:void(0);'
+                qtitles[i].setAttribute('onclick', 'login_toggle();');
+            }
         }
     }
 }
@@ -163,6 +166,9 @@ function load_more_recent() {
 				icon.style.display = 'none';
 				button.style.display = 'block';
                 activate_img_btns();
+                if (should_hide) {
+                    hide_questions();
+                }
 			},
 	});
 }
@@ -190,6 +196,9 @@ function load_more_popular(button, icon, page) {
                         icon.style.display = 'none';
                         button.style.display = 'block';
                         renderizar_questoes_populares(data.responseJSON);
+                        if (should_hide) {
+                            hide_questions();
+                        }
                     }
                 } catch (e) {
                     console.log(e);

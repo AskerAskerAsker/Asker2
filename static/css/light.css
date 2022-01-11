@@ -29,4 +29,8 @@
 .small-text, .light-text {
     color: #888;
 }
+.bg-faint-gradient {
+    background: linear-gradient(#f16fa1, #9056f1);
+    color: white; 
+}
 /* General */
