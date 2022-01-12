@@ -521,8 +521,8 @@ def ask(request):
 
         text = request.POST.get('question')
 
-        if len(text) > 181:
-            return HttpResponse('Proibido.', content_type='text/plain')
+        if len(text) > 181 or len(description) > 5000 or text[-1] != '?':
+            return redirect('/news')
 
         q = Question.objects.create(creator=UserProfile.objects.get(user=request.user), text=text, description=description.replace('\\', '\\\\'))
 
