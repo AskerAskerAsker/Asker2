@@ -27,11 +27,11 @@
             
                 <small class="text-muted">
                             
-                    <span id="response-counter-{{ question.id }}" style="color: #00CD66; font-weight: 500">
+                    <span id="response-counter-{{ question.id }}" style="color: #00CD66; font-weight: 700">
                         {{ question.total_responses }}
                     </span>
 
-                    <span id="response-sentence-{{ question.id }}" style="color: #00CD66; font-weight: 500">
+                    <span id="response-sentence-{{ question.id }}" style="color: #00CD66; font-weight: 700">
                         Respostas
                     </span>
                
@@ -42,8 +42,8 @@
                 
                     <span> &#8226; </span> 
                 
-                  <span> {{ question.total_views }} </span>
-                  <span style="margin-top: 10px"><ion-icon name="eye-outline"></ion-icon></span>
+                  <span> <b>{{ question.total_views }} </b></span>
+                  <span style="margin-left: -2px; font-weight: 900"><ion-icon name="eye"></ion-icon></span>
                 
                 </small>
 
@@ -75,12 +75,14 @@
 	                        </p>
                         </div>
 				    {% else %}
-                        <div class="vertical-spaced user-response" data-iddapergunta="{{ question.id }}">
+           
+                        <div class="vertical-spaced user-response" data-iddapergunta="{{ question.id }}" style="margin-bottom: 10px">
 						    <button class="vertical-spaced btn btn-outline-primary btn-sm" onclick="$(this).toggle(0); $('#answer-box-{{ question.id }}').toggle(0);" style="border-radius: 30px; margin-top: -5px;">
 							    <i class="fas fa-share"></i>
 							    Responder
 						    </button>
-					    </div>					    <div id="answer-box-{{ question.id }}" style="display: none">
+					    </div>					   
+                        <div id="answer-box-{{ question.id }}" style="display: none">
 						    <form onsubmit="return enviar_resposta_pergunta(this);">
 							    {% csrf_token %}
 							    <input type="hidden" name="from" value="index">
