@@ -1313,7 +1313,7 @@ def search(request):
     searcher_ips = cache.get('searcher_ids')
     if not searcher_ips:
         cache.set('searcher_ids', {user_ip: time})
-    elif searcher_ips[user_ip]:
+    elif user_ip in searcher_ips:
         last_search = time - searcher_ips[user_ip]
         searcher_ips[user_ip] = time
         cache.set('searcher_ids', searcher_ips)
