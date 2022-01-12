@@ -43,7 +43,7 @@ body {
 }
 .bg-faint-gradient {
     background: linear-gradient(#f16fa1, #9056f1);
-    color: white; 
+    color: white !important; 
 }
 .form-control {
   border: 1px solid rgba(0,0,0,.125) !important;

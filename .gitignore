@@ -12,6 +12,7 @@ uwsgi_params
 main_app/migrations
 django_project/settings.py
 .gittt/
+.idea/
 
 ### Django ###
 *.log

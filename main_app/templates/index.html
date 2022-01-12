@@ -49,23 +49,6 @@ Comunidade de Perguntas e Respostas!">
     }
 </style>
 <script>
-recent_questions=[
-    {% for question in questoes_recentes %}
-        {% if not question.creator.user in user_p.silenced_users.all %}
-            {"question_creator_avatar": "{{ question.creator.avatar.url }}",
-             "id":{{ question.id }},
-            "text":"{{ question.text }}",
-            "description":"{{ question.description|formatar_descricao|safe|linebreaksbr }}",
-            "total_answers":{{ question.total_responses }},
-            "total_views": {{ question.total_views }},
-            "pub_date":"{% fix_naturaltime question.pub_date|naturaltime %}",
-            "creator":"{{ question.creator.user.username }}",
-            {% answer user_p question as ANSWER %}
-            "user_answer":"{{ ANSWER|linebreaksbr }}",
-        },
-        {% endif %}
-    {% endfor %}
-];
 popular_questions_=[
     {% for question in popular_questions %}
         {% if not question.creator.user in user_p.silenced_users.all %}
@@ -141,9 +124,9 @@ Confirme seu email abrindo o link enviado para ele.<br>Este é o email usado na 
 </center>
 
 <section class="card" id="novas_questoes" style="background: transparent; border: none"> 
-    <div id="new-q-btn" style="display: none; background-color:transparent; height: 40px; width: 100%; margin-top: 25px; text-align:center; line-height: 18px;" onclick="update_recent()">
+    <button id="new-q-btn" class="btn bg-faint-gradient" style="display: none; border: none; width: 100%; margin-top: 25px; text-align:center; line-height: 15px; border-radius: 50px;" onclick="update_recent()">
             <br><p style="margin-bottom: 0px;">Carregar <span id="new-q-count">0</span> novas perguntas </p><br>
-    </div>
+    </button>
     <center id="top-spinner" style="display: none"><i class="fas fa-spinner fa-3x fa-spin"></i></center>
 	<ul class="list-group-flush" id="lista_de_questoes_recentes" style="border: none"></ul>
 	<button id="load-more-recent-btn" class="btn btn-outline-primary" onclick="load_more_recent();" style="border-radius: 30px; font-size: 13px">Ver Mais +</button>

@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from django.utils import timezone
+from datetime import timedelta
 from django.http import HttpResponse, JsonResponse
 from django.core.paginator import Paginator, EmptyPage, InvalidPage
 from django.contrib.auth import authenticate, login, logout as django_logout
@@ -1307,15 +1308,31 @@ class SearchRankCD(SearchRank):
             vector, query, normalization, **extra)
 
 def search(request):
+    time = timezone.now()
+    user_ip = get_client_ip(request)
+    searcher_ips = cache.get('searcher_ids')
+    if not searcher_ips:
+        cache.set('searcher_ids', {user_ip: time})
+    elif searcher_ips[user_ip]:
+        last_search = time - searcher_ips[user_ip]
+        searcher_ips[user_ip] = time
+        cache.set('searcher_ids', searcher_ips)
+        if last_search < timedelta(seconds=3):
+            context = {'error': 'Sua busca falhou', 'err_msg': 'Por favor, tente novamente.'}
+            return render(request, 'error.html', context)
+    else:
+        searcher_ips[user_ip] = time
+        cache.set('searcher_ids', searcher_ips)
+
     userquery = request.GET.get('q')
     page = request.GET.get('page', 1)
 
     '''
-    # Mais resultados, menos omissões, porém usa mais recursos e resultados irrelevantes.
+    # Mais resultados, menos omissões, porém usa mais recursos e gera muitos resultados irrelevantes.
     res_q = Question.objects.annotate(rank=SearchRank(SearchVector('text', 'description'), SearchQuery(userquery))).order_by('-rank')
     res_r = Response.objects.annotate(rank=SearchRank(SearchVector('text'), SearchQuery(userquery))).order_by('-rank')
     '''
-    # Menos resultados, mais omissões, porém usa menos recursos e menos resultados irrelevantes:
+    # Menos resultados, mais omissões, porém usa menos recursos e gera menos resultados irrelevantes:
     res_q = Question.objects.annotate(rank=SearchRank(SearchVector('text', weight='A') + SearchVector('description', weight='B'), SearchQuery(userquery))).filter(rank__gte=0.3).order_by('-rank')
     res_r = Response.objects.annotate(rank=SearchRank(SearchVector('text', weight='A'), SearchQuery(userquery))).filter(rank__gte=0.3).order_by('-rank')
 

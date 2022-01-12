@@ -264,7 +264,7 @@ formulario_de_resposta.onsubmit = function() {
 
 try {
     var description = document.getElementsByClassName('description')[0];
-    description.innerText = description.innerText.replaceAll('&quot;', '"').replaceAll('&lt;', '<').replaceAll('&gt;', '>');
+    description.innerText = description.innerText.replaceAll('&quot;', '"').replaceAll('&lt;', '<').replaceAll('&gt;', '>').replaceAll('&#x27;', "'").replaceAll('&amp;', '&');
 } catch (e) {
     console.log(e);
 }
