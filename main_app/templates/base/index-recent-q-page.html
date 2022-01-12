@@ -16,7 +16,7 @@
                     </span>
                 </div>
 			    <h2 class="question-title fg-1" style="font-size: 17px">
-				    <a class="q-title" href="/question/{{ question.id }}">
+				    <a class="q-title" style="text-decoration: none; outline: none" href="/question/{{ question.id }}">
 					    {{ question.text }}
 				    </a>
 			    </h2>
@@ -24,6 +24,28 @@
 			    {% if question.description %}
 				    <p class='description'>{{ question.description }}</p>
 			    {% endif %}
+            
+                <small class="text-muted">
+                            
+                    <span id="response-counter-{{ question.id }}" style="color: #00CD66; font-weight: 500">
+                        {{ question.total_responses }}
+                    </span>
+
+                    <span id="response-sentence-{{ question.id }}" style="color: #00CD66; font-weight: 500">
+                        Respostas
+                    </span>
+               
+
+                    <span>
+                         &#8226;  {% fix_naturaltime question.pub_date|naturaltime %} 
+                    </span>
+                
+                    <span> &#8226; </span> 
+                
+                  <span> {{ question.total_views }} </span>
+                  <span style="margin-top: 10px"><ion-icon name="eye-outline"></ion-icon></span>
+                
+                </small>
 
                 {% if question.image %}
                 <div class="index-qimg-container">
@@ -39,21 +61,7 @@
                 </div>
                 {% endif %}
             
-                <small class="text-muted">
-                    <ion-icon name="eye-outline"></ion-icon>{{ question.total_views }}
-                    <span> | </span>
-                    <span id="response-counter-{{ question.id }}" style="color: #00CD66; font-weight: 500">
-                        {{ question.total_responses }}
-                    </span>
-
-                    <span id="response-sentence-{{ question.id }}" style="color: #00CD66; font-weight: 500">
-                        Respostas
-                    </span>
-
-                    <span>
-                        | {% fix_naturaltime question.pub_date|naturaltime %}
-                    </span>
-                </small>
+    
 
 			    {% if user.is_anonymous %}
 				    <p>Faça <a href="/signin?redirect=/question/{{ question.id }}">login</a> ou <a href="/signup?redirect=/question/{{ question.id }}">crie uma conta</a> para responder essa pergunta.</p>
