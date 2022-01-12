@@ -102,7 +102,7 @@ ol, ul {
   margin-left: auto;
   margin-right: auto;
 }
-.notif-badge {
+#notif-badge {
   background-color: red;
   font-size: 9px;
   float: right;

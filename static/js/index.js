@@ -46,7 +46,6 @@ function image_toggle(el) {
 
 function activate_img_btns() {
     let btns = document.getElementsByClassName('index-qimg-btn');
-    console.log(btns.length + ' buttons to load');
     for (var i = 0; i < btns.length; i++) {
         var el = btns[i];
         var el_img = el.getElementsByClassName('index-qimg-off')[0].children[0];
@@ -173,6 +172,75 @@ function load_more_recent() {
 	});
 }
 
+async function check_for_update() {
+    try {
+        var last_known_q = document.getElementById("novas_questoes").getElementsByClassName("list-group-item")[0].getAttribute("data-id");
+        var notif_badge = document.getElementById('notif-badge');
+        var button = document.getElementById('new-q-btn');
+        var btn_count = document.getElementById('new-q-count');
+    } catch (e) {
+        return 0;
+    }
+	$.ajax({
+			url: "/update_index_check",
+			type: "get",
+			dataType: "json",
+			data: {
+				last_known_q: last_known_q,
+			},
+			complete: function(data) {
+
+                new_notifications = data.responseJSON['nn'];
+                new_questions = data.responseJSON['nq'];
+    
+                if (notif_badge) {
+                    if (new_notifications > 0) {
+                        notif_badge.innerHTML = new_notifications;
+                        notif_badge.style.display = 'block';
+                        window.title = "(" + new_notifications + ") Asker | Faça e Responda Perguntas na Comunidade!";
+                    } else {
+                        notif_badge.style.display = 'none';
+                        window.title = "Asker | Faça e Responda Perguntas na Comunidade!";
+                    }
+                }
+                if (new_questions > 0) {
+                    button.style.display = 'table';
+                    btn_count.innerHTML = new_questions;
+                }
+
+			},
+	});    
+}
+setInterval(check_for_update, 30000);
+
+function update_recent() {
+    var last_known_q = document.getElementById("novas_questoes").getElementsByClassName("list-group-item")[0].getAttribute("data-id");
+    var button = document.getElementById('new-q-btn');
+    var icon = document.getElementById('top-spinner');
+	button.style.display = 'none';
+	icon.style.display = 'none';
+	$.ajax({
+			url: "/update_index",
+			type: "get",
+			dataType: "html",
+			data: {
+				last_known_q: last_known_q,
+			},
+			complete: function(data) {
+                if (data.responseText == '-1') {
+                    icon.style.display = 'none';
+                } else if (data.responseText.includes(success_str)) {
+                    q_list = document.getElementById('lista_de_questoes_recentes');
+                    q_list.innerHTML = data.responseText + q_list.innerHTML;
+                }
+				icon.style.display = 'none';
+                activate_img_btns();
+                if (should_hide) {
+                    hide_questions();
+                }
+			},
+	});
+}
 
 function load_more_popular(button, icon, page) {
     

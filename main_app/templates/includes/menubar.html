@@ -26,7 +26,9 @@
                     <button class="menu-button"><font color="#fff" style="color: #fff; font-weight: 900">
                         <ion-icon name="earth-outline"></ion-icon>
                         {% if user_p.new_notifications > 0 %}
-                            <div class="notif-badge">{{ user_p.new_notifications }}</div>
+                            <div id="notif-badge">{{ user_p.new_notifications }}</div>
+                        {% else %}
+                            <div id="notif-badge" style="display: none;">{{ user_p.new_notifications }}</div>
                         {% endif %}
                     </font></button>
                 </li>

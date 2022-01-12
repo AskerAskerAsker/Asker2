@@ -18,8 +18,6 @@ import time
 import os
 import html
 import ast
-
-
 import io
 from PIL import Image, ImageFile, UnidentifiedImageError, ImageSequence
 
@@ -1121,6 +1119,34 @@ def more_questions(request):
         context['user_p'] = up
 
     return render(request, 'base/index-recent-q-page.html', context)
+
+def update_index(request):
+    up = UserProfile.objects.get(user=request.user)
+    nn = up.new_notifications
+
+    last_known_q = request.GET.get('last_known_q')
+    nq = Question.objects.filter(id__gt=last_known_q).order_by("-id")
+    if len(nq) == 0:
+        return HttpResponse('-1')
+
+    nq_context = {'questions': nq, 'user_p': up}
+
+    #list(Question.objects.filter(id__range=(id_de_inicio-50, id_de_inicio)))
+    
+    return render(request, 'base/index-recent-q-page.html', nq_context)
+
+def update_index_check(request):
+    up = UserProfile.objects.get(user=request.user)
+    nn = up.new_notifications
+
+    last_known_q = request.GET.get('last_known_q')
+    nq = Question.objects.filter(id__gt=last_known_q).order_by("id")
+    nq_context = {'questions': nq, 'user_p': up}
+    print(len(nq))
+    print([q.id for q in nq])
+    #list(Question.objects.filter(id__range=(id_de_inicio-50, id_de_inicio)))
+    
+    return JsonResponse({'nn': nn, 'nq': len(nq)})
 
 def get_more_questions(request):
     # Para o profile.html
