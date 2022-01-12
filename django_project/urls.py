@@ -70,5 +70,7 @@ path('menu', lambda request: render(request, 'menu.html')),
   path('confirm-account', views.confirm_account, name='confirm_account'),
   path('search', views.search, name='search'),
   path('modact', views.modactivity, name='modactivity'),
+  path('update_index_check', views.update_index_check, name='update_index_check'),
+  path('update_index', views.update_index, name='update_index'),
   path('admin/', admin.site.urls),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
