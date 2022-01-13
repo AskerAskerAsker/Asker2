@@ -24,7 +24,21 @@
 			    {% if question.description %}
 				    <p class='description'>{{ question.description }}</p>
 			    {% endif %}
-            
+
+                {% if question.image %}
+                <div class="index-qimg-container">
+		                    <button class="index-qimg-btn" onclick="image_toggle(this);">
+                        <div class="overflow-guide">
+                            <div class="separator-100"></div>
+                            <ion-icon name="chevron-down-outline"></ion-icon>
+                        </div>
+					    <div class="index-qimg-off">
+        						<img class="index-qimg" src="{{ question.image.url }}">
+					    </div>
+                    </button>
+                </div>
+                {% endif %}
+           
                 <small class="text-muted">
                             
                     <span id="response-counter-{{ question.id }}" style="color: #00CD66; font-weight: 700">
@@ -45,23 +59,7 @@
                   <span> <b>{{ question.total_views }} </b></span>
                   <span style="margin-left: -2px; font-weight: 900"><ion-icon name="eye"></ion-icon></span>
                 
-                </small>
-
-                {% if question.image %}
-                <div class="index-qimg-container">
-                    <button class="index-qimg-btn" onclick="image_toggle(this);">
-                        <div class="overflow-guide">
-                            <div class="separator-100"></div>
-                            <ion-icon name="chevron-down-outline"></ion-icon>
-                        </div>
-					    <div class="index-qimg-off">
-        						<img class="index-qimg" src="{{ question.image.url }}">
-					    </div>
-                    </button>
-                </div>
-                {% endif %}
-            
-    
+                </small>    
 
 			    {% if user.is_anonymous %}
 				    <p>Faça <a href="/signin?redirect=/question/{{ question.id }}">login</a> ou <a href="/signup?redirect=/question/{{ question.id }}">crie uma conta</a> para responder essa pergunta.</p>
