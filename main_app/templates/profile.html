@@ -31,53 +31,34 @@
     {% if user.is_authenticated %}
 	    {% include "includes/menubar.html" %}
     {% endif %}
-
-	{% include "includes/navbar.html" %}
-	<br>
 	
 	<main style="border: none"><div class="card bg-main" style="border: none" id="uinfo">
 	    <div class="card-body" style="border: none">
+        
+        <br><br>
 		<center id="center1">
-		  <div style="border-radius: 300px; background: url({{target_user_p.avatar.url}}); width: 220px; height: 220px; background-position: center center; background-repeat: no-repeat">		      
+		  <div style="border-radius: 300px; background: url({{target_user_p.avatar.url}}); width: 210px; height: 210px; background-position: center center; background-repeat: no-repeat">		      
 		  </div>
-		    
-       <br>
-        <h3 style="margin-top: -5px; font-size: 2.5vh">
+		  
+       	{% if target_user_p.user.username == user.username %}
+            <center>
+		    <div id="edit-profile" class="vertical-spaced"><a href="/user/{{ user.username }}/edit" style="text-decoration: none; outline: none; font-size: 13px"><b>Editar <ion-icon name="brush-outline"></ion-icon></b></a></div>
+            <br></center>
+		{% endif %}
+        
+        <h3 style="margin-top: 10px; font-size: 5vh; font-weight: 900">
             <b>{{ target_user_p.user.username }}</b>
         </h3>
-			<p id="bio" style="line-height: 16px; font-size: 16px">
-			   
-			     {{ target_user_p.bio|linebreaksbr }}
-
-			</p>
-			
-			<p style="font-size: 13px; font-weight: 700">
+        
+        <p style="font-size: 13px; font-weight: 700">
 			 No Asker desde <span class="font-italic">{{ target_user_p.user.date_joined.date }}.</span>
-			</p>
-			
-		</center>
-		<div class="card-group">
-			<div class="card bg-faint-gradient" style="border: none;">
-				<div class="card-body">
-                <h5><font color="white"><b>Perguntas</b></font></h5>
-                <p><font style="font-weight: 800">{{target_user_p.total_questions}}</font></p>
-				</div>
-			</div>
-			<div class="card bg-faint-gradient" style="border: none;">
-				<div class="card-body">
-                <h5><font color="white"><b>Respostas</b></font></h5>
-                <p><font style="font-weight: 800">{{target_user_p.total_responses}}</font></p>
-				</div>
-			</div>
-			<div class="card bg-faint-gradient" style="border: none;">
-				<div class="card-body">
-                <h5><font color="white"><b>Pontos</b></font></h5>
-                <p><font style="font-weight: 800">{{target_user_p.total_points}}</font></p>
-				</div>
-			</div>
-		</div>
+	    </p>
+        </center>
+        
 
-		{% if target_user_p.user.username != user.username %}
+        
+<center>        
+        {% if target_user_p.user.username != user.username %}
 
             {% if not user.is_anonymous %}
 		        {% afollowb user.username target_user_p.user.username as FOLLOWED %}
@@ -108,38 +89,75 @@
 		        </center>
             {% endif %}
 		{% endif %}
+</center> 
+<br>
+ 
+<center>
 
-        <br>
+<table frameborder="0" style="border-radius: 30px; width: 90%; max-width: 400px; height: 36px" class="bg-faint-gradient">
+<tbody>
+<tr>
+<td style="width: 40px; opacity: 0">1</td>
+<td style="padding: 10px"><b style="font-size: 18px">Perguntas</b></td>
+<td style="padding: 10px"><b style="font-size: 18px">Respostas</b></td>
+<td style="padding: 10px"><b style="font-size: 18px">Pontos</b></td>
+<td style="width: 40px; opacity: 0">2</td>
+</tr>
+<tr>
+<td style="width: 40px; opacity: 0">3</td>
+<td style="padding: 5px 10px 5px 10px"><b>{{target_user_p.total_questions}}</b></td>
+<td style="padding: 5px 10px 5px 10px"><b>{{target_user_p.total_responses}}</b></td>
+<td style="padding: 5px 10px 5px 10px"><b>{{target_user_p.total_points}}</b></td>
+<td style="width: 40px; opacity: 0">4</td>
+</tr>
+</tbody>
+</table> 
 
-		{% if target_user_p.user.username == user.username %}
-            <center>
-		    <div id="edit-profile" class="vertical-spaced"><a href="/user/{{ user.username }}/edit" style="text-decoration: none; outline: none"><b>Editar Perfil</b></a></div>
-            <br></center>
-		{% endif %}
+<br>   
+	    <p id="bio" style="line-height: 16px; font-size: 2vh; padding-top: 10px">	   
+			     {{ target_user_p.bio|linebreaksbr }}
+	    </p>
+        
+</center>
+
+        
+        
 		{% if target_user_p.user.username == user.username or not target_user_p.hide_activity or 'pap' in permissoes_usuario_logado or user.is_superuser %}
 		
+<style>
+.movend:active{
+color: #43CD80;
+font-weight: 800;
+}
+.movend:hover{
+color: #43CD80;
+font-weight: 800;
+}
+</style>
+     
+        <br>
 		<ul class="nav nav-tabs" id="tabs">
 			<li class="nav-item">
-				<a class="nav-link bg-main-tab activity-tab active"  id="questions">Perguntas</a>
+            <a class="nav-link bg-main-tab activity-tab movend active" style="border: none; border-top: 1px" id="questions">Perguntas</a>
 			</li>
 			<li class="nav-item">
-				<a class="nav-link bg-main-tab activity-tab disabled" id="responses">Respostas</a>
+				<a class="nav-link bg-main-tab activity-tab movend disabled" style="border: none;  border-top: 1px" id="responses">Respostas</a>
 			</li>
 			{% if target_user_p.user.username == user.username %}
 			<li class="nav-item">
-				<a class="nav-link bg-main-tab activity-tab disabled" id="followed-q">Perguntas Seguidas</a>
+				<a class="nav-link bg-main-tab activity-tab movend disabled" style="border: none" id="followed-q">Perguntas Seguidas</a>
 			</li>
 			<li class="nav-item">
-				<a class="nav-link bg-main-tab activity-tab disabled" id="followed-u">Seguindo</a>
+				<a class="nav-link bg-main-tab activity-tab movend disabled" style="border: none" id="followed-u">Seguindo</a>
 			</li>
 			<li class="nav-item">
-				<a class="nav-link bg-main-tab activity-tab disabled" id="followers">Seguidores</a>
+				<a class="nav-link bg-main-tab activity-tab movend disabled" style="border: none" id="followers">Seguidores</a>
 			</li>
 			<li class="nav-item">
-				<a class="nav-link bg-main-tab activity-tab disabled" id="blocked">Bloqueados</a>
+				<a class="nav-link bg-main-tab activity-tab movend disabled" style="border: none" id="blocked">Bloqueados</a>
 			</li>
 			<li class="nav-item">
-				<a class="nav-link bg-main-tab activity-tab disabled" id="silenced">Silenciados</a>
+				<a class="nav-link bg-main-tab activity-tab movend disabled" style="border-left: 0px; border-top: 1px; border-right: 0px; border-bottom: 0px" id="silenced">Silenciados</a>
 			</li>
 			{% endif %}
 		</ul>
@@ -153,14 +171,14 @@
 							<a href="/question/{{ question.id }}">{{ question.text }}</a><br>
 							<span class="small-text">Perguntada em: {{ question.pub_date|naturalday }}</span>
 							{% if question.best_answer == None and target_user_p.user.username == user.username %}
-								<br><span class="small-text">Sem melhor resposta</span>
+								<br><span class="small-text">Sem Melhor Resposta</span>
 							{% endif %}
 						</div>
 					</li>
 					{% endfor %}
 				</ul>
 				{% if target_user_p.total_questions > 0 %}
-					<button class="btn btn-outline-primary" onclick="show_more_questions(this, {{ target_user_p.user.id }})">mais</button>
+					<button class="btn btn-outline-primary" style="border: none" onclick="show_more_questions(this, {{ target_user_p.user.id }})"><b>Ver Mais+</b></button>
 				{% else %}
 					<p align="center" style="padding: 5px; font-size: 1.8vh">
 					   <center>

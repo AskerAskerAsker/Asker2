@@ -7,7 +7,7 @@
     {% if not question.creator.ban or question.creator.ban and user != question.creator.user %}
 	    {% if not question.creator.user in user_p.silenced_users.all %}
 	    <li class="list-group-item bg-main" data-id="{{ question.id }}">
-		    <div class="card-body">
+		    <div class="card-body"><br>
                 <div class="profile-picture-index" style="padding-bottom: 7px">
                     <div class="profile-pic-small" style="width: 20px; height: 20px; border-radius: 100px; background: url('{{ question.creator.avatar.url }}'); background-size: cover; background-repeat: no-repeat; vertical-align: middle; display:inline-block">
                     </div>
@@ -25,21 +25,7 @@
 				    <p class='description'>{{ question.description }}</p>
 			    {% endif %}
 
-                {% if question.image %}
-                <div class="index-qimg-container">
-		                    <button class="index-qimg-btn" onclick="image_toggle(this);">
-                        <div class="overflow-guide">
-                            <div class="separator-100"></div>
-                            <ion-icon name="chevron-down-outline"></ion-icon>
-                        </div>
-					    <div class="index-qimg-off">
-        						<img class="index-qimg" src="{{ question.image.url }}">
-					    </div>
-                    </button>
-                </div>
-                {% endif %}
-           
-                <small class="text-muted">
+            <small class="text-muted">
                             
                     <span id="response-counter-{{ question.id }}" style="color: #00CD66; font-weight: 700">
                         {{ question.total_responses }}
@@ -56,11 +42,26 @@
                 
                     <span> &#8226; </span> 
                 
-                  <span> <b>{{ question.total_views }} </b></span>
-                  <span style="margin-left: -2px; font-weight: 900"><ion-icon name="eye"></ion-icon></span>
+                  <span> <b style="color: #1874CD">{{ question.total_views }} </b></span>
+                  <span style="color: #1874CD; margin-left: -2px; font-weight: 700"><ion-icon name="eye"></ion-icon></span>
                 
                 </small>    
 
+                {% if question.image %}
+                <div class="index-qimg-container" style="padding-bottom: 9px">
+		                    <button class="index-qimg-btn" onclick="image_toggle(this);">
+                        <div class="overflow-guide">
+                            <div class="separator-100"></div>
+                            <ion-icon name="chevron-down-outline"></ion-icon>
+                        </div>
+					    <div class="index-qimg-off">
+        						<img class="index-qimg" src="{{ question.image.url }}">
+					    </div>
+                    </button>
+                </div>
+                {% endif %}
+           
+                
 			    {% if user.is_anonymous %}
 				    <p>Faça <a href="/signin?redirect=/question/{{ question.id }}">login</a> ou <a href="/signup?redirect=/question/{{ question.id }}">crie uma conta</a> para responder essa pergunta.</p>
 			    {% else %}
@@ -74,10 +75,10 @@
                         </div>
 				    {% else %}
            
-                        <div class="vertical-spaced user-response" data-iddapergunta="{{ question.id }}" style="margin-bottom: 10px">
-						    <button class="vertical-spaced btn btn-outline-primary btn-sm" onclick="$(this).toggle(0); $('#answer-box-{{ question.id }}').toggle(0);" style="border-radius: 30px; margin-top: -5px;">
-							    <i class="fas fa-share"></i>
-							    Responder
+                        <div class="vertical-spaced user-response" data-iddapergunta="{{ question.id }}" style="margin-bottom: 10px; padding-top: 10px">
+						    <button class="vertical-spaced btn btn-outline-primary btn-sm" onclick="$(this).toggle(0); $('#answer-box-{{ question.id }}').toggle(0);" style="border-radius: 30px; border: none; margin-top: -5px; margin-left: -8px">
+							    <i class="fas fa-share" style="color: #BA55D3"></i>
+							   <b style="color: #BA55D3"> Responder </b>
 						    </button>
 					    </div>					   
                         <div id="answer-box-{{ question.id }}" style="display: none">
