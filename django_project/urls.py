@@ -73,4 +73,5 @@ path('menu', lambda request: render(request, 'menu.html')),
   path('update_index_check', views.update_index_check, name='update_index_check'),
   path('update_index', views.update_index, name='update_index'),
   path('admin/', admin.site.urls),
+  path('promo', views.promo, name='promo'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

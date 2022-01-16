@@ -1387,3 +1387,5 @@ def modactivity(request):
     }
     return render(request, 'modactivity.html', context)
 
+def promo(request):
+    return render(request, 'promo.html')
