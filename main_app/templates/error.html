@@ -12,20 +12,7 @@
         }
     </style>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="/static/css/common.min.css">
-    <script src="/static/js/cookieman.js?v=1"></script>
-    <script>
-        var cssfn = 'light.css';
-        var cssversion = '?v=5';
-        if (getDarkCookie() == 'true') { cssfn = 'dark.css'; }
-        var link = document.createElement('link');
-        link.rel = 'stylesheet';
-        link.type = 'text/css';
-        link.href = '/static/css/' + cssfn + cssversion;
-        document.head.appendChild(link);
-
-	    document.getElementById('wait').remove();
-    </script>
+	{% include "includes/themehandler.html" %}
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://kit.fontawesome.com/1f965a8b94.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
@@ -47,11 +34,6 @@
         </div>
     </main>
     <script>
-        if (getDarkCookie() == 'true') {
-            document.getElementsByClassName('navbar')[0].classList.remove("navbar-light");
-            document.getElementsByClassName('navbar')[0].classList.add("navbar-dark");
-        }
-	</script>
 
 </body>
 </html>
