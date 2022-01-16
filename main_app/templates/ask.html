@@ -2,7 +2,7 @@
 <!doctype html>
 <html lang="pt-br">
 <head>
-<title>Perguntar...</title>
+<title>Asker | Perguntar...</title>
 <style id="wait">
 	body {
 		visibility: hidden;
@@ -32,6 +32,13 @@
     {% include "includes/navbar.html" %}
     
     <main>
+    
+    <center> 
+    <a href="https://asker.fun/rules" style="text-decoration: none; outline: none">
+    <font style="font-size: 11px; opacity: 0.8">Confira as Regras da Comunidade!</font>
+    </a>
+    </center>
+    
         {% if user_p.active %}
         <div id="inner" style="padding: 20px">
             <form method="post" enctype="multipart/form-data" onsubmit="enviar_pergunta(this)" id="form_pergunta">

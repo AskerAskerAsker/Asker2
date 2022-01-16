@@ -48,7 +48,7 @@
 		<h4>Nome de Usuário:</h4>
 		{{ invalid_username_text|safe }}
 		<form accept-charset="utf-8" method="post" id="username_form">
-			<input type="hidden" name="type" value="username">
+			<input type="hidden" name="type" maxlength="14" value="username">
 			{% csrf_token %}
 
 			<div class="form-row">

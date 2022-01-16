@@ -65,25 +65,25 @@
 		        {% ablockb user.username target_user_p.user.username as BLOCKED %}
 		        {% asilenceb user.username target_user_p.user.username as SILENCED %}
 
-                <center class="btn-group justified vertical-spaced" role="group">
+                <center class="btn-group justified vertical-spaced" style="font-weight: 500; border-radius: 100px" role="group">
                     {% if target_user_p.followable %}
 			        <button id="follow-button" class="btn btn-outline-primary" onclick="follow_user('{{ target_user_p.user.username }}')">
                             {% if FOLLOWED %}
-                                Seguindo
+                               <b> Seguindo </b>
                             {% else %}
-                                Seguir
+                               <b> Seguir </b>
                             {% endif %}
 			        </button>{% endif %}<button id="block-button" class="btn btn-outline-primary" onclick="block_user('{{ target_user_p.user.username }}')">
                             {% if BLOCKED %}
-                                Bloqueado
+                               <b> Bloqueado </b>
                             {% else %}
-                                Bloquear
+                               <b> Bloquear </b>
                             {% endif %}
 			        </button><button id="silence-button" class="btn btn-outline-primary" onclick="silence_user('{{ target_user_p.user.username }}')">
                             {% if SILENCED %}
-                                Silenciado
+                               <b> Silenciado </b>
                             {% else %}
-                                Silenciar
+                               <b> Silenciar </b>
                             {% endif %}
 			        </button>
 		        </center>
@@ -94,33 +94,35 @@
  
 <center>
 
-<table frameborder="0" style="border-radius: 30px; width: 90%; max-width: 400px; height: 36px" class="bg-faint-gradient">
+<table frameborder="0" style="margin-left: -10px; border-radius: 30px; width: 80%; max-width: 400px;" class="bg-faint-gradient">
 <tbody>
 <tr>
 <td style="width: 40px; opacity: 0">1</td>
-<td style="padding: 10px"><b style="font-size: 18px">Perguntas</b></td>
-<td style="padding: 10px"><b style="font-size: 18px">Respostas</b></td>
-<td style="padding: 10px"><b style="font-size: 18px">Pontos</b></td>
+<td style="width: 40px; opacity: 0">1</td>
+<td style="padding: 13px"><font style="font-size: 16px; font-weight: 500">Perguntas</font></td>
+<td style="padding: 13px"><font style="font-size: 16px; font-weight: 500">Respostas</font></td>
+<td style="padding: 13px"><b style="font-size: 18px; font-weight: 900">Pontos</b></td>
+<td style="width: 40px; opacity: 0">2</td>
 <td style="width: 40px; opacity: 0">2</td>
 </tr>
 <tr>
 <td style="width: 40px; opacity: 0">3</td>
-<td style="padding: 5px 10px 5px 10px"><b>{{target_user_p.total_questions}}</b></td>
-<td style="padding: 5px 10px 5px 10px"><b>{{target_user_p.total_responses}}</b></td>
-<td style="padding: 5px 10px 5px 10px"><b>{{target_user_p.total_points}}</b></td>
+<td style="width: 40px; opacity: 0">3</td>
+<td style="padding: 10px 13px 10px 13px; font-weight: 500">{{target_user_p.total_questions}}</td>
+<td style="padding: 10px 13px 10px 13px; font-weight: 500">{{target_user_p.total_responses}}</td>
+<td style="padding: 10px 13px 10px 13px; font-weight: 900">{{target_user_p.total_points}}</td>
+<td style="width: 40px; opacity: 0">4</td>
 <td style="width: 40px; opacity: 0">4</td>
 </tr>
 </tbody>
 </table> 
 
 <br>   
-	    <p id="bio" style="line-height: 16px; font-size: 2vh; padding-top: 10px">	   
+	    <p id="bio" style="line-height: 16px; font-size: 13px; padding-top: 10px">	   
 			     {{ target_user_p.bio|linebreaksbr }}
 	    </p>
         
-</center>
-
-        
+</center>    
         
 		{% if target_user_p.user.username == user.username or not target_user_p.hide_activity or 'pap' in permissoes_usuario_logado or user.is_superuser %}
 		
@@ -138,10 +140,11 @@ font-weight: 800;
         <br>
 		<ul class="nav nav-tabs" id="tabs">
 			<li class="nav-item">
-            <a class="nav-link bg-main-tab activity-tab movend active" style="border: none; border-top: 1px" id="questions">Perguntas</a>
+            <a class="nav-link bg-main-tab activity-tab movend active" style="border: none;" id="questions">
+            <i class="fas fa-share" style="color: #BA55D3; font-size: 18px; padding-right: 10px"></i> Perguntas</a>
 			</li>
 			<li class="nav-item">
-				<a class="nav-link bg-main-tab activity-tab movend disabled" style="border: none;  border-top: 1px" id="responses">Respostas</a>
+				<a class="nav-link bg-main-tab activity-tab movend disabled" style="border: none" id="responses">Respostas</a>
 			</li>
 			{% if target_user_p.user.username == user.username %}
 			<li class="nav-item">
@@ -191,7 +194,7 @@ font-weight: 800;
 		</section>
 
 		<section id="responses-section" class="hidden-section" style="border: none">
-			<div class="responses-card card bg-main" style="border: none">
+			<div class="responses-card card bg-main" style="border: none; width: 90%">
 				<ul class="list-group list-group-flush" id="rs">
 					{% for response in responses %}
 					<li class="list-group-item bg-main">
@@ -209,7 +212,7 @@ font-weight: 800;
 					{% endfor %}
 				</ul>
 				{% if target_user_p.total_responses != 0 %}
-					<button class="btn btn-outline-primary" onclick="show_more_responses(this, {{ target_user_p.user.id }})">mais</button>
+					<button class="btn btn-outline-primary" style="border: none" onclick="show_more_responses(this, {{ target_user_p.user.id }})"><b>Ver Mais+</b></button>
 				{% else %}
 					<p align="center" style="padding: 5px; font-size: 1.8vh"><center>
 					    {{ target_user_p.user.username }} ainda não respondeu nenhuma pergunta.

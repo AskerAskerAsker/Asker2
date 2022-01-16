@@ -7,7 +7,7 @@
     {% if not question.creator.ban or question.creator.ban and user != question.creator.user %}
 	    {% if not question.creator.user in user_p.silenced_users.all %}
 	    <li class="list-group-item bg-main" data-id="{{ question.id }}">
-		    <div class="card-body"><br>
+		    <div class="card-body" style="padding-bottom: 10px">
                 <div class="profile-picture-index" style="padding-bottom: 7px">
                     <div class="profile-pic-small" style="width: 20px; height: 20px; border-radius: 100px; background: url('{{ question.creator.avatar.url }}'); background-size: cover; background-repeat: no-repeat; vertical-align: middle; display:inline-block">
                     </div>
@@ -78,7 +78,7 @@
                         <div class="vertical-spaced user-response" data-iddapergunta="{{ question.id }}" style="margin-bottom: 10px; padding-top: 10px">
 						    <button class="vertical-spaced btn btn-outline-primary btn-sm" onclick="$(this).toggle(0); $('#answer-box-{{ question.id }}').toggle(0);" style="border-radius: 30px; border: none; margin-top: -5px; margin-left: -8px">
 							    <i class="fas fa-share" style="color: #BA55D3"></i>
-							   <b style="color: #BA55D3"> Responder </b>
+							   <b style="color: #000; opacity: 0.5"> Responder </b>
 						    </button>
 					    </div>					   
                         <div id="answer-box-{{ question.id }}" style="display: none">
