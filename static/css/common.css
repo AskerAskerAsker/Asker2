@@ -149,33 +149,27 @@ button font {
 	padding: 5px 5px;
     }
 }
-
 /* Menubar-end */
 
-/* Navbar */
-.navbar-round {
-    height: 40px;
-    width: 40px;
-    border-radius: 20px;
-    border: solid 1px #ddd;
-    border-color: #ddd !important;
-    padding: 11px 12px;
-    font-size: 15px;
+/* Index */
+#new-q-btn {
+	position: fixed;
+	display: none;
+	padding: 10px;
+	border: none;
+	z-index: 9999;
+	width: inherit;
+	max-width: inherit;
+	top: 7vh;
+	text-align:center;
+	line-height: 15px;
+	border-radius: 50px;
 }
 @media (min-width: 320px) and (max-width: 570px) {
-	.navbar-brand {
-		margin-right: 0px;
+	#new-q-btn {
+		top: 7vh;
 	}
 }
-@media (min-width: 570px) and (max-width: 760px) {
-	.navbar-nav {
-		font-size: 2vw;
-		text-align: center;
-	}
-}
-/* Navbar-end */
-
-/* Index */
 .index-qimg {
     display: block;
     margin-left: auto;

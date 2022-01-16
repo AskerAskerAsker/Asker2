@@ -132,7 +132,7 @@ def save_answer(request):
 
         now = timezone.now()
 
-        file_name = 'rpic-{}{}'.format(now.date(), now.time())
+        file_name = 'rpic-{}{}'.format(now.date(), now.time()).replace(':', '')
 
         success = save_img_file(f, 'media/responses/' + file_name, (850, 850))
         if success:
@@ -530,7 +530,7 @@ def ask(request):
         if form.is_valid():
             f = request.FILES['file']
 
-            file_name = 'qpic-{}{}'.format(timezone.now().date(), timezone.now().time())
+            file_name = 'qpic-{}{}'.format(timezone.now().date(), timezone.now().time()).replace(':', '')
 
             success = save_img_file(f, 'media/questions/' + file_name, (850, 850))
             if success:
@@ -706,7 +706,7 @@ def edit_profile(request, username):
                 '''
                 Nome da imagem do usuário no sistema de arquivos: nome de usuário atual, data de alteração e horário da alteração.
                 '''
-                file_name = '{}-{}-{}'.format(request.user.username, timezone.now().date(), timezone.now().time())
+                file_name = '{}-{}-{}'.format(request.user.username, timezone.now().date(), timezone.now().time()).replace(':', '')
 
                 success = save_img_file(f, 'media/avatars/' + file_name, (192, 192))
                 if not success:

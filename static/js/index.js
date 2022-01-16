@@ -197,10 +197,10 @@ async function check_for_update() {
                     if (new_notifications > 0) {
                         notif_badge.innerHTML = new_notifications;
                         notif_badge.style.display = 'block';
-                        window.title = "(" + new_notifications + ") Asker | Faça e Responda Perguntas na Comunidade!";
+                        document.title = "(" + new_notifications + ") Asker | Faça e Responda Perguntas na Comunidade!";
                     } else {
                         notif_badge.style.display = 'none';
-                        window.title = "Asker | Faça e Responda Perguntas na Comunidade!";
+                        document.title = "Asker | Faça e Responda Perguntas na Comunidade!";
                     }
                 }
                 if (new_questions > 0) {

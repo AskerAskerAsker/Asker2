@@ -77,40 +77,31 @@ popular_questions_=[
  
 <body>
 	{% include "includes/navbar.html" %}
-<div id="otop"></div> 
-
-<center>
-<a href="#otop">
-   <button id="new-q-btn" class="btn bg-faint-gradient" style="display: none; padding: 10px; border: none; position: fixed; top: 20%; left: 100%; z-index: 9999999999999; text-align:center; line-height: 15px; border-radius: 50px 0px 0px 50px;" onclick="update_recent()">
-      <br><p style="margin-bottom: 0px; font-weight: 800"><span id="new-q-count">0</span> Novas Perguntas </p><br>
-   </button>
-</a>
-</center>
-
-    
-    {% if not user_p.active and not user.is_anonymous %}
-    
-
-        <style>
-            @media (min-width:801px) {
-                .user-nao-ativo {
-                    width: 50%;
-                }
-            }
-        </style>
-<center><div class="alert alert-info user-nao-ativo">
-<p>
-Confirme seu email abrindo o link enviado para ele.<br>Este é o email usado na tela de cadastro: {{ user.email }}</p>
-<p>Caso não encontre o email, verifique na pasta de spam.
-</p> 
-<b>Edite Seu Perfil <a style="text-decoration: none" href="/user/{{ user.username }}">Aqui</a></b>
-</div>
-</center>
-    {% endif %}
+	
+{% if not user_p.active and not user.is_anonymous %}
+	<style>
+		@media (min-width:801px) {
+			.user-nao-ativo {
+				width: 50%;
+			}
+		}
+	</style>
+	<center>
+		<div class="alert alert-info user-nao-ativo">
+			<p> Confirme seu email abrindo o link enviado para ele.<br>Este é o email usado na tela de cadastro: {{ user.email }} </p>
+			<p> Caso não encontre o email, verifique na pasta de spam. </p> 
+			<b>Edite Seu Perfil <a style="text-decoration: none" href="/user/{{ user.username }}">Aqui</a></b>
+		</div>
+	</center>
+{% endif %}
 <main>
 <script>
 	var mostrar_primeiro = "{{ initial }}";
 </script>
+
+<button id="new-q-btn" class="btn bg-faint-gradient" onclick="update_recent()">
+<br><p style="margin-bottom: 0px; font-weight: 800"><span id="new-q-count">0</span> Novas Perguntas </p><br>
+</button>
 
 <center> 
 
