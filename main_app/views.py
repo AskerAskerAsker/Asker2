@@ -61,7 +61,6 @@ def save_img_file(post_file, file_path, max_size):
     try:
         im = Image.open(io.BytesIO(img_data))
         final_path = file_path + '.' + im.format
-        print(final_path)
         if im.format in ('GIF', 'WEBP') and im.is_animated:
             bio = compress_animated(io.BytesIO(img_data), max_size, 80)
             with open(final_path, 'wb+') as destination:
