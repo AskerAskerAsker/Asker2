@@ -34,9 +34,31 @@
 			<input type="file" class="form-control-file" id="image" name="file" required="required">
 			<div style="padding-top: 5px"><input type="submit" class="btn btn-primary" style="border-radius: 30px" value="Alterar Foto"></div>
 		</form>
-		
-    <br>
-    <br>
+
+        <br>
+        <br>
+
+        <h4>Foto de Capa:</h4>
+        <form method="post" enctype="multipart/form-data">
+            <input type="hidden" name="type" value="cover-pic">
+            {% csrf_token %}
+            <label for="cover">Escolha uma imagem:</label>
+            <input type="file" class="form-control-file" id="cover" name="file" required="required">
+            <div style="padding-top: 5px"><input type="submit" class="btn btn-primary" style="border-radius: 30px" value="Alterar Capa"></div>
+        </form>
+
+        <br>
+        <br>
+
+        <form method="post">
+            {% csrf_token %}
+            <input type="hidden" name="type" value="remove-cover">
+            <input type="submit" value="Remover Capa" class="btn btn-outline-danger btn-sm">
+        </form>
+
+        <br>
+        <br>
+
 		<h4>Biografia:</h4>
 		<form method="post">
 			<input type="hidden" name="type" value="bio">

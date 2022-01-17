@@ -776,6 +776,48 @@ def edit_profile(request, username):
                 u.followable = False
             u.save()
             return redirect('/user/' + username)
+        elif request.POST.get('type') == 'cover-pic':
+            '''
+            Troca a foto de capa do usuário.
+            Retorno: redirect para o perfil do usuário.
+            '''
+            form = UploadFileForm(request.POST, request.FILES)
+            if form.is_valid():
+
+                u = UserProfile.objects.get(user=request.user)
+
+                '''
+                Já que vai trocar de foto de capa, apaga a foto antiga se houver.
+                '''
+                if u.cover_photo:
+                    os.system('rm ' + u.cover_photo.path)
+
+                f = request.FILES['file']
+                '''
+                Nome da imagem do usuário no sistema de arquivos: nome de usuário atual, data de alteração e horário da alteração.
+                '''
+                file_name = '{}-{}-{}'.format(request.user.username, timezone.now().date(), timezone.now().time()).replace(':', '')
+
+                success = save_img_file(f, 'media/cover_photos/' + file_name, (192, 192))
+                if not success:
+                    return redirect('/user/' + request.user.username + '/edit')
+
+                u.cover_photo = 'cover_photos/' + file_name
+                u.save()
+            return redirect('/user/' + username)
+        elif request.POST.get('type') == 'remove-cover':
+            '''
+            Remove a foto de capa do usuário.
+            Retorno: redirect para o perfil do usuário.
+            '''
+            u = UserProfile.objects.get(user=request.user)
+            if u.cover_photo:
+                os.system('rm ' + u.cover_photo.path)
+                u.cover_photo = None
+                u.save()
+
+            return redirect('/user/' + request.user.username)
+
 
     return render(request, 'edit-profile.html', {'user_p': UserProfile.objects.get(user=User.objects.get(username=username))})
 

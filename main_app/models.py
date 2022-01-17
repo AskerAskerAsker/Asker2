@@ -68,7 +68,8 @@ class UserProfile(models.Model):
     avatar = models.ImageField(max_length=256, default='avatars/default-avatar.png', blank=True)
     bio = models.TextField(max_length=2048, blank=True)
     total_points = models.IntegerField(null=True, default=0, blank=True)
-    
+    cover_photo = models.ImageField(blank=True, null=True)
+
     '''
     pap: permissão para apagar perguntas
     par: permissão para apagar respostas
