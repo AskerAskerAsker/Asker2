@@ -60,16 +60,18 @@ def save_img_file(post_file, file_path, max_size):
     ImageFile.LOAD_TRUNCATED_IMAGES = True
     try:
         im = Image.open(io.BytesIO(img_data))
+        final_path = file_path + '.' + im.format
+        print(final_path)
         if im.format in ('GIF', 'WEBP') and im.is_animated:
             bio = compress_animated(io.BytesIO(img_data), max_size, 80)
-            with open(file_path, 'wb+') as destination:
+            with open(final_path, 'wb+') as destination:
                 destination.write(bio.getbuffer())
         else:
             im.thumbnail(max_size)
-            im.save(file_path, im.format)
+            im.save(final_path, im.format)
     except UnidentifiedImageError:
         return False
-    return True
+    return final_path[final_path.find('media/')+len('media/'):]
 
 
 def get_client_ip(request):
@@ -136,7 +138,7 @@ def save_answer(request):
 
         success = save_img_file(f, 'media/responses/' + file_name, (850, 850))
         if success:
-            response.image = 'responses/' + file_name
+            response.image = success
 
         response.save()
 
@@ -534,7 +536,7 @@ def ask(request):
 
             success = save_img_file(f, 'media/questions/' + file_name, (850, 850))
             if success:
-                q.image = 'questions/' + file_name
+                q.image = success
 
             q.save()
 
@@ -712,7 +714,7 @@ def edit_profile(request, username):
                 if not success:
                     return redirect('/user/' + request.user.username + '/edit')
 
-                u.avatar = 'avatars/' + file_name
+                u.avatar = success
                 u.save()
             return redirect('/user/' + username)
         if request.POST.get('type') == 'bio':
@@ -802,7 +804,7 @@ def edit_profile(request, username):
                 if not success:
                     return redirect('/user/' + request.user.username + '/edit')
 
-                u.cover_photo = 'cover_photos/' + file_name
+                u.cover_photo = success
                 u.save()
             return redirect('/user/' + username)
         elif request.POST.get('type') == 'remove-cover':
@@ -1147,7 +1149,6 @@ def more_questions_old(request):
 def more_questions(request):
     # Para a página inicial
     id_de_inicio = int(request.GET.get('id_de_inicio'))
-    print('inicio: ', id_de_inicio)
     if id_de_inicio > 0:
         questions = list(Question.objects.filter(id__range=(id_de_inicio-50, id_de_inicio)))
         questions.reverse()
@@ -1173,8 +1174,6 @@ def update_index(request):
         return HttpResponse('-1')
 
     nq_context = {'questions': nq, 'user_p': up}
-
-    #list(Question.objects.filter(id__range=(id_de_inicio-50, id_de_inicio)))
     
     return render(request, 'base/index-recent-q-page.html', nq_context)
 
@@ -1185,9 +1184,6 @@ def update_index_check(request):
     last_known_q = request.GET.get('last_known_q')
     nq = Question.objects.filter(id__gt=last_known_q).order_by("id")
     nq_context = {'questions': nq, 'user_p': up}
-    print(len(nq))
-    print([q.id for q in nq])
-    #list(Question.objects.filter(id__range=(id_de_inicio-50, id_de_inicio)))
     
     return JsonResponse({'nn': nn, 'nq': len(nq)})
 
