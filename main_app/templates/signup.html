@@ -46,10 +46,6 @@
 				<label for="exampleInputPassword1">Senha:</label>
 				<input minlength="6" maxlength="256" style="border-radius: 30px" type="password" name="password" class="form-control bg-main" id="exampleInputPassword1" placeholder="Senha" required="required">
 			  </div>
-			  <!--<div class="form-check">
-				<input type="checkbox" class="form-check-input" id="exampleCheck1">
-				<label class="form-check-label" for="exampleCheck1">Check me out</label>
-			  </div>-->
 			  <button type="submit" style="border-radius: 30px" class="btn btn-primary">Criar conta</button>
 			</form>
 		</main>
@@ -60,7 +56,7 @@
                 emails = ['mail','hotmail','outlook','yahoo','icloud','gmail','bol','aol'];
 
                 let start = email.indexOf('@') + 1;
-                let end = email.indexOf('.');
+                let end = email.indexOf('.', start);
                 email = email.slice(start, end);
 
                 if (!emails.includes(email)) {

@@ -892,7 +892,7 @@ def is_a_valid_user(username, email, password):
 
     emails = ['mail','hotmail','outlook','live','msn','yahoo','icloud','gmail','bol','aol','uol','terra','protonmail','tutanota','yandex','net']
     start = email.index('@') + 1
-    end = email.index('.')
+    end = email.index('.', start)
     email = email[start:end]
     if not email in emails:
         return False

@@ -37,9 +37,8 @@
         
         <br><br>
 		<center id="center1">
-            {% if user_p.cover_photo %}
-	    <p>Em breve a funcionalidade de foto de capa estará disponível.</p>
-            <img style="display: none" src="{{ user_p.cover_photo.url }}">
+            {% if target_user_p.cover_photo %}
+            <img src="{{ target_user_p.cover_photo.url }}">
             {% endif %}
 		  <div style="border-radius: 300px; background: url({{target_user_p.avatar.url}}); width: 210px; height: 210px; background-position: center center; background-repeat: no-repeat; background-size: cover;">		      
 		  </div>

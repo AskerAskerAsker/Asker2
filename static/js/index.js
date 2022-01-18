@@ -211,7 +211,7 @@ async function check_for_update() {
 			},
 	});    
 }
-setInterval(check_for_update, 30000);
+setInterval(check_for_update, 35000);
 
 function update_recent() {
     var last_known_q = document.getElementById("novas_questoes").getElementsByClassName("list-group-item")[0].getAttribute("data-id");
@@ -232,8 +232,9 @@ function update_recent() {
                 } else if (data.responseText.includes(success_str)) {
                     q_list = document.getElementById('lista_de_questoes_recentes');
                     q_list.innerHTML = data.responseText + q_list.innerHTML;
+                    window.scrollTo(0, 0);
                 }
-				icon.style.display = 'none';
+                icon.style.display = 'none';
                 activate_img_btns();
                 if (should_hide) {
                     hide_questions();
