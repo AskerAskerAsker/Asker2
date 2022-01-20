@@ -1164,8 +1164,11 @@ def more_questions(request):
     return render(request, 'base/index-recent-q-page.html', context)
 
 def update_index(request):
-    up = UserProfile.objects.get(user=request.user)
-    nn = up.new_notifications
+    nn = 0
+    up = None
+    if not request.user.is_anonymous:
+        up = UserProfile.objects.get(user=request.user)
+        nn = up.new_notifications
 
     last_known_q = request.GET.get('last_known_q')
     nq = Question.objects.filter(id__gt=last_known_q).order_by("-id")

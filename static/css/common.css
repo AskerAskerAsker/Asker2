@@ -152,22 +152,22 @@ button font {
 /* Menubar-end */
 
 /* Index */
+#new-q-btn button {
+	border: none;
+	border-radius: 50px;
+}
 #new-q-btn {
 	position: fixed;
 	display: none;
-	padding: 10px;
-	border: none;
 	z-index: 9999;
 	width: inherit;
 	max-width: inherit;
 	top: 4vh;
-	text-align:center;
-	line-height: 15px;
-	border-radius: 50px;
+	text-align: center;
 }
 @media (min-width: 320px) and (max-width: 570px) {
 	#new-q-btn {
-		top: 7vh;
+		top: 7.5vh;
 	}
 }
 .index-qimg {
