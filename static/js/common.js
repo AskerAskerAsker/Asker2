@@ -20,7 +20,7 @@ async function check_for_notifications() {
 			type: "get",
 			dataType: "json",
 			data: {
-				last_known_q: 1,
+				last_known_q: 999999,
 			},
 			complete: function(data) {
                 new_notifications = data.responseJSON['nn'];
