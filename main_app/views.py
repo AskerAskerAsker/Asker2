@@ -799,7 +799,7 @@ def edit_profile(request, username):
                 '''
                 file_name = '{}-{}-{}'.format(request.user.username, timezone.now().date(), timezone.now().time()).replace(':', '')
 
-                success = save_img_file(f, 'media/cover_photos/' + file_name, (192, 192))
+                success = save_img_file(f, 'media/cover_photos/' + file_name, (900, 300))
                 if not success:
                     return redirect('/user/' + request.user.username + '/edit')
 

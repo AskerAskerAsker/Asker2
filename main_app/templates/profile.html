@@ -31,16 +31,28 @@
     {% if user.is_authenticated %}
 	    {% include "includes/menubar.html" %}
     {% endif %}
+    
+    
+   
+    
 	
-	<main style="border: none"><div class="card bg-main" style="border: none" id="uinfo">
-	    <div class="card-body" style="border: none">
+	<main style="border: none">
+       <div class="card bg-main" style="border: none" id="uinfo">
+    
+	    {% if target_user_p.cover_photo %}
+   
+       <img width="100%" style="max-height: 175px; margin: 0; position: absolute; z-index: 99; margin-top: 30px; border-radius: 15px" src="{{ target_user_p.cover_photo.url }}"></img>
+     
+    
+       {% endif %}
+    
+	    <div class="card-body" style="border: none;">
         
         <br><br>
+           
+    
 		<center id="center1">
-            {% if target_user_p.cover_photo %}
-            <img src="{{ target_user_p.cover_photo.url }}">
-            {% endif %}
-		  <div style="border-radius: 300px; background: url({{target_user_p.avatar.url}}); width: 210px; height: 210px; background-position: center center; background-repeat: no-repeat; background-size: cover;">		      
+		  <div style="margin-top: 15px; border-radius: 300px; background: url({{target_user_p.avatar.url}}); width: 160px; height: 159px; background-position: center center; background-repeat: no-repeat; background-size: cover; position: relative; z-index: 999">		      
 		  </div>
 		  
        	{% if target_user_p.user.username == user.username %}
