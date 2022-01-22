@@ -76,8 +76,29 @@ popular_questions_=[
 {% endif %}   
  
 <body>
-	{% include "includes/navbar.html" %}
+
+<br>
+
+<center> 
+   <div class="navegacao" style="position: fixed; z-index: 99999; width: 100%; height: 80px; margin-top: -10px; padding-top: 35px; background-image: linear-gradient(to right, #9400D3 , #9370DB); border-radius: 20px">
+        <button class="btn text-uppercase" style="color: white; border-color: white; border-radius: 30px" id="botao-popular">popular</button>
+        <button class="btn text-uppercase left-spaced" style="color: white; border-color: white; border-radius: 30px" id="botao-recentes">recente</button>
+        {% if user.is_authenticated %}
+        <button class="btn text-uppercase left-spaced" style="color: white; border-color: white; border-radius: 30px" id="botao-seguindo"><b>Seguindo</b></button>
+        {% else %}
+        <button class="btn text-uppercase hidden" style="color: white; border-color: white; border-radius: 30px" id="botao-seguindo"><b>Seguindo</b></button>
+        {% endif %}
+        {% if user_p.message == 'reward' %}
+            &nbsp;<a href="/rewards">Resgatar moedas</a>
+            <i class="fas fa-coins fa-sm"></i>
+        {% endif %}
+    </div>
+</center>
 	
+<br>
+
+	{% include "includes/navbar.html" %}
+
 {% if not user_p.active and not user.is_anonymous %}
 	<style>
 		@media (min-width:801px) {
@@ -105,29 +126,6 @@ popular_questions_=[
 	</button>
 </div>
 
-<center> 
-
-<a href="https://asker.fun/question/140590" style="color: red; text-decoration: none; outline: none; font-size: 15px; font-weight: 800">
-A Melhor Capa (VOTAÇÃO)
-</a>
-<br>
-   <div class="navegacao" style="margin-top: 20px">
-        <a href="https://instagram.com/askerfun" style="padding-right: 5px" target="_blank">
-            <img src="https://i2.wp.com/www.multarte.com.br/wp-content/uploads/2019/03/logo-instagram-png-fundo-transparente13.png?fit=696%2C696&ssl=1" width="20px" height="20px">
-        </a>
-        <button class="btn btn-outline-primary text-uppercase" style="border-radius: 30px" id="botao-popular">popular</button>
-        <button class="btn btn-outline-primary text-uppercase left-spaced" style="border-radius: 30px" id="botao-recentes">recente</button>
-        {% if user.is_authenticated %}
-        <button class="btn btn-outline-primary text-uppercase left-spaced" style="border-radius: 30px" id="botao-seguindo"><b>Seguindo</b></button>
-        {% else %}
-        <button class="btn btn-outline-primary text-uppercase hidden" style="border-radius: 30px" id="botao-seguindo"><b>Seguindo</b></button>
-        {% endif %}
-        {% if user_p.message == 'reward' %}
-            &nbsp;<a href="/rewards">Resgatar moedas</a>
-            <i class="fas fa-coins fa-sm"></i>
-        {% endif %}
-    </div>
-</center>
 
 <section class="card" id="novas_questoes" style="background: transparent; border: none"> 
     <center id="top-spinner" style="display: none"><i class="fas fa-spinner fa-3x fa-spin"></i></center>

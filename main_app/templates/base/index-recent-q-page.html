@@ -7,22 +7,24 @@
     {% if not question.creator.ban or question.creator.ban and user != question.creator.user %}
 	    {% if not question.creator.user in user_p.silenced_users.all %}
 	    <li class="list-group-item bg-main" data-id="{{ question.id }}">
-		    <div class="card-body" style="padding-bottom: 10px">
+		    <div class="card-body" style="padding-bottom: 6px">
                 <div class="profile-picture-index" style="padding-bottom: 7px">
-                    <div class="profile-pic-small" style="width: 20px; height: 20px; border-radius: 100px; background: url('{{ question.creator.avatar.url }}'); background-size: cover; background-repeat: no-repeat; vertical-align: middle; display:inline-block">
+                    <div class="profile-pic-small" style="width: 30px; height: 30px; border-radius: 100px; background: url('{{ question.creator.avatar.url }}'); background-size: cover; background-repeat: no-repeat; vertical-align: middle; display:inline-block">
                     </div>
-                    <span class="left-spaced" style="font-weight: 600; font-size: 12px; opacity: 0.7; vertical-align: middle; padding-top: 2px;">
+                    <span class="left-spaced" style="font-weight: 600; font-size: 13px; opacity: 0.7; vertical-align: middle; padding-top: 2px;">
                         {{ question.creator }}
                     </span>
                 </div>
-			    <h2 class="question-title fg-1" style="font-size: 17px">
+			    <h2 class="question-title fg-1" style="font-size: 16px">
 				    <a class="q-title" style="text-decoration: none; outline: none" href="/question/{{ question.id }}">
 					    {{ question.text }}
 				    </a>
 			    </h2>
 			    
 			    {% if question.description %}
+            <a style="text-decoration: none; outline: none; color: inherit; font-size: 13px" href="/question/{{ question.id }}">
 				    <p class='description'>{{ question.description }}</p>
+            </a>
 			    {% endif %}
 
             <small class="text-muted">
@@ -76,9 +78,9 @@
 				    {% else %}
            
                         <div class="vertical-spaced user-response" data-iddapergunta="{{ question.id }}" style="margin-bottom: 10px; padding-top: 10px">
-						    <button class="vertical-spaced btn btn-outline-primary btn-sm" onclick="$(this).toggle(0); $('#answer-box-{{ question.id }}').toggle(0);" style="border-radius: 30px; border: none; margin-top: -5px; margin-left: -8px">
+						    <button class="vertical-spaced btn btn-sm" onclick="$(this).toggle(0); $('#answer-box-{{ question.id }}').toggle(0);" style="border-radius: 30px; border: none; margin-top: -5px; margin-left: -8px">
 							    <i class="fas fa-share" style="color: #BA55D3"></i>
-							   <b style="opacity: 0.7"> Responder </b>
+							   <b style="opacity: 0.5"> Responder </b>
 						    </button>
 					    </div>					   
                         <div id="answer-box-{{ question.id }}" style="display: none">

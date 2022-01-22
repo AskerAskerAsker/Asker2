@@ -96,7 +96,8 @@ function renderizar_questoes_populares(popular_questions) {
     try { questoes_populares.innerHTML += '<li class="list-group-item bg-main questao" data-id="'+popular_questions[index].id+'">' +
                                                                     '<div class="card-body" style="border: none; background: transparent">' +
                                                                         '<div class="flexbox" style="border: none; background: transparent">' +
-                                                                            '<h2 style="font-size: 17px" class="question-title fg-1">' +
+    
+                                                                            '<h2 style="font-size: 16px" class="question-title fg-1">' +
                                                                                 '<a style="text-decoration: none; outline: none" class="q-title" href="/question/'+popular_questions[index].id+'">' +
                                                                                     popular_questions[index].text +
                                                                                 '</a>' +
@@ -160,6 +161,13 @@ function load_more_recent() {
                     button.style.display = 'block'; 
                     q_list = document.getElementById('lista_de_questoes_recentes');
                     q_list.innerHTML += data.responseText;
+                let descriptions = document.getElementsByClassName('description');
+for (let i in descriptions) {
+  try {
+    descriptions[i].innerText = descriptions[i].innerText.replaceAll('&quot;', '"');
+  } catch {}
+}
+
                     recent_exists = true;
                 }
 				icon.style.display = 'none';

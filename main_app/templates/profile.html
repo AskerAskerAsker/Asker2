@@ -46,32 +46,30 @@
     
        {% endif %}
     
-	    <div class="card-body" style="border: none;">
-        
-        <br><br>
-           
+    <br><br>
+    
+	    <div class="card-body" style="border: none;">  
     
 		<center id="center1">
-		  <div style="margin-top: 15px; border-radius: 300px; background: url({{target_user_p.avatar.url}}); width: 160px; height: 159px; background-position: center center; background-repeat: no-repeat; background-size: cover; position: relative; z-index: 999">		      
+		  <div style="margin-top: 40px; border-radius: 300px; background: url({{target_user_p.avatar.url}}); width: 130px; height: 129px; background-position: center center; background-repeat: no-repeat; background-size: cover; position: relative; z-index: 999">		      
 		  </div>
-		  
+		 
+        
        	{% if target_user_p.user.username == user.username %}
             <center>
 		    <div id="edit-profile" class="vertical-spaced"><a href="/user/{{ user.username }}/edit" style="text-decoration: none; outline: none; font-size: 13px"><b>Editar <ion-icon name="brush-outline"></ion-icon></b></a></div>
-            <br></center>
+            </center>
 		{% endif %}
         
-        <h3 style="margin-top: 10px; font-size: 5vh; font-weight: 900">
+        <h3 style="margin-top: 10px; font-size: 4.5vh; font-weight: 900">
             <b>{{ target_user_p.user.username }}</b>
         </h3>
         
         <p style="font-size: 13px; font-weight: 700">
-			 No Asker desde <span class="font-italic">{{ target_user_p.user.date_joined.date }}.</span>
+        No Asker desde <span class="font-italic"><b>{{ target_user_p.user.date_joined.date }}.</b></span>
 	    </p>
         </center>
-        
-
-        
+ 
 <center>        
         {% if target_user_p.user.username != user.username %}
 
@@ -105,17 +103,17 @@
             {% endif %}
 		{% endif %}
 </center> 
-<br>
- 
+        
+        
 <center>
 
-<table frameborder="0" style="margin-left: -10px; border-radius: 30px; width: 80%; max-width: 400px;" class="bg-faint-gradient">
+<table frameborder="0" style="margin-left: -10px; margin-top: 20px; border-radius: 100px; width: 80%; max-width: 400px;" class="bg-faint-gradient">
 <tbody>
 <tr>
 <td style="width: 40px; opacity: 0">1</td>
 <td style="width: 40px; opacity: 0">1</td>
-<td style="padding: 13px"><font style="font-size: 16px; font-weight: 500">Perguntas</font></td>
-<td style="padding: 13px"><font style="font-size: 16px; font-weight: 500">Respostas</font></td>
+<td style="padding: 13px"><font style="font-size: 15px; font-weight: 500">Perguntas</font></td>
+<td style="padding: 13px"><font style="font-size: 15px; font-weight: 500">Respostas</font></td>
 <td style="padding: 13px"><b style="font-size: 18px; font-weight: 900">Pontos</b></td>
 <td style="width: 40px; opacity: 0">2</td>
 <td style="width: 40px; opacity: 0">2</td>
@@ -132,8 +130,7 @@
 </tbody>
 </table> 
 
-<br>   
-	    <p id="bio" style="line-height: 16px; font-size: 13px; padding-top: 10px">	   
+	    <p id="bio" style="line-height: 16px; font-size: 13px; padding-top: 20px">	   
 			     {{ target_user_p.bio|linebreaksbr }}
 	    </p>
         
