@@ -78,21 +78,22 @@ popular_questions_=[
 <body>
 
 <br>
-
 <center> 
-   <div class="navegacao" style="position: fixed; z-index: 99999; width: 100%; height: 80px; margin-top: -10px; padding-top: 35px; background-image: linear-gradient(to right, #9400D3 , #9370DB); border-radius: 20px">
-        <button class="btn text-uppercase" style="color: white; border-color: white; border-radius: 30px" id="botao-popular">popular</button>
-        <button class="btn text-uppercase left-spaced" style="color: white; border-color: white; border-radius: 30px" id="botao-recentes">recente</button>
-        {% if user.is_authenticated %}
-        <button class="btn text-uppercase left-spaced" style="color: white; border-color: white; border-radius: 30px" id="botao-seguindo"><b>Seguindo</b></button>
-        {% else %}
-        <button class="btn text-uppercase hidden" style="color: white; border-color: white; border-radius: 30px" id="botao-seguindo"><b>Seguindo</b></button>
-        {% endif %}
-        {% if user_p.message == 'reward' %}
-            &nbsp;<a href="/rewards">Resgatar moedas</a>
-            <i class="fas fa-coins fa-sm"></i>
-        {% endif %}
-    </div>
+	<div class="containerem" style="z-index: 9999;">
+	   <div class="navegacao" style="position: fixed; padding: 10px; height: 75px; margin-top: -10px; padding-top: 35px; background-image: linear-gradient(to right, #9400D3 , #9370DB); top: 20px; border-radius: 20px">
+			<button class="btn text-uppercase" style="color: white; border none;" id="botao-popular">popular</button>
+			<button class="btn text-uppercase left-spaced" style="color: white; border none;" id="botao-recentes">recente</button>
+			{% if user.is_authenticated %}
+			<button class="btn text-uppercase left-spaced" style="color: white; border none;" id="botao-seguindo">Seguindo</button>
+			{% else %}
+			<button class="btn text-uppercase hidden" style="color: white; border none;" id="botao-seguindo">Seguindo</button>
+			{% endif %}
+			{% if user_p.message == 'reward' %}
+				&nbsp;<a href="/rewards">Resgatar moedas</a>
+				<i class="fas fa-coins fa-sm"></i>
+			{% endif %}
+		</div>
+	</div>
 </center>
 	
 <br>
