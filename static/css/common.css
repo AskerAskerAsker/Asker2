@@ -5,6 +5,7 @@ textarea.large-compact {
 }
 
 /* Menubar */
+
 ol, ul {
     list-style: none;
 }
@@ -127,28 +128,6 @@ button font {
     color: #007bff;
 }
 
-@media (min-width: 580px) {
-    .menu-list + .menu-list {
-        border-top: 1px solid #ddd;
-    }
-    #menuarrow {
-        display: none;
-    }
-    .containerem {
-        margin-left: 0px !important; 
-	top: 15%;
-	left: 0;
-	right: auto;
-    }
-    .menu {
-	flex-direction: column;
-	border-radius: 0px 20px 20px 0px;
-    }
-    .menu-list {
-	display: block;
-	padding: 5px 5px;
-    }
-}
 /* Menubar-end */
 
 /* Index */
