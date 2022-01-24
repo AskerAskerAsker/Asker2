@@ -7,11 +7,13 @@
     {% if not question.creator.ban or question.creator.ban and user != question.creator.user %}
 	    {% if not question.creator.user in user_p.silenced_users.all %}
 	    <li class="list-group-item bg-main" data-id="{{ question.id }}">
-		    <div class="card-body" style="padding-bottom: 6px">
+ <a href="/question/{{ question.id }}" style="text-decoration: none; color: inherit">
+
+        <div class="card-body" style="padding-bottom: 12px">
                 <div class="profile-picture-index" style="padding-bottom: 7px">
-                    <div class="profile-pic-small" style="width: 30px; height: 30px; border-radius: 100px; background: url('{{ question.creator.avatar.url }}'); background-size: cover; background-repeat: no-repeat; vertical-align: middle; display:inline-block">
+                    <div class="profile-pic-small" style="width: 27px; height: 27px; border-radius: 100px; background: url('{{ question.creator.avatar.url }}'); background-size: cover; background-repeat: no-repeat; vertical-align: middle; display:inline-block">
                     </div>
-                    <span class="left-spaced" style="font-weight: 600; font-size: 13px; opacity: 0.7; vertical-align: middle; padding-top: 2px;">
+                    <span class="left-spaced" style="font-weight: 600; font-size: 11px; opacity: 0.6; text-decoration: none; color: inherit; vertical-align: middle; padding-top: 2px;">
                         {{ question.creator }}
                     </span>
                 </div>
@@ -44,12 +46,13 @@
                 
                     <span> &#8226; </span> 
                 
-                  <span> <b style="color: #1874CD">{{ question.total_views }} </b></span>
-                  <span style="color: #1874CD; margin-left: -2px; font-weight: 700"><ion-icon name="eye"></ion-icon></span>
+                  <span> {{ question.total_views }} </span>
+                  <span style="margin-left: -2px; font-weight: 700"><ion-icon name="eye"></ion-icon></span>
                 
                 </small>    
 
                 {% if question.image %}
+       <a href="/question/{{ question.id }}"> 
                 <div class="index-qimg-container" style="padding-bottom: 9px">
 		                    <button class="index-qimg-btn" onclick="image_toggle(this);">
                         <div class="overflow-guide">
@@ -61,6 +64,7 @@
 					    </div>
                     </button>
                 </div>
+       </a>
                 {% endif %}
            
                 
@@ -78,10 +82,10 @@
 				    {% else %}
            
                         <div class="vertical-spaced user-response" data-iddapergunta="{{ question.id }}" style="margin-bottom: 10px; padding-top: 10px">
-						    <button class="vertical-spaced btn btn-sm" onclick="$(this).toggle(0); $('#answer-box-{{ question.id }}').toggle(0);" style="border-radius: 30px; border: none; margin-top: -5px; margin-left: -8px">
+						    <a class="vertical-spaced" onclick="$(this).toggle(0); $('#answer-box-{{ question.id }}').toggle(0);" style="color: inherit; font-size: 13px; opacity: 0.8; background: transparent; margin-top: -5px; margin-left: 0px">
 							    <i class="fas fa-share" style="color: #BA55D3"></i>
-							   <b style="opacity: 0.5"> Responder </b>
-						    </button>
+							   <b style="opacity: 0.7"> Responder </b>
+						    </a>
 					    </div>					   
                         <div id="answer-box-{{ question.id }}" style="display: none">
 						    <form onsubmit="return enviar_resposta_pergunta(this);">
@@ -89,7 +93,7 @@
 							    <input type="hidden" name="from" value="index">
 							    <input name="question_id" type="hidden" value="{{ question.id }}">
 							    
-		                        <textarea onclick="$(this).css('height', '140px');" name="text" maxlength="5000" class="form-control form-control-sm" placeholder="Sua Resposta:" required></textarea>
+		                        <textarea onclick="$(this).css('height', '140px');" name="text" maxlength="5000" class="form-control form-control-sm" style="border-radius: 15px" placeholder="Sua Resposta:" required></textarea>
                                 <br>
                                 <button name="submit_btn" type="submit" style="border-radius: 30px" class="btn btn-outline-primary btn-sm">
 	                                 <i class="far fa-paper-plane"></i>
@@ -100,6 +104,7 @@
 				    {% endif %}
 			    {% endif %}
 		    </div>
+        </a>
 	    </li>
 	    {% endif %}
     {% endif %}

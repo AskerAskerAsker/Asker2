@@ -132,6 +132,7 @@ class Question(models.Model):
     total_responses = models.IntegerField(default=0)
     total_views = models.IntegerField(null=True, default=0)
     best_answer = models.IntegerField(blank=True, null=True) # ID da melhor resposta.
+    viewers = models.TextField(null=False, blank=True, default='set()')
 
     def get_embedded_content(self):
         return make_embedded_content(self.description)

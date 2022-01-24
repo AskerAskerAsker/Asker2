@@ -39,13 +39,14 @@ ol, ul {
 }
 .menu-item {
   position: relative;
+  font-size: 20px;
 }
 .menu-button {
   font: inherit;
   border: 0;
   padding: 5px 6px;
   width: 100%;
-  border-radius: 8px;
+  border-radius: 30px;
   display: flex;
   align-items: center;
   position: relative;
@@ -124,13 +125,16 @@ button font {
     display: none;
 }
 .arr ion-icon {
-    font-size: 24px;
+    font-size: 54px;
     color: #007bff;
 }
 
 /* Menubar-end */
 
 /* Index */
+.questao {
+	overflow-x: hidden;
+}
 #new-q-btn button {
 	border: none;
 	border-radius: 50px;
@@ -141,13 +145,8 @@ button font {
 	z-index: 9999;
 	width: inherit;
 	max-width: inherit;
-	top: 4vh;
+	top: 11vh;
 	text-align: center;
-}
-@media (min-width: 320px) and (max-width: 570px) {
-	#new-q-btn {
-		top: 7.5vh;
-	}
 }
 .index-qimg {
     display: block;

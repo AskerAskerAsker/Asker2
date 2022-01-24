@@ -6,6 +6,7 @@
 	{% if not question.creator.user in user_p.silenced_users.all %}
 	<li class="list-group-item bg-main" data-id="{{ question.id }}">
 		<div class="card-body">
+        
 			<div class="flexbox">
 				<h2 class="question-title fg-1">
 					<a href="/question/{{ question.id }}">

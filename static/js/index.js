@@ -96,7 +96,6 @@ function renderizar_questoes_populares(popular_questions) {
     try { questoes_populares.innerHTML += '<li class="list-group-item bg-main questao" data-id="'+popular_questions[index].id+'">' +
                                                                     '<div class="card-body" style="border: none; background: transparent">' +
                                                                         '<div class="flexbox" style="border: none; background: transparent">' +
-    
                                                                             '<h2 style="font-size: 16px" class="question-title fg-1">' +
                                                                                 '<a style="text-decoration: none; outline: none" class="q-title" href="/question/'+popular_questions[index].id+'">' +
                                                                                     popular_questions[index].text +
@@ -205,10 +204,10 @@ async function check_for_update() {
                     if (new_notifications > 0) {
                         notif_badge.innerHTML = new_notifications;
                         notif_badge.style.display = 'block';
-                        document.title = "(" + new_notifications + ") Asker | Faça e Responda Perguntas na Comunidade!";
+                        document.title = "(" + new_notifications + ") Asker - Faça e Responda Perguntas na Comunidade!";
                     } else {
                         notif_badge.style.display = 'none';
-                        document.title = "Asker | Faça e Responda Perguntas na Comunidade!";
+                        document.title = "Asker - Faça e Responda Perguntas na Comunidade!";
                     }
                 }
                 if (new_questions > 0) {
@@ -321,9 +320,9 @@ function load_more_feed() {
 
 botao_popular.onclick = function () {
     document.getElementById("logo").href = "/";
-    botao_popular.style.fontWeight = 'bold';
-    botao_recentes.style.fontWeight = 'normal';
-    botao_seguindo.style.fontWeight = 'normal';
+    botao_popular.style.fontWeight = '900';
+    botao_recentes.style.fontWeight = '400';
+    botao_seguindo.style.fontWeight = '400';
     document.getElementById("questoes_populares").style.display = "block";
     document.getElementById("novas_questoes").style.display = "none";
     document.getElementById("feed").style.display = "none";
@@ -332,9 +331,9 @@ botao_popular.onclick = function () {
 }
 botao_recentes.onclick = function () {
     document.getElementById("logo").href = "/news";
-    botao_popular.style.fontWeight = 'normal';
-    botao_recentes.style.fontWeight = 'bold';
-    botao_seguindo.style.fontWeight = 'normal';
+    botao_popular.style.fontWeight = '400';
+    botao_recentes.style.fontWeight = '900';
+    botao_seguindo.style.fontWeight = '400';
     document.getElementById("questoes_populares").style.display = "none";
     document.getElementById("novas_questoes").style.display = "block";
     document.getElementById("feed").style.display = "none";
@@ -344,9 +343,9 @@ botao_recentes.onclick = function () {
 }
 botao_seguindo.onclick = function () {
     document.getElementById("logo").href = "/feed";
-    botao_popular.style.fontWeight = 'normal';
-    botao_recentes.style.fontWeight = 'normal';
-    botao_seguindo.style.fontWeight = 'bold';
+    botao_popular.style.fontWeight = '400';
+    botao_recentes.style.fontWeight = '400';
+    botao_seguindo.style.fontWeight = '900';
     document.getElementById("questoes_populares").style.display = "none";
     document.getElementById("novas_questoes").style.display = "none";
     document.getElementById("feed").style.display = "block";
@@ -360,7 +359,7 @@ if (!conta_ativa) {
     var botoes_responder = document.getElementsByClassName('botao_responder');
     for (var i = 0; i < botoes_responder.length; ++i) {
         botoes_responder[i].onclick = function () {
-            alert('Confirme sua conta pelo e-mail enviado para responder perguntas.');
+            alert('Confirme Sua Conta Pelo e-mail Enviado Para Responder Perguntas.');
             return 0;
         };
     }

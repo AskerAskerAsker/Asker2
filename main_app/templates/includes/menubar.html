@@ -9,21 +9,22 @@
             </form>
         </div>
     </div>
-    <div id="menubar" class="containerem">
-        <div class="menu">
-        <ul class="menu-list">
-            <a href="/"><li class="menu-item"><button class="menu-button"><font color="#fff" style="color: #fff; font-weight: 900"><ion-icon name="home-outline"></ion-icon></font></button></li></a>
-            <li class="menu-item"><button id='dark-mode' class="menu-button"><font color="#fff" style="color: #fff; font-weight: 900"><ion-icon name="bulb-outline"></ion-icon></font></button></li>
-            <a href="/rank"><li class="menu-item"><button class="menu-button"><font color="#fff" style="color: #fff; font-weight: 900"><ion-icon name="trophy-outline"></ion-icon></font></button></li></a>
-            <li class="menu-item" id="searchbtn"><button class="menu-button"><font color="#fff" style="color: #fff; font=weight: 900"><ion-icon name="search-outline"></ion-icon></font></button></li>
+    <div id="menubar" class="containerem" style="height: 57px; padding: 0px">
+        <div class="menu" style="width: 100%; border-radius: 0px 0px 25px 25px; max-width: 400px; align-items: center; justify-content: center;">
+       
+        <ul class="menu-list" style="margin-top: 5px;">
+       <li class="menu-item"><button id='dark-mode' class="menu-button"><font color="#fff" style="color: #fff; font-size: 18px; font-weight: 900"><ion-icon name="bulb-outline"></ion-icon></font></button></li>
+       <a href="/rules"> <li class="menu-item"><button class="menu-button"><font color="#fff" style="color: #fff; font-weight: 900"><ion-icon name="alert-circle-outline"></ion-icon></font></button></li></a>
+            <li class="menu-item" id="searchbtn"><button class="menu-button"><font color="#fff" style="color: #fff; font-size: 18px; font=weight: 900"><ion-icon name="search-outline"></ion-icon></font></button></li>
         </ul>
-        <ul class="menu-list">
-            <a href="/user/{{ user.username }}"><li class="menu-item"><button class="menu-button">
-            <div style="margin-left: -2px; border-radius: 300px; background: url({{user_p.avatar.url}}); width: 30px; height: 30px; background-position: center center; background-size: cover; background-repeat: no-repeat"></div>
-            </button></li></a>
+        <ul class="menu-list" style="align-items: center; justify-content: center;">
+          <a href="https://asker.fun/"><li class="menu-item"><button class="menu-button">
+            <div style="border-radius: 300px; background: url(/media/avatars/Asker%20Admin-2021-12-01-15%3A06%3A17.088222); width: 50px; height: 50px; background-position: center center; background-size: cover; background-repeat: no-repeat"></div>
+            </button></li>
+          </a>
             <a href="/notifications">
-                <li class="menu-item">
-                    <button class="menu-button"><font color="#fff" style="color: #fff; font-weight: 900">
+                <li class="menu-item" style="margin-top: 5px;">
+                    <button class="menu-button"><font color="#fff" style="color: #fff; font-size: 18px; font-weight: 900">
                         <ion-icon name="earth-outline"></ion-icon>
                         {% if user_p.new_notifications > 0 %}
                             <div id="notif-badge">{{ user_p.new_notifications }}</div>
@@ -33,11 +34,9 @@
                     </font></button>
                 </li>
             </a>
-            <a href="/ask"> <li class="menu-item"><button class="menu-button"><font color="#fff" style="color: #fff; font-weight: 900"><ion-icon name="pencil"></ion-icon></font></button></li></a>
-            <a href="/rules"> <li class="menu-item"><button class="menu-button"><font color="#fff" style="color: #fff; font-weight: 900"><ion-icon name="alert-circle-outline"></ion-icon></font></button></li></a>
-        </ul>
-        <ul class="menu-list">
-            <a href="/logout"><li class="menu-item"><button class="menu-button"><font color="#fff" style="color: #fff; font-weight: 900"><ion-icon name="exit-outline"></ion-icon></font></button></li></a>
+           <a href="/rank"><li class="menu-item" style="margin-top: 5px;"><button class="menu-button"><font color="#fff" style="color: #fff; font-size: 18px; font-weight: 900"><ion-icon name="trophy-outline"></ion-icon></font></button></li></a>
+           <a href="/ask"> <li class="menu-item" style="margin-top: 5px;"><button class="menu-button"><font color="#fff" style="color: #fff; font-size: 18px; font-weight: 900"><ion-icon name="pencil"></ion-icon></font></button></li></a>
+             
         </ul>
         </div>
     </div>

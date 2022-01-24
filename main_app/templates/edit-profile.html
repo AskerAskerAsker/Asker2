@@ -24,9 +24,20 @@
 	        {% include "includes/menubar.html" %}
         {% endif %}
 		{% include "includes/navbar.html" %}
+    
+  
+    
     <main style="padding: 50px 20px">
 
-		<h4>Foto de Perfil:</h4>
+     <h4 style="font-weight: 900"><b>Edite Seu Perfil!</b></h4>
+ Edite seu nome de usuário, capa, foto do perfil, biografia e sua privacidade. <br> 
+ Se precisar de ajuda envie um email para: <b>mail.asker.fun@gmail.com</b>
+    
+    <br>
+    <br>
+    <br>
+    
+		<h5>Foto de Perfil:</h5>
 		<form method="post" enctype="multipart/form-data">
 			<input type="hidden" name="type" value="profile-pic">
 			{% csrf_token %}
@@ -38,7 +49,7 @@
         <br>
         <br>
 
-        <h4>Foto de Capa:</h4>
+        <h5>Foto de Capa:</h5>
         <form method="post" enctype="multipart/form-data">
             <input type="hidden" name="type" value="cover-pic">
             {% csrf_token %}
@@ -47,32 +58,42 @@
             <div style="padding-top: 5px"><input type="submit" class="btn btn-primary" style="border-radius: 30px" value="Alterar Capa"></div>
         </form>
 
-        <br>
-        <br>
-
+    <br>
+    
         <form method="post">
             {% csrf_token %}
             <input type="hidden" name="type" value="remove-cover">
-            <input type="submit" value="Remover Capa" class="btn btn-outline-danger btn-sm">
+            <input type="submit" value="Remover Capa Atual do Perfil" style="border-radius: 30px" class="btn btn-outline-danger btn-sm">
         </form>
 
         <br>
         <br>
 
-		<h4>Biografia:</h4>
+		<h5>Biografia:</h5>
 		<form method="post">
 			<input type="hidden" name="type" value="bio">
 			{% csrf_token %}
-			<textarea class="form-control" name="bio" maxlength="3000" width="70%">{{ user_p.bio }}</textarea>
+			<textarea class="form-control" name="bio" maxlength="3000" width="70%" height="200px">{{ user_p.bio }}</textarea>
 			<div style="padding-top: 5px"><input class="btn btn-primary" type="submit" style="border-radius: 30px" value="Alterar Biografia"></div>
 		</form>
  <br><br>
-		<h4>Nome de Usuário:</h4>
+		<h5>Edite o Nome de Usuário:</h5>
 		{{ invalid_username_text|safe }}
 		<form accept-charset="utf-8" method="post" id="username_form">
 			<input type="hidden" name="type" maxlength="14" value="username">
 			{% csrf_token %}
 
+        
+        	<div class="form-row">
+				<div class="col-md-4 mb-3">
+					<input maxlength="30" name="username" placeholder="Novo Nome de Usuário:" value="{{ user.username }}" class="form-control{{ invalid_username }}" value="{{ username }}" type="text">
+					<div class="invalid-feedback" style="display: {{ username_display }}">
+						Nome de usuário em uso ou inválido.
+					</div>
+				</div>
+			</div>
+        
+        
 			<div class="form-row">
 				<div class="col-md-4 mb-3">
 					<input name="password" placeholder="Digite sua Senha:" class="form-control{{ invalid_password }}" type="password">
@@ -82,14 +103,6 @@
 				</div>
 			</div>
 
-			<div class="form-row">
-				<div class="col-md-4 mb-3">
-					<input maxlength="30" name="username" placeholder="Novo Nome de Usuário:" class="form-control{{ invalid_username }}" value="{{ username }}" type="text">
-					<div class="invalid-feedback" style="display: {{ username_display }}">
-						Nome de usuário em uso ou inválido.
-					</div>
-				</div>
-			</div>
 
 			<div class="form-row">
 				<div class="col-md-4 mb-3">
@@ -121,6 +134,9 @@
 		{% if user.username == user_p.user.username %}
 		<hr>
 		<p>Seu email: {{ user.email }}</p>
+       
+      <a href="/logout"><font color="#fff" style="color: red; font-weight: 900">Desconectar-se</font></a>
+    
 		{% endif %}
     
     <br>

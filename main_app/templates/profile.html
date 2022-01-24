@@ -33,20 +33,16 @@
     {% endif %}
     
     
-   
-    
-	
 	<main style="border: none">
        <div class="card bg-main" style="border: none" id="uinfo">
     
 	    {% if target_user_p.cover_photo %}
-   
-       <img width="100%" style="max-height: 175px; margin: 0; position: absolute; z-index: 99; margin-top: 30px; border-radius: 15px" src="{{ target_user_p.cover_photo.url }}"></img>
      
+    <div style="width: 100%; height: 250px; border-radius: 0px 0px 15px 15px; background: url({{ target_user_p.cover_photo.url }}); background-repeat: no-repeat; background-position: center; background-size: cover; position: absolute; z-index: 99"></div>
     
        {% endif %}
     
-    <br><br>
+    <br><br><br><br>
     
 	    <div class="card-body" style="border: none;">  
     
@@ -57,11 +53,12 @@
         
        	{% if target_user_p.user.username == user.username %}
             <center>
-		    <div id="edit-profile" class="vertical-spaced"><a href="/user/{{ user.username }}/edit" style="text-decoration: none; outline: none; font-size: 13px"><b>Editar <ion-icon name="brush-outline"></ion-icon></b></a></div>
+		    <div id="edit-profile" class="vertical-spaced"><a href="/user/{{ user.username }}/edit" style="text-decoration: none; outline: none; font-size: 13px"><b>Configurações <ion-icon name="brush-outline"></ion-icon></b></a></div>
             </center>
 		{% endif %}
         
-        <h3 style="margin-top: 10px; font-size: 4.5vh; font-weight: 900">
+        <br>
+        <h3 style="font-size: 30px; font-weight: 900">
             <b>{{ target_user_p.user.username }}</b>
         </h3>
         
@@ -69,10 +66,10 @@
         No Asker desde <span class="font-italic"><b>{{ target_user_p.user.date_joined.date }}.</b></span>
 	    </p>
         </center>
- 
+        
+<div style="padding-top: 3px; padding-bottom: 3px;">    
 <center>        
         {% if target_user_p.user.username != user.username %}
-
             {% if not user.is_anonymous %}
 		        {% afollowb user.username target_user_p.user.username as FOLLOWED %}
 		        {% ablockb user.username target_user_p.user.username as BLOCKED %}
@@ -103,7 +100,7 @@
             {% endif %}
 		{% endif %}
 </center> 
-        
+</div>       
         
 <center>
 
@@ -130,7 +127,7 @@
 </tbody>
 </table> 
 
-	    <p id="bio" style="line-height: 16px; font-size: 13px; padding-top: 20px">	   
+	    <p id="bio" style="line-height: 16px; font-size: 13px; padding-top: 30px">	   
 			     {{ target_user_p.bio|linebreaksbr }}
 	    </p>
         

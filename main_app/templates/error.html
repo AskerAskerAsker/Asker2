@@ -21,15 +21,16 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/waypoints/4.0.1/shortcuts/infinite.min.js"></script>
 </head>
 <body>
-	{% include "includes/navbar.html" %}
+
+<br>
 
     <main>
-        <div class="err-msg card bg-main">
-            <div class="card-body">
+        <div class="err-msg card bg-main" style="border: none">
+            <div class="card-body" style="border: none">
                 <i class="fas fa-exclamation-triangle fa-4x"></i> <br><br>
                 <h5> {{ error }} </h5>
                 <p> {{ err_msg }} </p>
-                <a href="{{ redirect }}">Voltar</a>
+                <a href="https://asker.fun/">Voltar</a>
             </div>
         </div>
     </main>

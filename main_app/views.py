@@ -184,6 +184,9 @@ def index(request):
 
 
 def question(request, question_id):
+
+    user_ip = get_client_ip(request)
+
     q = Question.objects.filter(id=question_id)
     if q.exists():
         q = q.first()
@@ -525,7 +528,7 @@ def ask(request):
         if len(text) > 181 or len(description) > 5000 or text[-1] != '?':
             return redirect('/news')
 
-        q = Question.objects.create(creator=UserProfile.objects.get(user=request.user), text=text, description=description.replace('\\', '\\\\'))
+        q = Question.objects.create(creator=UserProfile.objects.get(user=request.user), text=text, viewers='set()', description=description.replace('\\', '\\\\'))
 
         form = UploadFileForm(request.POST, request.FILES)
         if form.is_valid():
