@@ -1,5 +1,6 @@
 var success_str = 'kfO1wMuva3hNgh0AhIviPyhEGyoRjDdX';
 var should_hide = false;
+var org_title = document.title;
 
 function hide_questions() {
     qtitles = document.getElementsByClassName('q-title');
@@ -204,10 +205,10 @@ async function check_for_update() {
                     if (new_notifications > 0) {
                         notif_badge.innerHTML = new_notifications;
                         notif_badge.style.display = 'block';
-                        document.title = "(" + new_notifications + ") Asker - Faça e Responda Perguntas na Comunidade!";
+                        document.title = "(" + new_notifications + ") " + org_title;
                     } else {
                         notif_badge.style.display = 'none';
-                        document.title = "Asker - Faça e Responda Perguntas na Comunidade!";
+                        document.title = org_title;
                     }
                 }
                 if (new_questions > 0) {
