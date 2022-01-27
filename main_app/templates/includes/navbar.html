@@ -1,14 +1,9 @@
 <CENTER>
-<br>
-    <a id="logo" href="/" class="navbar-brand animate__backInLeft"><img src="/static/images/"alt="Asker"></a>
-
-<BR>
-
-            {% if user.is_authenticated %}
-            {% else %}
-                <a class="nav-link" style="font-weight: 700" href="/signin?redirect={{ request.get_full_path }}">Fazer Login &#10152;</a>
-            {% endif %}
- 
+{% if user.is_authenticated %}
+{% else %}
+<br><br><br>
+{% endif %}
+    <a id="logo" href="/" class="navbar-brand animate__backInLeft"><img src="/static/images/asker.png"alt="Asker"></a>
   
 </CENTER>
 

@@ -85,7 +85,7 @@ def get_client_ip(request):
 def calculate_popular_questions():
     last_id = Question.objects.all().last().id
     id_range = (last_id - 100, last_id)
-    popular_questions = Question.objects.filter(id__range=id_range).order_by('-total_views')[:40]
+    popular_questions = Question.objects.filter(id__range=id_range).order_by('-total_responses')[:40]
     return popular_questions
 
 
@@ -118,7 +118,7 @@ def save_answer(request):
     question.total_responses += 1
     question.save()
 
-    response_creator.total_points += 2
+    response_creator.total_points += 30
     response_creator.save()
 
     if response_creator.user not in question.creator.silenced_users.all():
@@ -929,7 +929,7 @@ def choose_best_answer(request):
         rcuserp = UserProfile.objects.get(user=r.creator.user)
         quserp = UserProfile.objects.get(user=request.user)
 
-        rcuserp.total_points += 10
+        rcuserp.total_points += 100
         quserp.total_points += 2
         rcuserp.save()
         quserp.save()

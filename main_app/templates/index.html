@@ -47,6 +47,9 @@ Comunidade de Perguntas e Respostas!">
         max-width: 30px;
     }
 </style>
+
+
+
 <script>
 popular_questions_=[
     {% for question in popular_questions %}
@@ -68,12 +71,20 @@ popular_questions_=[
 </script>
 <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, viewport-fit=cover">
 
-
 </head>
+
+
+
 
 {% if user.is_authenticated %}
 	{% include "includes/menubar.html" %}
 {% endif %}   
+
+{% if user.is_authenticated %}
+{% else %}
+<br>
+{% endif %}
+
 
   {% include "includes/navbar.html" %}
     
@@ -87,13 +98,16 @@ popular_questions_=[
 	   <div class="navegacao" style="position: fixed; padding: 10px; height: 55px; margin-top: 25px; padding-top: 20px; background-image: linear-gradient(to right, #87CEFF , rgb(232, 232, 232, 0.9)); top: -25px; border-radius: 0px 0px 20px 20px">
            {% else %}
 	   <div class="navegacao" style="position: fixed; padding: 10px; height: 55px; margin-top: 25px; padding-top: 20px; background-image: linear-gradient(to right, #87CEFF , rgb(232, 232, 232, 0.9)); top: 20px; border-radius: 0px 0px 20px 20px">
-           {% endif %}
+      {% endif %}
 
 			<a id="botao-popular" style="padding-right: 10px; text-decoration: none; outline: none; cursor: pointer; font-size: 14px">🔥Populares</a>
 			<a class="left-spaced"  id="botao-recentes" style="padding-right: 10px; text-decoration: none; outline: none; cursor: pointer; border none; font-size: 14px">Recentes</a>
 			{% if user.is_authenticated %}
 			<a class="left-spaced" id="botao-seguindo" style="padding-right: 10px; text-decoration: none; outline: none; cursor: pointer; border none; font-size: 14px">Seguindo</a>
-			{% else %}
+       
+       {% else %}
+       <a id="botao-popular" style="font-weight: 700; font-size: 15px; text-decoration: none; outline: none" href="/signin?redirect={{ request.get_full_path }}">Login &#10152;</a>
+       
 			<a class="hidden" id="botao-seguindo" style="padding-right: 8px; text-decoration: none; outline: none; cursor: pointer; border none; font-size: 14px">Seguindo</a>
 			{% endif %}
       	    {% if user.is_authenticated %}
@@ -111,10 +125,7 @@ popular_questions_=[
        
 	</div>
 
-<a href="https://asker.fun/question/143218" style="color: green; opacity: 0.6; text-decoration: none; outline: none; font-size: 15px; font-weight: 700">
-BBB 22 Votação 💜
-</a>
-<br>
+<a href="https://asker.fun/promo" style="color: green; text-decoration: none; opacity: 0.6; font-size: 13px; font-weight: 800">Promoção em Andamento</a>
 
 </center>
 
@@ -128,9 +139,6 @@ BBB 22 Votação 💜
 		}
 	</style>
 
-
-
-
 	<center>
 		<div class="alert alert-info user-nao-ativo">
 			<p> Confirme seu email abrindo o link enviado para ele.<br>Este é o email usado na tela de cadastro: {{ user.email }} </p>
@@ -139,7 +147,13 @@ BBB 22 Votação 💜
 		</div>
 	</center>
 {% endif %}
+
+{% if user.is_authenticated %}
 <main>
+{% else %}
+<main style="margin-top: -40px">
+{% endif %}
+
 <script>
 	var mostrar_primeiro = "{{ initial }}";
 </script>
@@ -147,7 +161,7 @@ BBB 22 Votação 💜
 <section class="card" id="novas_questoes" style="background: transparent; border: none"> 
     <center id="top-spinner" style="display: none"><i class="fas fa-spinner fa-3x fa-spin"></i></center>
 	<ul class="list-group-flush" id="lista_de_questoes_recentes" style="border: none"></ul>
-	<button id="load-more-recent-btn" class="btn btn-outline-primary" onclick="load_more_recent();" style="border: none; font-size: 13px">Ver Mais +</button>
+	<button id="load-more-recent-btn" class="btn btn-outline-primary" onclick="load_more_recent();" style="margin-left: 30px; border: none; font-size: 13px;"><b>Ver Mais +</b></button>
 	<center style="display: none"><i class="fas fa-spinner fa-3x fa-spin"></i></center>
     <br><br>
 </section>
@@ -155,7 +169,7 @@ BBB 22 Votação 💜
 
 <section id="questoes_populares" style="background: transparent; border: none">
 	<ul class="list-group-flush" id="lista_de_questoes_populares" style="border: none"></ul>
-	<button id="load-more-popular-btn" class="btn btn-outline-primary" onclick="popular_page++; load_more_popular(this, this.nextElementSibling, popular_page);" style="border: none; font-size: 13px">Ver Mais +</button>
+	<button id="load-more-popular-btn" class="btn btn-outline-primary" onclick="popular_page++; load_more_popular(this, this.nextElementSibling, popular_page);" style="margin-left: 30px; border: none; font-size: 13px"><b>Ver Mais +</b></button>
 	<center style="display: none"><i class="fas fa-spinner fa-3x fa-spin"></i></center>
     <br><br>
 </section>
@@ -163,7 +177,7 @@ BBB 22 Votação 💜
 
 <section id="feed" style="background: transparent; border: none">
 	<ul class="list-group-flush" id="feed_list" style="border: none"></ul>
-	<button id="load-more-feed-btn" class="btn btn-outline-primary" onclick="load_more_feed(this, this.nextElementSibling);" style="border-radius: 30px; font-size: 13px">Ver Mais +</button>
+	<button id="load-more-feed-btn" class="btn btn-outline-primary" onclick="load_more_feed(this, this.nextElementSibling);" style="margin-left: 30px; border:none; font-size: 13px"><b>Ver Mais +</b></button>
 	<center style="display: none"><i class="fas fa-spinner fa-3x fa-spin"></i></center>
     <br><br>
 </section>
