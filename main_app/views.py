@@ -28,7 +28,9 @@ def compress_animated(bio, max_size, max_frames):
     min_size = min(max_size)
     frame_count = 0
     for frame in ImageSequence.Iterator(im):
+        print(frame_count, max_frames)
         if frame_count > max_frames:
+            print('Stopping at:', frame_count, max_frames)
             break
 
         ''' PIL não salvará o canal A! Workaround: salvar em P-mode '''
@@ -1081,6 +1083,7 @@ def more_popular_questions(request):
                 "total_answers": q.total_responses,
                 "pub_date": fix_naturaltime(naturaltime(q.pub_date)),
                 "creator": q.creator.user.username,
+                "question_creator_avatar": q.creator.avatar.url,
                 "user_answer": "False",
               },
             )
@@ -1097,6 +1100,7 @@ def more_popular_questions(request):
                 "total_answers": q.total_responses,
                 "pub_date": fix_naturaltime(naturaltime(q.pub_date)),
                 "creator": q.creator.user.username,
+                "question_creator_avatar": q.creator.avatar.url,
                 "user_answer": answer,
               },
             )

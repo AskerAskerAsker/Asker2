@@ -133,6 +133,29 @@ button font {
 /* Menubar-end */
 
 /* Index */
+.qcreator-small {
+	margin-left: 5px;
+	font-weight: 600;
+	font-size: 11px;
+	opacity: 0.6;
+	text-decoration: none;
+	color: inherit;
+	vertical-align: middle;
+	padding-top: 2px;
+}
+.profile-pic-small {
+	width: 27px;
+	height: 27px;
+	border-radius: 100px;
+	background-size: cover !important;
+	background-repeat: no-repeat !important;
+	background-position: center center !important;
+	vertical-align: middle;
+	display: inline-block;
+}
+.profile-picture-index {
+	padding-bottom: 7px;
+}
 .questao {
 	overflow-x: hidden;
 }

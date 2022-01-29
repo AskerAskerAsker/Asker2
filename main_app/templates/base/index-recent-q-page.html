@@ -7,67 +7,64 @@
     {% if not question.creator.ban or question.creator.ban and user != question.creator.user %}
 	    {% if not question.creator.user in user_p.silenced_users.all %}
 	    <li class="list-group-item bg-main" data-id="{{ question.id }}">
- <a href="/question/{{ question.id }}" style="text-decoration: none; color: inherit">
+		<a href="/question/{{ question.id }}" style="text-decoration: none; color: inherit">
 
         <div class="card-body" style="padding-bottom: 12px">
-                <div class="profile-picture-index" style="padding-bottom: 7px">
-                    <div class="profile-pic-small" style="width: 27px; height: 27px; border-radius: 100px; background: url('{{ question.creator.avatar.url }}'); background-size: cover; background-repeat: no-repeat; vertical-align: middle; display:inline-block">
-                    </div>
-                    <span class="left-spaced" style="font-weight: 600; font-size: 11px; opacity: 0.6; text-decoration: none; color: inherit; vertical-align: middle; padding-top: 2px;">
-                        {{ question.creator }}
-                    </span>
-                </div>
-			    <h2 class="question-title fg-1" style="font-size: 16px">
-				    <a class="q-title" style="text-decoration: none; outline: none" href="/question/{{ question.id }}">
-					    {{ question.text }}
-				    </a>
-			    </h2>
-			    
-			    {% if question.description %}
+			<div class="profile-picture-index">
+				<div class="profile-pic-small" style="background: url('{{ question.creator.avatar.url }}');">
+				</div>
+				<span class="qcreator-small">
+					{{ question.creator }}
+				</span>
+			</div>
+			<h2 class="question-title fg-1" style="font-size: 16px">
+				<a class="q-title" style="text-decoration: none; outline: none" href="/question/{{ question.id }}">
+					{{ question.text }}
+				</a>
+			</h2>
+			
+			{% if question.description %}
             <a style="text-decoration: none; outline: none; color: inherit; font-size: 13px" href="/question/{{ question.id }}">
 				    <p class='description'>{{ question.description }}</p>
             </a>
-			    {% endif %}
-
+			{% endif %}
+			
+			{% if question.image %}
+			<a href="/question/{{ question.id }}"> 
+				<div class="index-qimg-container" style="padding-bottom: 9px">
+							<button class="index-qimg-btn" onclick="image_toggle(this);">
+						<div class="overflow-guide">
+							<div class="separator-100"></div>
+							<ion-icon name="chevron-down-outline"></ion-icon>
+						</div>
+						<div class="index-qimg-off">
+								<img class="index-qimg" src="{{ question.image.url }}">
+						</div>
+					</button>
+				</div>
+			</a>
+			{% endif %}
+	   
             <small class="text-muted">
-                            
-                    <span id="response-counter-{{ question.id }}" style="color: #00CD66; font-weight: 700">
-                        {{ question.total_responses }}
-                    </span>
+				<span id="response-counter-{{ question.id }}" style="color: #00CD66; font-weight: 700">
+					{{ question.total_responses }}
+				</span>
 
-                    <span id="response-sentence-{{ question.id }}" style="color: #00CD66; font-weight: 700">
-                        Respostas
-                    </span>
-               
+				<span id="response-sentence-{{ question.id }}" style="color: #00CD66; font-weight: 700">
+					Respostas
+				</span>
+		   
 
-                    <span>
-                         &#8226;  {% fix_naturaltime question.pub_date|naturaltime %} 
-                    </span>
-                
-                    <span> &#8226; </span> 
-                
-                  <span> {{ question.total_views }} </span>
-                  <span style="margin-left: -2px; font-weight: 700"><ion-icon name="eye"></ion-icon></span>
-                
-                </small>    
-
-                {% if question.image %}
-       <a href="/question/{{ question.id }}"> 
-                <div class="index-qimg-container" style="padding-bottom: 9px">
-		                    <button class="index-qimg-btn" onclick="image_toggle(this);">
-                        <div class="overflow-guide">
-                            <div class="separator-100"></div>
-                            <ion-icon name="chevron-down-outline"></ion-icon>
-                        </div>
-					    <div class="index-qimg-off">
-        						<img class="index-qimg" src="{{ question.image.url }}">
-					    </div>
-                    </button>
-                </div>
-       </a>
-                {% endif %}
-           
-                
+				<span>
+					 &#8226;  {% fix_naturaltime question.pub_date|naturaltime %} 
+				</span>
+			
+				<span> &#8226; </span> 
+			
+			  <span> {{ question.total_views }} </span>
+			  <span style="margin-left: -2px; font-weight: 700"><ion-icon name="eye"></ion-icon></span>
+			
+            </small>
 			    {% if user.is_anonymous %}
 				    <p>Faça <a href="/signin?redirect=/question/{{ question.id }}">login</a> ou <a href="/signup?redirect=/question/{{ question.id }}">crie uma conta</a> para responder essa pergunta.</p>
 			    {% else %}

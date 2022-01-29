@@ -95,21 +95,22 @@ var questoes_populares = document.getElementById("lista_de_questoes_populares");
 function renderizar_questoes_populares(popular_questions) {
     for (var index = 0; index < 20; ++index) {
     try { questoes_populares.innerHTML += '<li class="list-group-item bg-main questao" data-id="'+popular_questions[index].id+'">' +
-                                                                    '<div class="card-body" style="border: none; background: transparent">' +
-                                                                        '<div class="flexbox" style="border: none; background: transparent">' +
-                                                                            '<h2 style="font-size: 16px" class="question-title fg-1">' +
-                                                                                '<a style="text-decoration: none; outline: none" class="q-title" href="/question/'+popular_questions[index].id+'">' +
-                                                                                    popular_questions[index].text +
-                                                                                '</a>' +
-                                                                            '</h2>' +
-                                                                        '</div>' +
-                                                                        (popular_questions[index].description != '' ? '<p class="description">'+popular_questions[index].description+'</p>' : '') +
-                                                           '<small class="text-muted" style="color: #40E0D0">' +
-                                                                                (popular_questions[index].total_answers == 1 ? '<span style="color: #00CD66; font-weight: 800" id="response-counter-'+popular_questions[index].id+'">1</span> <span style="color: #00CD66; font-weight: 800" id="response-sentence-'+popular_questions[index].id+'">Resposta</span>' : '<span style="color: #00CD66; font-weight: 800" id="response-counter-'+popular_questions[index].id+'">'+popular_questions[index].total_answers+'</span> <span style="color: #00CD66" id="response-sentence-'+popular_questions[index].id+'">Respostas</span>') + ' | ' + popular_questions[index].pub_date +
-                                                                            '</small>' +                  
-                                                                  
-                                                                '</li>'; } catch (e) {
-                                                                }
+												'<div class="card-body" style="border: none; background: transparent">' +
+													'<div class="profile-picture-index"><div class="profile-pic-small" style="background:url(\'' + popular_questions[index].question_creator_avatar + '\');"></div><span class="qcreator-small">' + popular_questions[index].creator + '</span></div>' + 
+													'<div class="flexbox" style="border: none; background: transparent">' +
+														'<h2 style="font-size: 16px" class="question-title fg-1">' +
+															'<a style="text-decoration: none; outline: none" class="q-title" href="/question/'+popular_questions[index].id+'">' +
+																popular_questions[index].text +
+															'</a>' +
+														'</h2>' +
+													'</div>' +
+													(popular_questions[index].description != '' ? '<p class="description">'+popular_questions[index].description+'</p>' : '') +
+									   '<small class="text-muted" style="color: #40E0D0">' +
+															(popular_questions[index].total_answers == 1 ? '<span style="color: #00CD66; font-weight: 800" id="response-counter-'+popular_questions[index].id+'">1</span> <span style="color: #00CD66; font-weight: 800" id="response-sentence-'+popular_questions[index].id+'">Resposta</span>' : '<span style="color: #00CD66; font-weight: 800" id="response-counter-'+popular_questions[index].id+'">'+popular_questions[index].total_answers+'</span> <span style="color: #00CD66" id="response-sentence-'+popular_questions[index].id+'">Respostas</span>') + ' | ' + popular_questions[index].pub_date +
+														'</small>' +                  
+											  
+											'</li>'; } catch (e) {
+											}
     }
 }
 renderizar_questoes_populares(popular_questions_);
