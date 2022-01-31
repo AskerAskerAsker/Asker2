@@ -251,6 +251,8 @@ def like(request):
     answer_id = request.GET.get('answer_id')
 
     r = Response.objects.get(id=answer_id)
+    if r.creator.user == request.user:
+        return HttpResponse('Proibido', content_type='text/plain')
 
     q = r.question
     if r.likes.filter(username=request.user.username).exists():
@@ -605,10 +607,11 @@ def comment(request):
                                                                                              text=html.escape(request.POST.get('text')),
                                                                                              pub_date=timezone.now())
 
-    n = Notification.objects.create(receiver=comment.response.creator.user,
+    if not request.user == comment.response.creator.user:
+        n = Notification.objects.create(receiver=comment.response.creator.user,
                                                                                                                     type='comment-in-response',
                                                                                                                     text='<p><a href="/user/{}">{}</a> comentou na sua resposta na pergunta: <a href="/question/{}">"{}"</a></p>'.format(comment.creator.username, comment.creator.username, comment.response.question.id, comment.response.question.text))
-    n.prepare()
+        n.prepare()
 
     comment_creator_template = '''
             <li class="list-group-item c no-horiz-padding">

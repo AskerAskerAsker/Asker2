@@ -52,7 +52,11 @@
 				</div>
 			{% endif %}
 
+			{% if response.creator != user_p %}
 			<div class="heart-comment" id="like-counter-{{ response.id }}" onclick="like(this, {{ response.id }})">
+			{% else %}
+			<div class="heart-comment" id="like-counter-{{ response.id }}">
+			{% endif %}
 				<i><img width="18px" src="/static/images/{{ response.id|like_or_not:user.username }}?version=3" class="hc-icon"></i>
 				<span>{{ response.total_likes }}</span>
 			</div>
@@ -165,7 +169,7 @@
 					</div>
 				{% endif %}
 
-				<div class="heart-comment" id="like-counter-{{ response.id }}" onclick="like(this, {{ response.id }})">
+				<div class="heart-comment" id="like-counter-{{ response.id }}">
 					<i>
 						<img width="16px" src="/static/images/{{ response.id|like_or_not:user.username }}?version=3" class="hc-icon">
 					</i>

@@ -6,7 +6,9 @@ textarea.large-compact {
 }
 
 /* Menubar */
-
+html {
+    overflow-y: scroll; /* Fix deslocamento de menubar */
+}
 ol, ul {
     list-style: none;
 }
@@ -129,7 +131,6 @@ button font {
     font-size: 54px;
     color: #007bff;
 }
-
 /* Menubar-end */
 
 /* Index */
@@ -208,7 +209,6 @@ button font {
     width: 100%;
     height: 100%;
 }
-
 #reload {
 	width: 35px;
 	height: 35px;
@@ -229,12 +229,10 @@ button font {
     transform: rotate(359deg);
   }
 }
-
 .question-title {
 	font-size: 1em;
 	font-weight: bold;
 }
-
 .end {
 	font-size: larger;
 	text-align: center;
@@ -328,7 +326,6 @@ button font {
 .poster-text-container .r-username {
 	display: block;
 }
-
 .choice.list-group-item:first-child {
   border-top: none;
 }
