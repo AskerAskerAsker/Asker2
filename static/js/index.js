@@ -9,7 +9,7 @@ function hide_questions() {
 
         if (qid != 'javascript:void(0);') {
             var total_responses = document.getElementById('response-counter-' + qid).innerHTML;
-            if (Number(total_responses) < 10) {
+            if (Number(total_responses) < 12) {
                 qtitles[i].href = 'javascript:void(0);'
                 qtitles[i].setAttribute('onclick', 'login_toggle();');
             }
