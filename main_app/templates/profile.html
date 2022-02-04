@@ -74,6 +74,7 @@
 		        {% afollowb user.username target_user_p.user.username as FOLLOWED %}
 		        {% ablockb user.username target_user_p.user.username as BLOCKED %}
 		        {% asilenceb user.username target_user_p.user.username as SILENCED %}
+		        {% ablockb target_user_p.user.username user.username as TARGET_HAS_BLOCKED %}
 
                 <center class="btn-group justified vertical-spaced" style="font-weight: 500; border-radius: 100px" role="group">
                     {% if target_user_p.followable %}
@@ -95,7 +96,9 @@
                             {% else %}
                                <b> Silenciar </b>
                             {% endif %}
-			        </button>
+			        </button>{% if not TARGET_HAS_BLOCKED and target_user_p.allows_chat %}<button id="chat-button" class="btn btn-outline-primary" onclick="open_chat('{{ target_user_p.user.username }}')">
+                            <b> <ion-icon name="mail-open-outline"></ion-icon> </b>
+			        </button>{% endif %}
 		        </center>
             {% endif %}
 		{% endif %}
@@ -314,7 +317,7 @@ font-weight: 800;
 		</main>
         <script src="https://cdn.jsdelivr.net/npm/linkifyjs@2.1.9/dist/linkify.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/linkifyjs@2.1.9/dist/linkify-jquery.min.js"></script>
-        <script src="/static/js/profile.js?v=9.1"></script>
+        <script src="/static/js/profile.js?v=9.2"></script>
 	    <script src="/static/js/common.js?v=1.5"></script>
 	</body>
 </html>

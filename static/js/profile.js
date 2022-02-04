@@ -143,7 +143,9 @@ function show_more_responses(button, uid) {
 	});
 }
 
-/* Retirados de profile.html dia 11/12/2021 */
+function open_chat(username) {
+	window.location = '/open_chat?u=' + username;	
+}
 function block_user(username) {
     button = document.getElementById('block-button')
     button.disabled = true

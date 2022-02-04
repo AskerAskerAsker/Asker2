@@ -1,0 +1,89 @@
+{% load humanize %}
+{% load main_app_extras %}
+<!doctype html>
+<html lang="pt-br">
+    <head>
+        <title>Mensagens</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+		<style id="wait">
+			body {
+				visibility: hidden;
+				opacity: 0;
+			}
+		</style>
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/css/bootstrap.min.css">
+		<link href="https://fonts.googleapis.com/css?family=Raleway:400,500,500i,700,800i" rel="stylesheet">
+        {% include "includes/themehandler.html" %}
+		<script src="https://kit.fontawesome.com/1f965a8b94.js"></script>
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+        <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script> 
+        <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+    </head>
+
+    <body>
+        {% if user.is_authenticated %}
+	        {% include "includes/menubar.html" %}
+        {% endif %}
+        <main style="border: none">
+         
+        <br><br><br><br>
+        
+        <center> <h4 style="font-weight: 900"><b>Mensagens</b></h4> </center>
+        
+            <section class="card bg-main">
+                <ul class="list-group list-group-flush">
+					{% for chat in chats %}
+						{% chat_last_message chat as last_message %}
+						{% if last_message %}
+						<li class="list-group-item bg-main">
+							{% chat_new_messages user_p chat as new_chat_m %}
+							<div class="card-body" {% if new_chat_m %} style="background-color: rgba(0, 123, 255, 15%); border-radius: 15px;" {% endif %}>
+								<a href="/chat?c={{ chat.id }}" style="text-decoration: none;">
+									{% chat_counterpart user_p chat as counterpart %}
+									<div class="poster-container">
+										<div class="poster-info">
+											<div class="poster-profile-pic-container" style="border-radius: 100px; width: 59px; height: 57px; background: url({{ counterpart.avatar.url }}); background-size: cover; background-repeat: no-repeat; background-position: center;"></div>
+											<div class="poster-text-container" style="padding-left: 10px;">
+												<div>
+													<span class="r-username">
+														<font style="font-weight: 700; font-size: 15px;">
+															{{ counterpart.user.username }}
+														</font>
+													</span>
+													<span class="post-pub-date" title="{{ chat.last_activity }}">
+														{% fix_naturaltime chat.last_activity|naturaltime %}
+													</span>
+												</div>
+											</div>
+										</div>
+									</div>
+									<p class="small-text">
+										<span>
+										{% if last_message.creator == user_p.user %}
+											Você:
+										{% else %}
+											{{ last_message.creator }}:
+										{% endif %}
+										</span>
+										{% if not last_message.hide%}
+										{{ last_message.text }}
+										{% else %}
+											<span style="opacity: 50%">[Apagada]</span>
+										{% endif %}
+										
+									</p>
+								</a>
+							</div>
+						</li>
+						{% endif %}
+                    {% endfor %}
+                </ul>
+            </section>
+        </main>
+	    <script src="/static/js/common.js?v=1.5"></script>
+
+    </body>
+</html>

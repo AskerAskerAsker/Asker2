@@ -127,6 +127,11 @@
 			{% else %}
 				<input type="checkbox" name="followable" id="followable"> <label class="inline" for="followable">Permitir novos seguidores</label><br>
 			{% endif %}
+			{% if user_p.allows_chat %}
+				<input type="checkbox" name="allows-chat" id="allows-chat" checked> <label class="inline" for="allows-chat">Permitir novas conversas</label><br>
+			{% else %}
+				<input type="checkbox" name="allows-chat" id="allows-chat"> <label class="inline" for="allows-chat">Permitir novas conversas</label><br>
+			{% endif %}
 			<input class="btn btn-primary vertical-spaced" type="submit" style="border-radius: 30px" value="Alterar Privacidade">
 		</form>
 

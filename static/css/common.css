@@ -5,6 +5,33 @@ textarea.large-compact {
 	border-radius: 20px;
 }
 
+/* Chat */
+.rmsg, .lmsg {
+	width: 70%;
+	border-radius: 15px;
+}
+.rmsg {
+	background: linear-gradient(to right, rgba(241,111,161,50%), rgba(144,86,241,50%));
+	float: right;
+}
+.lmsg {
+	float: left;
+}
+.txt {
+	padding: 10px;
+	margin: 1px;
+	border-radius: 15px;
+}
+.msg {
+	background-color: transparent !important;
+}
+@media (min-width: 320px) and (max-width: 580px) {
+  .rmsg, .lmsg {
+	  width: 85%;
+  }
+}
+/* Chat-end */
+
 /* Menubar */
 html {
     overflow-y: scroll; /* Fix deslocamento de menubar */
@@ -421,6 +448,7 @@ button font {
 }
 .card {
     margin-bottom: 2px;
+	border: none;
 }
 #tabs {
 	width: 100%;

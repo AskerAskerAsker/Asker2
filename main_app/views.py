@@ -7,8 +7,8 @@ from django.contrib.auth import authenticate, login, logout as django_logout
 from django.contrib.auth.models import User
 from django.contrib.humanize.templatetags.humanize import naturalday, naturaltime
 from django.core.cache import cache
-from main_app.models import UserProfile, Question, Response, Comment, Notification, Poll, PollChoice, PollVote, Ban, Report, ConfirmationCode, ModActivity
-from main_app.templatetags.main_app_extras import fix_naturaltime, formatar_descricao, get_total_answers
+from main_app.models import UserProfile, Question, Response, Comment, Notification, Poll, PollChoice, PollVote, Ban, Report, ConfirmationCode, ModActivity, Chat, ChatMessage
+from main_app.templatetags.main_app_extras import fix_naturaltime, formatar_descricao, get_total_answers, chat_counterpart
 from main_app.forms import UploadFileForm
 from django_project import general_rules
 from urllib.parse import unquote
@@ -28,9 +28,7 @@ def compress_animated(bio, max_size, max_frames):
     min_size = min(max_size)
     frame_count = 0
     for frame in ImageSequence.Iterator(im):
-        print(frame_count, max_frames)
         if frame_count > max_frames:
-            print('Stopping at:', frame_count, max_frames)
             break
 
         ''' PIL não salvará o canal A! Workaround: salvar em P-mode '''
@@ -783,6 +781,10 @@ def edit_profile(request, username):
                 u.followable = True
             else:
                 u.followable = False
+            if request.POST.get('allows-chat') is not None:
+                u.allows_chat = True
+            else:
+                u.allows_chat = False
             u.save()
             return redirect('/user/' + username)
         elif request.POST.get('type') == 'cover-pic':
@@ -1413,6 +1415,208 @@ def search(request):
 
     return render(request, 'search.html', context)
 
+def open_chat(request):
+    context = dict()
+    uname = request.GET.get('u')
+    target_up = UserProfile.objects.get(user=User.objects.get(username=uname))
+    
+    if request.user.is_authenticated:
+        up = UserProfile.objects.get(user=request.user)
+        context['user_p'] = up
+    else:
+        return redirect('/news')
+        
+    if target_up.blocked_users.filter(userprofile=up).exists() or not target_up.allows_chat:
+        context = {'error': 'Esta página não pode ser exibida', 'err_msg': 'Esta conversa não existe ou não está disponível.'}
+        return render(request, 'error.html', context)
+        
+    # TODO: adicionar handling para users silenciados!
+    
+    c = Chat.objects.filter(participant=up.user).filter(participant=target_up.user)
+    if not c:
+        c = Chat.objects.create()
+        c.participant.add(up.user, target_up.user)
+        c.save()
+    elif len(c) == 1:
+        c = c[0]
+        
+    return redirect('/chat?c=' + str(c.id))
+
+def chats(request):
+    context = dict()
+    if request.user.is_authenticated:
+        up = UserProfile.objects.get(user=request.user)
+        context['user_p'] = up
+    else:
+        return redirect('/news')
+        
+    chats = Chat.objects.filter(participant=up.user).order_by('-last_activity')
+    context['chats'] = chats
+            
+    return render(request, 'chats.html', context)
+
+def chat(request):
+    context = dict()
+    chat_id = request.GET.get('c', -1)
+    try:
+        c = Chat.objects.get(id=chat_id)
+    except:
+        context = {'error': 'Esta página não pode ser exibida', 'err_msg': 'Esta conversa não existe ou não está disponível.'}
+        return render(request, 'error.html', context)
+    
+    if request.user.is_authenticated:
+        up = UserProfile.objects.get(user=request.user)
+        context['user_p'] = up
+        if not c.participant.filter(userprofile=up).exists():
+            context = {'error': 'Esta página não pode ser exibida', 'err_msg': 'Esta conversa não existe ou não está disponível.'}
+            return render(request, 'error.html', context)
+    else:
+        return redirect('/news')
+                       
+    counterpart = chat_counterpart(up, c)
+    context['counterpart'] = counterpart
+    
+    last_received = ChatMessage.objects.filter(chat=c, creator=counterpart.user).last()
+    
+    if last_received:
+        if last_received.id > c.last_viewed:
+            c.last_viewed = last_received.id
+            c.save()
+    
+    messages = list(reversed(list(ChatMessage.objects.filter(chat=c).order_by('-id')[:10])))
+    context['messages'] = messages
+    
+    context['cid'] = c.id
+    context['last_viewed'] = c.last_viewed
+         
+    return render(request, 'chat.html', context)
+    
+def sendmsg(request):
+    chat_id = request.POST.get('c')
+    text = request.POST.get('text')
+        
+    try:
+        c = Chat.objects.get(id=chat_id)
+    except:
+        return HttpResponse('Proibido', content_type='text/plain')
+    
+    if request.user.is_authenticated:
+        up = UserProfile.objects.get(user=request.user)
+        try:
+            if (timezone.now() - ChatMessage.objects.filter(creator=up.user).latest('id').pub_date).seconds < 1:
+                return HttpResponse('Proibido', content_type='text/plain')
+        except:
+            # except DoesNotExist!!
+            pass
+        if not c.participant.filter(userprofile=up).exists():
+            return HttpResponse('Proibido', content_type='text/plain')
+    else:
+        return HttpResponse('Proibido', content_type='text/plain')
+        
+    message = ChatMessage.objects.create(chat=c, creator=up.user)
+    
+    message.text = text
+    if not text:
+        message.text = 'Foto'
+        form = UploadFileForm(request.POST, request.FILES)
+        if form.is_valid():
+            f = request.FILES['file']
+
+            chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-_)(0123456789'
+            file_name = ''.join(random.choice(chars) for i in range(32))
+
+            success = save_img_file(f, 'media/chat_photos/' + file_name, (1200, 1200))
+            if success:
+                message.image = success
+        
+    message.save()
+    
+    c.last_activity = timezone.now()
+    c.save()
+
+    return HttpResponse('OK', content_type='text/plain')
+    
+def loadmsgs(request):
+    chat_id = request.GET.get('c')
+    type = request.GET.get('type')  # old, new
+    last_loaded = request.GET.get('last')
+    last_known_viewed = request.GET.get('lkv')
+    
+    try:
+        c = Chat.objects.get(id=chat_id)
+    except:
+        return HttpResponse('Proibido', content_type='text/plain')
+    
+    if request.user.is_authenticated:
+        up = UserProfile.objects.get(user=request.user)
+        if not c.participant.filter(userprofile=up).exists():
+            return HttpResponse('Proibido', content_type='text/plain')
+    else:
+        return HttpResponse('Proibido', content_type='text/plain')
+    
+    last_viewed_new = None
+    last_deletions = None
+    if type == 'old':
+        messages = list(reversed(list(ChatMessage.objects.filter(id__lt=last_loaded, chat=c).order_by('-id')[:50])))
+    elif type == 'new':
+        messages = list(reversed(list(ChatMessage.objects.filter(id__gt=last_loaded, chat=c).order_by('-id')[:50])))
+        if c.last_viewed > int(last_known_viewed):
+            last_viewed_new = c.last_viewed
+        last_deletions = ChatMessage.objects.filter(chat=c, hide=True, creator=chat_counterpart(up, c).user, pub_date__gte=timezone.now()-timedelta(hours=1)).order_by('-id')[:5]
+    
+    return render(request, 'base/chat-messages.html', {'messages': messages, 'user_p': up, 'last_viewed': last_viewed_new, 'last_deletions': last_deletions})
+    
+def markviewed(request):
+    chat_id = request.GET.get('c')
+    msg_id = request.GET.get('m')
+    
+    try:
+        c = Chat.objects.get(id=chat_id)
+        m = ChatMessage.objects.get(id=msg_id)
+    except:
+        return HttpResponse('Proibido', content_type='text/plain')
+    
+    if m.chat != c:
+        return HttpResponse('Proibido', content_type='text/plain')
+    if request.user.is_authenticated:
+        up = UserProfile.objects.get(user=request.user)
+        counterpart = chat_counterpart(up, c)
+        if counterpart is None:
+            return HttpResponse('Proibido', content_type='text/plain')
+        if not m.creator == counterpart.user:
+            return HttpResponse('Proibido', content_type='text/plain')
+    else:
+        return HttpResponse('Proibido', content_type='text/plain')
+        
+    c.last_viewed = msg_id
+    c.save()
+    
+    return HttpResponse('OK', content_type='text/plain')
+    
+def remove_msg(request):
+    chat_id = request.GET.get('c')
+    msg_id = request.GET.get('m')
+    
+    try:
+        c = Chat.objects.get(id=chat_id)
+        m = ChatMessage.objects.get(id=msg_id)
+    except:
+        return HttpResponse('Proibido', content_type='text/plain')
+    
+    if m.chat != c:
+        return HttpResponse('Proibido', content_type='text/plain')
+    if request.user.is_authenticated:
+        up = UserProfile.objects.get(user=request.user)
+        if m.creator != up.user:
+            return HttpResponse('Proibido', content_type='text/plain')
+    else:
+        return HttpResponse('Proibido', content_type='text/plain')
+        
+    m.hide = True
+    m.save()
+        
+    return HttpResponse('OK', content_type='text/plain')
+        
 def modactivity(request):
     if request.user.id != 82:
         # Nega acesso a usuários

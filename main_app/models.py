@@ -101,6 +101,8 @@ class UserProfile(models.Model):
     followable = models.BooleanField(default=True)
     followed_users = models.ManyToManyField(User, related_name='followed_by', blank=True)
     followed_questions = models.ManyToManyField('Question', related_name='q_followed_by', blank=True)
+    
+    allows_chat = models.BooleanField(default=False)
 
     def __str__(self):
         return self.user.username
@@ -286,3 +288,18 @@ class ModActivity(models.Model):
 class ConfirmationCode(models.Model):
     user = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
     code = models.CharField(max_length=256)
+
+class Chat(models.Model):
+    participant = models.ManyToManyField(User, related_name='made_by')
+    last_viewed = models.IntegerField(default=0)
+    last_activity = models.DateTimeField(default=timezone.now)
+    active = models.BooleanField(default=True)  # qualquer um dos participantes pode 'bloquear' a conversa, desativando-a
+
+class ChatMessage(models.Model):
+    chat = models.ForeignKey(Chat, on_delete=models.CASCADE)
+    creator = models.ForeignKey(User, on_delete=models.CASCADE)
+    pub_date = models.DateTimeField(default=timezone.now)
+    text = models.TextField(null=False)
+    image = models.ImageField(null=True, blank=True)
+    hide = models.BooleanField(default=False)
+    

@@ -1,0 +1,95 @@
+{% load humanize %}
+{% load main_app_extras %}
+<!doctype html>
+<html lang="pt-br" style="height: 100vh; scrollbar-width: none;">
+    <head>
+        <title>Mensagens</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+		<style id="wait">
+			body {
+				visibility: hidden;
+				opacity: 0;
+			}
+		</style>
+		<style>
+		#msg_txtarea {
+			scrollbar-width: none;
+			-ms-overflow-style: none;
+		}
+		
+		</style>
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/css/bootstrap.min.css">
+		<link href="https://fonts.googleapis.com/css?family=Raleway:400,500,500i,700,800i" rel="stylesheet">
+        {% include "includes/themehandler.html" %}
+		<script src="https://kit.fontawesome.com/1f965a8b94.js"></script>
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+        <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script> 
+        <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+    </head>
+
+    <body style="height: 100vh;">
+        {% if user.is_authenticated %}
+	        {% include "includes/menubar.html" %}
+        {% endif %}
+        <main style="height: 100vh; display: flex; flex-direction: column;">
+			<div>
+				<br><br><br>
+				<center> <h4 style="font-weight: 900"><b>Mensagens com {{ counterpart }}</b></h4> </center>
+			</div>
+		
+            <section id="chatbox" class="card bg-main" style="overflow-y: scroll; height: 100%;">
+								
+				{% if messages %}
+				<button id="load-old" class="page-btn btn btn-primary vertical-spaced" style="border-radius: 30px; width: 70%; margin-right: auto; margin-left: auto;" onclick="load_old()">Ver Mais</button>
+				{% endif %}
+                <ul id="msg-l" class="list-group">
+					<div class="hidden">
+						<span id="vchk" style="position: absolute; right: 30px; bottom: 20px;">
+							<ion-icon style="background-color: rgba(255,255,255,20%); border-radius:10px;" name="checkmark-outline"></ion-icon>
+						</span>
+					</div>
+					{% include "base/chat-messages.html" %}
+                </ul>
+			
+				<br><br>
+            </section>
+			
+			<div style="padding-left: 5px; padding-right: 5px; background: transparent; display: flex; flex-direction: row;">
+				<br>
+				<textarea id="msg_txtarea" maxlength="260" class="form-control large-compact" style="font-size: 13px; font-weight: 600; border-radius: 10px; height: 100%; margin-right: 3px;" placeholder="Sua Mensagem" name="text" onkeypress="txt_v();"></textarea>
+				<div style="display: flex; flex-direction: column;">
+
+				<form style="text-align: center;" method="post" enctype="multipart/form-data" id="img-form">
+					{% csrf_token %}
+					<input type="hidden" name="c" value="{{ cid }}">
+					<label style="margin: auto;" for="upload-photo">
+						<i class="fas fa-camera fa-lg"></i>
+						<span id="upload-photo-text"></span>
+					</label>
+					<input type="file" accept="image/*" name="file" id="upload-photo" onchange="add_img();">
+					<img src="/static/images/close-icon.png" width="20px" style="display: none; cursor: pointer;" id="delete-photo-icon" onclick="rm_img();">
+					
+				</form>
+				
+				<button id="send-btn" class="btn btn-outline-primary left-spaced" style="font-size: 14px; font-weight: 700; border-radius: 30px; margin-top: 5px;" onclick="send_msg();">
+					<i class="far fa-paper-plane"></i>
+					Enviar
+				</button>
+					
+				</div>
+			</div>
+			<div style="margin-bottom: 60px;"></div>
+			
+        </main>
+		<script>
+			var CID = {{ cid }};
+			var CSRF_TOKEN = '{{ csrf_token }}';
+		</script>
+		<script src="/static/js/chat.js?v=0.8.6"></script>
+	    <script src="/static/js/common.js?v=1.5"></script>
+
+    </body>
+</html>

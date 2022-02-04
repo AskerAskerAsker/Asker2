@@ -1,3 +1,4 @@
+{% load main_app_extras %}
 <div id="barcontainer" style="transition: 0.3s; margin-top: -78px; position: fixed; z-index: 9999999; width: 100%; max-width: 400px">
     <div id="searchcontainer" class="bg-outer" style="box-shadow: 0 10px 20px rgba(64, 64, 64, 0.15);">
         <div id="searchcontainer">
@@ -16,8 +17,8 @@
        <li class="menu-item"><button id='dark-mode' class="menu-button"><font color="#fff" style="color: #fff; font-size: 18px; font-weight: 900"><ion-icon name="bulb-outline"></ion-icon></font></button></li>
        <a href="/rules"> <li class="menu-item"><button class="menu-button"><font color="#fff" style="color: #fff; font-weight: 900"><ion-icon name="alert-circle-outline"></ion-icon></font></button></li></a>
             <li class="menu-item" id="searchbtn"><button class="menu-button"><font color="#fff" style="color: #fff; font-size: 18px; font=weight: 900"><ion-icon name="search-outline"></ion-icon></font></button></li>
-          <a href="https://asker.fun/"><li class="menu-item"><button class="menu-button">
-            <div style="border-radius: 300px; background: url(/media/avatars/Asker%20Admin-2021-12-01-15%3A06%3A17.088222); width: 50px; height: 50px; background-position: center center; background-size: cover; background-repeat: no-repeat"></div>
+          <a href="/"><li class="menu-item"><button class="menu-button">
+            <div style="border-radius: 300px; background: url(https://asker.fun/media/avatars/Asker%20Admin-2021-12-01-15%3A06%3A17.088222); width: 50px; height: 50px; background-position: center center; background-size: cover; background-repeat: no-repeat"></div>
             </button></li>
           </a>
             <a href="/notifications">
@@ -32,7 +33,18 @@
                     </font></button>
                 </li>
             </a>
-           <a href="/rank"><li class="menu-item"><button class="menu-button"><font color="#fff" style="color: #fff; font-size: 18px; font-weight: 900"><ion-icon name="trophy-outline"></ion-icon></font></button></li></a>
+            <a href="/chats">
+               <li class="menu-item">
+                   <button class="menu-button"><font color="#fff" style="color: #fff; font-size: 18px; font-weight: 900">
+					{% check_new_messages user_p as new_m %}
+					{% if new_m %}
+					<ion-icon name="chatbubble-ellipses-outline"></ion-icon>
+					{% else %}
+					<ion-icon name="chatbubble-outline"></ion-icon>
+				    {% endif %}
+                   </font></button>
+               </li>
+           </a>
            <a href="/ask"> <li class="menu-item"><button class="menu-button"><font color="#fff" style="color: #fff; font-size: 18px; font-weight: 900"><ion-icon name="pencil"></ion-icon></font></button></li></a>
              
         </ul>

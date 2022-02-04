@@ -1,0 +1,48 @@
+{% load humanize %}
+{% load main_app_extras %}
+<!-- kfO1wMuva3hNgh0AhIviPyhEGyoRjDdX -->
+{% if messages or last_viewed %}
+<!-- bDvziM9fOa85xovJ -->
+{% endif %}
+{% if last_viewed %}
+<data class="last_viewed" value="{{ last_viewed }}"></data>
+{% endif %}
+{% if last_deletions %}
+	<!-- JEyr8mg0 -->
+	{% for deletion in last_deletions%}
+		<data class="d_msg" value="{{ deletion.id }}"></data>
+	{% endfor %}
+{% endif %}
+{% for message in messages %}
+<li class="list-group-item msg" data-id="{{ message.id }}" style="display: flex;"
+	{% if user_p.user == message.creator %}
+	{% if not message.hide %}onclick="toggle_options(this);"{% endif %}><div class="rmsg" style="margin-left: auto;">
+	{% else %}
+	><div class="lmsg"> <!-- hmiJEd3j -->
+	{% endif %}
+		<div class="txt bg-main" id="m-{{ message.id }}">
+			<p> <b>{{ message.creator }}</b>
+			    <span title='{{ message.pub_date }}'class="small-text left-spaced">{% fix_naturaltime message.pub_date|naturaltime %}</span>
+			</p>
+			{% if not message.hide %}
+				{% if not message.image %}
+				<span class="mtxt"> {{ message.text|linebreaksbr }}</span>
+				{% else %}
+				<span class="mtxt">
+					<img style="display: block; border-radius: 15px; margin-left: auto; margin-right: auto;" src="media/{{ message.image }}" width="100%">
+				</span>
+				{% endif %}
+			{% else %}
+			<span class="mtxt" style="color: #888;"> [Apagada] </span>
+			{% endif %}
+		</div>
+	</div>
+	{% if user_p.user == message.creator %}
+	<div class="options" style="display: none">
+		<button class="bg-danger" style="border: none; border-radius: 5px; margin: 5px; color: white;" onclick="msgrm({{ message.id }});">
+			<ion-icon name="trash-outline"></ion-icon>
+		</button>
+	</div>
+	{% endif %}
+</li>
+{% endfor %}

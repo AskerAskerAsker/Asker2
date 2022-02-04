@@ -1,6 +1,6 @@
 from django_project import general_rules
 from django import template
-from main_app.models import User, UserProfile, Question, Response, Comment, Poll, PollChoice, PollVote
+from main_app.models import User, UserProfile, Question, Response, Comment, Poll, PollChoice, PollVote, Chat, ChatMessage
 from django.contrib.humanize.templatetags.humanize import naturaltime
 import zlib
 
@@ -210,7 +210,51 @@ def has_chosen(user, poll_choice):
         # Exceção do AnonymousUser
         return False
 
+'''
+Retorna o nome do outro lado de uma conversa `chat` do usuário `userprofile`.
+'''
+@register.simple_tag
+def chat_counterpart(userprofile, chat):
+    participants = chat.participant.all().exclude(userprofile=userprofile)
+    if len(participants) == 1:
+        return UserProfile.objects.get(user=participants[0])
+    return None
+    
+'''
+Retorna a última mensagem de um chat
+'''
+@register.simple_tag
+def chat_last_message(chat):
+    try:
+        return ChatMessage.objects.filter(chat=chat).latest('id')
+    except:
+        return None
 
+'''
+Vê se há mensagens não lidas no chat `chat` pelo usuário `userprofile`.
+'''
+@register.simple_tag
+def chat_new_messages(userprofile, chat):
+    last_m = chat_last_message(chat)
+    if not last_m:
+        return False
+    last_v = chat.last_viewed
+    if last_m.creator != userprofile.user:
+        if last_v != last_m.id:
+            return True
+    return False
+    
+'''
+Vê se há mensagens não lidas em qualquer chat do usuário `userprofile`.
+'''
+@register.simple_tag
+def check_new_messages(userprofile):
+    chats = Chat.objects.filter(participant=userprofile.user)
+    for chat in chats:
+        if chat_new_messages(userprofile, chat):
+            return True
+    return False
+    
 '''
 Retorna o total de visualizações de uma pergunta.
 '''
@@ -220,7 +264,6 @@ def question_total_views(question_id):
     return Question.objects.get(id=question_id).total_views
   except:
     return '0'
-
 
 '''
 a bloqueou b?

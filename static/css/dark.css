@@ -13,7 +13,7 @@ body {
   color: #f8f9fa !important;
 }
 .bg-main {
-  background-color: transparent !important; /* 343a40 */
+  background-color: #222 !important;
   color: #f8f9fa;
 }
 .bg-main-tab.active {
@@ -47,18 +47,18 @@ body {
 }
 .form-control {
   border: 1px solid rgba(0,0,0,.125) !important;
-  background-color: #394046 !important;
+  background-color: #343a40 !important;
   color: #f8f9fa !important;
 }
 .form-control:focus {
-  background-color: #394046;
+  background-color: #343a40;
   color: #f8f9fa;
 }
 .text-muted {
   color: #f8f9fa !important;
 }
 hr {
-    border-color: #394046;
+    border-color: #343a40;
 }
 .clickable, .clickable:hover {
     color: #f8f9fa !important;
