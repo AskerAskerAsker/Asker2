@@ -1506,8 +1506,11 @@ def sendmsg(request):
             if (timezone.now() - ChatMessage.objects.filter(creator=up.user).latest('id').pub_date).seconds < 1:
                 return HttpResponse('Proibido', content_type='text/plain')
         except:
-            # except DoesNotExist!!
+            # excecao para 'DoesNotExist' - caso nao haja nenhuma mensagem no chat
             pass
+        if chat_counterpart(up, c).blocked_users.filter(userprofile=up).exists():
+            return HttpResponse('Proibido', content_type='text/plain')
+            
         if not c.participant.filter(userprofile=up).exists():
             return HttpResponse('Proibido', content_type='text/plain')
     else:
