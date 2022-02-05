@@ -85,19 +85,19 @@ popular_questions_=[
 <br>
 {% endif %}
 
-
+<div style="margin-top: -20px">
   {% include "includes/navbar.html" %}
-    
- 
+</div>    
+
 <body>
 
 <br><br>
 <center> 
 	<div class="containerem" style="z-index: 9999;">
 	   {% if not user.is_authenticated %}
-	   <div class="navegacao" style="position: fixed; padding: 10px; height: 55px; margin-top: 25px; padding-top: 20px; background-image: linear-gradient(to right, #9932CC , rgb(30, 144, 255, 0.9)); top: -25px; border-radius: 0px 0px 20px 20px">
+	   <div class="navegacao" style="position: fixed; padding: 10px; height: 55px; margin-top: 4px; padding-top: 20px; background-image: linear-gradient(to right, #E8E8E8 , rgb(205, 0, 205)); top: -25px; border-radius: 0px 0px 20px 20px">
            {% else %}
-	   <div class="navegacao" style="position: fixed; padding: 10px; height: 55px; margin-top: 25px; padding-top: 20px; background-image: linear-gradient(to right, #87CEFF , rgb(232, 232, 232, 0.9)); top: 20px; border-radius: 0px 0px 20px 20px">
+	   <div class="navegacao" style="position: fixed; padding: 10px; height: 55px; margin-top: 4px; padding-top: 20px; background-image: linear-gradient(to right, #87CEFF , rgb(232, 232, 232, 0.9)); top: 20px; border-radius: 0px 0px 20px 20px">
       {% endif %}
 
         <a class="left-spaced" href="https://instagram.com/askerfun" style="padding-right: 5px" target="_blank">
@@ -110,7 +110,7 @@ popular_questions_=[
 			<a class="left-spaced" id="botao-seguindo" style="padding-right: 10px; text-decoration: none; outline: none; cursor: pointer; border none; font-size: 14px">Seguindo</a>
        
        {% else %}
-       <a id="botao-popular" style="font-weight: 700; font-size: 15px; color: white; text-decoration: none; outline: none" href="/signin?redirect={{ request.get_full_path }}">Login &#10152;</a>
+       <a id="botao-popular" style="font-weight: 700; font-size: 15px; text-decoration: none; outline: none" href="/signin?redirect={{ request.get_full_path }}">Login &#10152;</a>
        
 			<a class="hidden" id="botao-seguindo" style="padding-right: 8px; text-decoration: none; outline: none; cursor: pointer; border none; font-size: 14px">Seguindo</a>
 			{% endif %}
