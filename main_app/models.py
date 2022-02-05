@@ -102,7 +102,7 @@ class UserProfile(models.Model):
     followed_users = models.ManyToManyField(User, related_name='followed_by', blank=True)
     followed_questions = models.ManyToManyField('Question', related_name='q_followed_by', blank=True)
     
-    allows_chat = models.BooleanField(default=False)
+    allows_chat = models.BooleanField(default=True)
 
     def __str__(self):
         return self.user.username
