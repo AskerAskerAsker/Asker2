@@ -75,11 +75,12 @@
 				       </a>
 		     </center>
                 
-		                <br>
+		  <br><br>
+                
 					<div class="card" style="background: transparent; border: none">
 						<div class="list-group list-group-flush" style="background: transparent; border: none">
 							{% for user in rank %}
-							<li class="list-group-item" style="background: transparent; border: none; padding-bottom: 40px">
+							<li class="list-group-item" style="background: transparent; border: none; padding-bottom: 55px">
 								<div>
 									<b class="right-spaced">{{ user.pos }}°</b> <a href="/user/{{ user.user }}" style="font-weight: 800">{{ user.user }}</a>
 								</div>
@@ -89,7 +90,7 @@
 											Pontuação
 										</div>
 										<div>
-                                        <b style="font-weight: 800">{{ user.user.total_points }} </b>
+                                        <b style="font-weight: 800; color: #BA55D3">{{ user.user.total_points }} </b>
 										</div>
 									</div>
 									<div>

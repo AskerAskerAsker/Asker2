@@ -1,3 +1,15 @@
+/* Index */
+.navegacao a {
+    color: white;
+}
+.navegacao a:hover {
+    color: white;
+}
+.navegacao {
+    background-image: linear-gradient(to right, #377EBF, rgba(166,166,188,0.9));
+}
+/* Index-end */
+
 /* Navbar */
 .navbar-round {
     border: solid 0px #555;

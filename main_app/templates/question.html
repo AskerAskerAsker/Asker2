@@ -36,10 +36,13 @@
     {% endif %}
 
 
-		{% include "includes/navbar.html" %}
-
+	<div style="display: none">
+    {% include "includes/navbar.html" %}
+    </div>
+    
+    
 <br><br>
-		<main style="margin-top: -25px;">
+		<main>
 			<div class="card bg-main" style="border: none;">
 				<div class="card-body" style="border: none;">
 					
@@ -77,7 +80,7 @@
 					{% if question.image %}
 						<div>
                             <br>
-							<img style="display: block; margin-left: auto; margin-right: auto;" width="75%" src="{{ question.image.url }}">
+							<img style="display: block; border-radius: 10px; margin-left: auto; margin-right: auto;" width="75%" src="{{ question.image.url }}">
 							<br>
 						</div>
 					{% endif %}

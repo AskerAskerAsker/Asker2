@@ -29,13 +29,17 @@
     {% if user.is_authenticated %}
         {% include "includes/menubar.html" %}
     {% endif %}
+
+<div style="display: none">
     {% include "includes/navbar.html" %}
-    
+</div>
+
+
     <main>
     
     <center> 
     
-    <br>
+    <br><br>
     
     <img src="{{user_p.avatar.url}}" style="border-radius: 100px; width: 75px"></img>
     

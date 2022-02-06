@@ -1,5 +1,5 @@
 {% load main_app_extras %}
-<div id="barcontainer" style="transition: 0.3s; margin-top: -78px; position: fixed; z-index: 9999999; width: 100%; max-width: 400px">
+<div id="barcontainer" style="transition: 0.3s; margin-top: -80px; position: fixed; z-index: 9999999; width: 100%">
     <div id="searchcontainer" class="bg-outer" style="box-shadow: 0 10px 20px rgba(64, 64, 64, 0.15);">
         <div id="searchcontainer">
             <form action="/search" class="card-body" style="display: flex">
@@ -10,21 +10,22 @@
             </form>
         </div>
     </div>
-    <div id="menubar" class="containerem" style="height: 57px; padding: 0px">
+    <div id="menubar" class="containerem" style="height: 50px; padding: 0px">
         <div class="menu" style="width: 100%; border-radius: 0px 0px 25px 25px; max-width: 400px; align-items: center; justify-content: center;">
        
         <ul class="menu-list" style="margin-top: 5px; align-items: center">
-       <li class="menu-item"><button id='dark-mode' class="menu-button"><font color="#fff" style="color: #fff; font-size: 18px; font-weight: 900"><ion-icon name="bulb-outline"></ion-icon></font></button></li>
-       <a href="/rules"> <li class="menu-item"><button class="menu-button"><font color="#fff" style="color: #fff; font-weight: 900"><ion-icon name="alert-circle-outline"></ion-icon></font></button></li></a>
-            <li class="menu-item" id="searchbtn"><button class="menu-button"><font color="#fff" style="color: #fff; font-size: 18px; font=weight: 900"><ion-icon name="search-outline"></ion-icon></font></button></li>
-          <a href="/"><li class="menu-item"><button class="menu-button">
-            <div style="border-radius: 300px; background: url(https://asker.fun/media/avatars/Asker%20Admin-2021-12-01-15%3A06%3A17.088222); width: 50px; height: 50px; background-position: center center; background-size: cover; background-repeat: no-repeat"></div>
-            </button></li>
+       <li class="menu-item"><button id='dark-mode' class="menu-button"><font color="#fff" style="color: #fff; font-size: 19px; font-weight: 900"><ion-icon name="bulb-outline"></ion-icon></font></button></li>
+       <a href="/rank"> <li class="menu-item"><button class="menu-button"><font color="#fff" style="color: #fff; font-size: 19px; font-weight: 900"><ion-icon name="ribbon-outline"></ion-icon></font></button></li></a>
+            <li class="menu-item" id="searchbtn"><button class="menu-button"><font color="#fff" style="color: #fff; font-size: 19px; font=weight: 900"><ion-icon name="search-outline"></ion-icon></font></button></li>
+          <a href="/"><li class="menu-item">
+          <button class="menu-button" style="padding-bottom: 8px">
+             <img width="88px" src="https://i.imgur.com/2F4x4ch.png"></img>
+          </button></li>
           </a>
             <a href="/notifications">
                 <li class="menu-item">
-                    <button class="menu-button"><font color="#fff" style="color: #fff; font-size: 18px; font-weight: 900">
-                        <ion-icon name="earth-outline"></ion-icon>
+                    <button class="menu-button"><font color="#fff" style="color: #fff; font-size: 19px; font-weight: 900">
+                        <ion-icon name="notifications-outline"></ion-icon>
                         {% if user_p.new_notifications > 0 %}
                             <div id="notif-badge">{{ user_p.new_notifications }}</div>
                         {% else %}
@@ -35,7 +36,7 @@
             </a>
             <a href="/chats">
                <li class="menu-item">
-                   <button class="menu-button"><font color="#fff" style="color: #fff; font-size: 18px; font-weight: 900">
+                   <button class="menu-button"><font color="#fff" style="color: #fff; font-size: 19px; font-weight: 900">
 					{% check_new_messages user_p as new_m %}
 					{% if new_m %}
 					<ion-icon name="chatbubble-ellipses-outline"></ion-icon>
@@ -45,7 +46,7 @@
                    </font></button>
                </li>
            </a>
-           <a href="/ask"> <li class="menu-item"><button class="menu-button"><font color="#fff" style="color: #fff; font-size: 18px; font-weight: 900"><ion-icon name="pencil"></ion-icon></font></button></li></a>
+           <a href="/ask"> <li class="menu-item"><button class="menu-button"><font color="#fff" style="color: #fff; font-size: 19px; font-weight: 900"><ion-icon name="pencil"></ion-icon></font></button></li></a>
              
         </ul>
         </div>

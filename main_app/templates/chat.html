@@ -1,7 +1,7 @@
 {% load humanize %}
 {% load main_app_extras %}
 <!doctype html>
-<html lang="pt-br" style="height: 100vh; scrollbar-width: none;">
+<html lang="pt-br" style="height: 100%; scrollbar-width: none;">
     <head>
         <title>Mensagens</title>
         <meta charset="utf-8">
@@ -30,11 +30,11 @@
         <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
     </head>
 
-    <body style="height: 100vh;">
+    <body style="height: 100%;">
         {% if user.is_authenticated %}
 	        {% include "includes/menubar.html" %}
         {% endif %}
-        <main style="height: 100vh; display: flex; flex-direction: column;">
+        <main style="height: 100%; display: flex; flex-direction: column;">
 			<div>
 				<br><br><br>
 				<center> <h4 style="font-weight: 900"><b>Mensagens com {{ counterpart }}</b></h4> </center>
@@ -81,8 +81,7 @@
 					
 				</div>
 			</div>
-			<div style="margin-bottom: 60px;"></div>
-			
+			<div style="height: 10px;"></div>
         </main>
 		<script>
 			var CID = {{ cid }};

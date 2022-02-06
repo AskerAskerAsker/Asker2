@@ -118,7 +118,7 @@ def save_answer(request):
     question.total_responses += 1
     question.save()
 
-    response_creator.total_points += 2
+    response_creator.total_points += 60
     response_creator.save()
 
     if response_creator.user not in question.creator.silenced_users.all():
@@ -936,7 +936,7 @@ def choose_best_answer(request):
         rcuserp = UserProfile.objects.get(user=r.creator.user)
         quserp = UserProfile.objects.get(user=request.user)
 
-        rcuserp.total_points += 10
+        rcuserp.total_points += 150
         quserp.total_points += 2
         rcuserp.save()
         quserp.save()

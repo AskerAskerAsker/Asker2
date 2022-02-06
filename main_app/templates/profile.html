@@ -38,11 +38,11 @@
     
 	    {% if target_user_p.cover_photo %}
      
-    <div style="width: 100%; height: 250px; border-radius: 0px 0px 15px 15px; background: url({{ target_user_p.cover_photo.url }}); background-repeat: no-repeat; background-position: center; background-size: cover; position: absolute; z-index: 99" default="https://imgur.com/erqqyVZ"> </div>
+    <div style="width: 100%; height: 250px; border-radius: 0px 0px 15px 15px; background: url({{ target_user_p.cover_photo.url }}); background-repeat: no-repeat; background-position: center; background-size: cover; position: absolute; z-index: 99"> </div>
     
        {% endif %}
     
-    <br><br><br><br>
+    <div style="height: 100px;"></div>
     
 	    <div class="card-body" style="border: none;">  
     
@@ -50,13 +50,7 @@
 		  <div style="margin-top: 40px; border-radius: 300px; background: url({{target_user_p.avatar.url}}); width: 130px; height: 129px; background-position: center center; background-repeat: no-repeat; background-size: cover; position: relative; z-index: 999">		      
 		  </div>
 		 
-        
-       	{% if target_user_p.user.username == user.username %}
-            <center>
-		    <div id="edit-profile" class="vertical-spaced"><a href="/user/{{ user.username }}/edit" style="text-decoration: none; outline: none; font-size: 13px"><b>Configurações <ion-icon name="brush-outline"></ion-icon></b></a></div>
-            </center>
-		{% endif %}
-        
+       
         <br>
         <h3 style="font-size: 30px; font-weight: 900">
             <b>{{ target_user_p.user.username }}</b>
@@ -133,6 +127,14 @@
 	    <p id="bio" style="line-height: 16px; font-size: 13px; padding-top: 30px">	   
 			     {{ target_user_p.bio|linebreaksbr }}
 	    </p>
+
+
+    	{% if target_user_p.user.username == user.username %}
+            <center>
+		    <div id="edit-profile" class="vertical-spaced"><a href="/user/{{ user.username }}/edit" style="text-decoration: none; outline: none; font-size: 13px"><b>Configurações <ion-icon name="brush-outline"></ion-icon></b></a></div>
+            </center>
+		{% endif %}
+        
         
 </center>    
         

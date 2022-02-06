@@ -3,11 +3,15 @@
 <!doctype html>
 <html lang="pt-br">
 <head>
-<title>Asker | Faça e Responda Perguntas na Comunidade!</title>
+<title>
+Asker • Conheça Pessoas, Faça Amigos, Crie e Responda Perguntas na Melhor e Mais Divertida 
+Comunidade Online!
+</title>
 <meta charset="UTF-8">
 
-<meta name="description" content="Faça e Responda Perguntas na Melhor e Mais Divertida 
-Comunidade de Perguntas e Respostas!">
+<meta name="description" content="Conheça Pessoas, Faça Amigos, Crie e Responda Perguntas na Melhor e Mais Divertida 
+Comunidade Online!">
+
 <style id="wait">
 	body {
 		visibility: hidden;
@@ -41,7 +45,7 @@ Comunidade de Perguntas e Respostas!">
 <script>
     var popular_page = 1;
 </script>
-<style>body{display:none}.navegacao{margin-top:10px;margin-bottom:10px}.navegacao button{font-size:.8em}</style>
+<style>body{display:none}.navegacao button{font-size:.8em}</style>
 <style>
     .profile-picture-index img {
         max-width: 30px;
@@ -85,7 +89,7 @@ popular_questions_=[
 <br>
 {% endif %}
 
-<div>
+<div style="display: none">
   {% include "includes/navbar.html" %}
 </div>    
 
@@ -95,22 +99,31 @@ popular_questions_=[
 <center> 
 	<div class="containerem" style="z-index: 9999;">
 	   {% if not user.is_authenticated %}
-	   <div class="navegacao" style="position: fixed; padding: 10px; height: 55px; margin-top: 23px; padding-top: 20px; background-image: linear-gradient(to right, #E8E8E8 , rgb(205, 0, 205)); top: -25px; border-radius: 0px 0px 20px 20px">
-           {% else %}
-	   <div class="navegacao" style="position: fixed; padding: 10px; height: 55px; margin-top: 23px; padding-top: 20px; background-image: linear-gradient(to right, #87CEFF , rgb(232, 232, 232, 0.9)); top: 20px; border-radius: 0px 0px 20px 20px">
+	   <div class="navegacao" style="position: fixed; padding: 10px; margin-top: 23px; padding-top: 10px; padding-bottom: 6px; background-image: linear-gradient(to right, #68228B, rgb(28, 134, 238)); height: 75px; top: -25px; border-radius: 0px 0px 20px 20px">
+           
+       <center> <img width="80px" src="https://i.imgur.com/2F4x4ch.png"></img> </center>
+       
+       {% else %}
+	   <div class="navegacao" style="position: fixed; padding: 10px; height: 55px; margin-top: 23px; padding-top: 18px; background-image: linear-gradient(to right, #87CEFF , rgb(232, 232, 232)); top: 10px; border-radius: 0px 0px 20px 20px">
       {% endif %}
-
-        <a class="left-spaced" href="https://instagram.com/askerfun" style="padding-right: 5px" target="_blank">
-            <img src="https://i2.wp.com/www.multarte.com.br/wp-content/uploads/2019/03/logo-instagram-png-fundo-transparente13.png?fit=696%2C696&ssl=1" width="20px" height="20px">
-        </a>
-
-			<a id="botao-popular" style="padding-right: 10px; text-decoration: none; outline: none; cursor: pointer; font-size: 14px">Populares</a>
-			<a class="left-spaced"  id="botao-recentes" style="padding-right: 10px; text-decoration: none; outline: none; cursor: pointer; border none; font-size: 14px">Recentes</a>
-			{% if user.is_authenticated %}
+			
+       		{% if not user.is_authenticated %}
+			<a id="botao-popular" style="padding-right: 10px; text-decoration: none; outline: none; color: #CFCFCF; cursor: pointer; font-size: 14px">Populares</a>
+			{% else %}
+            <a id="botao-popular" style="padding-right: 10px; text-decoration: none; outline: none; cursor: pointer; font-size: 14px">Populares</a>
+       		{% endif %}
+       
+       {% if not user.is_authenticated %}
+       <a class="left-spaced"  id="botao-recentes" style="padding-right: 10px; text-decoration: none; color: #CFCFCF; outline: none; cursor: pointer; border none; font-size: 14px">Recentes</a>
+	   {% else %}
+       <a class="left-spaced"  id="botao-recentes" style="padding-right: 10px; text-decoration: none; outline: none; cursor: pointer; border none; font-size: 14px">Recentes</a>
+	   {% endif %}
+       
+       {% if user.is_authenticated %}
 			<a class="left-spaced" id="botao-seguindo" style="padding-right: 10px; text-decoration: none; outline: none; cursor: pointer; border none; font-size: 14px">Seguindo</a>
        
        {% else %}
-       <a id="botao-popular" style="font-weight: 700; font-size: 15px; text-decoration: none; outline: none" href="/signin?redirect={{ request.get_full_path }}">Login &#10152;</a>
+       <a id="botao-popular" style="font-weight: 700; font-size: 15px; text-decoration: none; color: white; outline: none" href="/signin?redirect={{ request.get_full_path }}">Login &#10152;</a>
        
 			<a class="hidden" id="botao-seguindo" style="padding-right: 8px; text-decoration: none; outline: none; cursor: pointer; border none; font-size: 14px">Seguindo</a>
 			{% endif %}
@@ -120,7 +133,9 @@ popular_questions_=[
             </a>  
             {% endif %}
 		</div>
-    
+
+
+ 
 <div id="new-q-btn" style="position: fixed; top: 115px">
 	<button class="btn bg-faint-gradient" onclick="update_recent()">
 	<p style="margin-bottom: 0px; font-weight: 800"><span id="new-q-count">0</span> Novas Postagens</p>
@@ -128,6 +143,20 @@ popular_questions_=[
 </div>
        
 	</div>
+
+
+<br><BR>
+
+{% if user.is_authenticated %}
+<a href="https://forms.gle/xBX7Gv1WPbszB29c8" target="_blank" style="font-size: 13px; font-weight: 600; text-decoration: none">Moderador(a) Asker 2022</a>
+
+<br>
+
+<a href="https://asker.fun/question/150749" style="color: green; opacity: 0.7; text-decoration: none; font-weight: 800; font-size: 13px">
+PROMOÇÃO ↗️
+</a>
+
+{% endif %} 
 
 </center>
 
