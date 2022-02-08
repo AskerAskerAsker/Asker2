@@ -367,7 +367,7 @@ def signup(request):
         '''
         # verificando caractere por caractere:
         pode = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZáéíóúâêôäëïöüãõçñÁÉÍÓÚÂÊÔÄËÏÖÜÃÕÇÑ0123456789-_ '
-¨        for ch in username:
+        for ch in username:
             if ch in pode:
                 continue
 
@@ -1165,7 +1165,7 @@ def more_questions(request):
     if id_de_inicio > 0:
         questions = list(Question.objects.filter(id__range=(id_de_inicio-50, id_de_inicio)))
         questions.reverse()
-        questions = questions [:20]
+        questions = questions[:20]
     else:
         questions = Question.objects.order_by('-id')[:20]
 
