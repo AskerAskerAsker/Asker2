@@ -367,7 +367,7 @@ def signup(request):
         '''
         # verificando caractere por caractere:
         pode = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZáéíóúâêôäëïöüãõçñÁÉÍÓÚÂÊÔÄËÏÖÜÃÕÇÑ0123456789-_ '
-        for ch in username:
+¨        for ch in username:
             if ch in pode:
                 continue
 
@@ -729,13 +729,15 @@ def edit_profile(request, username):
             return redirect('/user/' + username)
         if request.POST.get('type') == 'username':
 
-            username = request.POST.get('username')
+            username = request.POST.get('username').strip()
 
             '''
             Validação do nome de usuário: é permitido apenas letras, números, hífens, undercores e espaços.
             '''
             # verificando caractere por caractere:
-            pode = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_ '
+
+            pode = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZáéíóúâêôäëïöüãõçñÁÉÍÓÚÂÊÔÄËÏÖÜÃÕÇÑ0123456789-_ '
+            
             for ch in username:
                 if ch in pode:
                     continue
