@@ -1163,9 +1163,7 @@ def more_questions(request):
     # Para a página inicial
     id_de_inicio = int(request.GET.get('id_de_inicio'))
     if id_de_inicio > 0:
-        questions = list(Question.objects.filter(id__range=(id_de_inicio-50, id_de_inicio)))
-        questions.reverse()
-        questions = questions[:20]
+        questions = Question.objects.filter(id__lte=id_de_inicio).order_by('-id')[:20]
     else:
         questions = Question.objects.order_by('-id')[:20]
 
