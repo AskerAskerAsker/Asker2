@@ -95,8 +95,12 @@ popular_questions_=[
 
 <body>
 
-<br><br>
+<br><br><br>
+
+
 <center> 
+
+
 	<div class="containerem" style="z-index: 9999;">
 	   {% if not user.is_authenticated %}
 	   <div class="navegacao" style="position: fixed; padding: 10px; margin-top: 20px; padding-top: 10px; padding-bottom: 6px; background-image: linear-gradient(to right, #FF1493, #8A2BE2); height: 75px; top: -25px; border-radius: 0px 0px 20px 20px">
@@ -136,13 +140,14 @@ popular_questions_=[
 
 
  
-<div id="new-q-btn" style="position: fixed; top: 115px">
+<div id="new-q-btn" style="position: fixed; top: 108px">
 	<button class="btn bg-faint-gradient" onclick="update_recent()">
 	<p style="margin-bottom: 0px; font-weight: 800"><span id="new-q-count">0</span> Novas Postagens</p>
 	</button>
 </div>
        
 	</div>
+
 
 </center>
 

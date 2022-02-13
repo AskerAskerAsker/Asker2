@@ -29,31 +29,31 @@
         {% endif %}
         <main style="border: none">
          
-        <br><br><br><br>
+        <br><br><br>
         
-        <center> <h4 style="font-weight: 900"><b>Mensagens</b></h4> </center>
+        <center> <h5 style="font-weight: 900; color: #C71585; padding-bottom: 10px"><b>Mensagens</b></h5> </center>
         
             <section class="card bg-main">
                 <ul class="list-group list-group-flush">
 					{% for chat in chats %}
 						{% chat_last_message chat as last_message %}
 						{% if last_message %}
-						<li class="list-group-item bg-main">
+						<li class="list-group-item bg-main" STYLE="PADDING: 0PX; padding-left: 10px; padding-right: 10px">
 							{% chat_new_messages user_p chat as new_chat_m %}
 							<div class="card-body" {% if new_chat_m %} style="background-color: rgba(0, 123, 255, 15%); border-radius: 15px;" {% endif %}>
 								<a href="/chat?c={{ chat.id }}" style="text-decoration: none;">
 									{% chat_counterpart user_p chat as counterpart %}
 									<div class="poster-container">
 										<div class="poster-info">
-											<div class="poster-profile-pic-container" style="border-radius: 100px; width: 59px; height: 57px; background: url({{ counterpart.avatar.url }}); background-size: cover; background-repeat: no-repeat; background-position: center;"></div>
+											<div class="poster-profile-pic-container" style="border-radius: 100px; width: 39px; height: 37px; background: url({{ counterpart.avatar.url }}); background-size: cover; background-repeat: no-repeat; background-position: center;"></div>
 											<div class="poster-text-container" style="padding-left: 10px;">
 												<div>
 													<span class="r-username">
-														<font style="font-weight: 700; font-size: 15px;">
+														<font style="font-weight: 700; font-size: 12px;">
 															{{ counterpart.user.username }}
 														</font>
 													</span>
-													<span class="post-pub-date" title="{{ chat.last_activity }}">
+													<span class="post-pub-date" title="{{ chat.last_activity }}" style="font-size: 10px">
 														{% fix_naturaltime chat.last_activity|naturaltime %}
 													</span>
 												</div>

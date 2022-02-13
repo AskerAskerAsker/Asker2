@@ -42,7 +42,7 @@
             <section id="chatbox" class="card bg-main" style="overflow-y: scroll; height: 100%;">
 								
 				{% if messages %}
-				<button id="load-old" class="page-btn btn btn-primary vertical-spaced" style="border-radius: 30px; width: 70%; margin-right: auto; margin-left: auto;" onclick="load_old()">Ver Mais</button>
+				<button id="load-old" class="page-btn btn btn-primary vertical-spaced" style="border-radius: 30px; width: 50%; margin-right: auto; margin-left: auto;" onclick="load_old()">Ver Mais</button>
 				{% endif %}
                 <ul id="msg-l" class="list-group">
 					<div class="hidden">
@@ -50,16 +50,16 @@
 							<ion-icon style="background-color: rgba(255,255,255,20%); border-radius:10px;" name="checkmark-outline"></ion-icon>
 						</span>
 					</div>
-					{% include "base/chat-messages.html" %}
+				{% include "base/chat-messages.html" %}
                 </ul>
 			
 				<br><br>
             </section>
 			
-			<div style="padding-left: 5px; padding-right: 5px; background: transparent; display: flex; flex-direction: row;">
+			<div style="padding-left: 30px; padding-right: 30px; padding-bottom: 10px; padding-top: 20px; background: transparent; display: flex; flex-direction: row;">
 				<br>
-				<textarea id="msg_txtarea" maxlength="260" class="form-control large-compact" style="font-size: 13px; font-weight: 600; border-radius: 10px; height: 100%; margin-right: 3px;" placeholder="Sua Mensagem" name="text" onkeypress="txt_v();"></textarea>
-				<div style="display: flex; flex-direction: column;">
+				<textarea id="msg_txtarea" maxlength="260" class="form-control large-compact" style="font-size: 11px; font-weight: 600; border-radius: 20px; height: 100%; margin-right: 3px;" placeholder="Fale Aqui..." name="text" onkeypress="txt_v();"></textarea>
+				<div style="display: flex; flex-direction: column; padding-left: 10px">
 
 				<form style="text-align: center;" method="post" enctype="multipart/form-data" id="img-form">
 					{% csrf_token %}
@@ -69,13 +69,12 @@
 						<span id="upload-photo-text"></span>
 					</label>
 					<input type="file" accept="image/*" name="file" id="upload-photo" onchange="add_img();">
-					<img src="/static/images/close-icon.png" width="20px" style="display: none; cursor: pointer;" id="delete-photo-icon" onclick="rm_img();">
+					<img src="/static/images/close-icon.png" width="10px" style="opacity: 0.7; display: none; cursor: pointer;" id="delete-photo-icon" onclick="rm_img();">
 					
 				</form>
 				
-				<button id="send-btn" class="btn btn-outline-primary left-spaced" style="font-size: 14px; font-weight: 700; border-radius: 30px; margin-top: 5px;" onclick="send_msg();">
-					<i class="far fa-paper-plane"></i>
-					Enviar
+				<button id="send-btn" class="btn btn-primary left-spaced" style="border-radius: 100px; font-size: 18px; font-weight: 800; padding-top: 10px" onclick="send_msg();">
+                    <ion-icon name="send-outline"></ion-icon>
 				</button>
 					
 				</div>
