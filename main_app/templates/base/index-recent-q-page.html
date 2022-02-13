@@ -45,25 +45,25 @@
 			</a>
 			{% endif %}
 	   
-            <small class="text-muted">
+            <small class="text-muted qinfo">
+				{% if not user.is_anonymous %}
+					{% starred user question as STARRED %}
+					{% if STARRED %}
+					<a onclick="star_question(this, {{ question.id }});"> <ion-icon class="offstar hidden" name="star-outline"></ion-icon> <ion-icon class="onstar text-warning" name="star"></ion-icon> <span class="starcount">{{ question.total_stars }}</span> &#8226; </a>
+					{% else %}
+					<a onclick="star_question(this, {{ question.id }});"> <ion-icon class="offstar" name="star-outline"></ion-icon> <ion-icon class="onstar text-warning hidden" name="star"></ion-icon> <span class="starcount">{{ question.total_stars }}</span> &#8226; </a>
+					{% endif %}
+				{% endif %}
 				<span id="response-counter-{{ question.id }}" style="color: #00CD66; font-weight: 700">
 					{{ question.total_responses }}
 				</span>
-
 				<span id="response-sentence-{{ question.id }}" style="color: #00CD66; font-weight: 700">
 					Respostas
 				</span>
-		   
-
 				<span>
-					 &#8226;  {% fix_naturaltime question.pub_date|naturaltime %} 
+					&#8226;  {% fix_naturaltime question.pub_date|naturaltime %} 
 				</span>
-			
-				<span> &#8226; </span> 
-			
-			  <span> {{ question.total_views }} </span>
-			  <span style="margin-left: -2px; font-weight: 700"><ion-icon name="eye"></ion-icon></span>
-			
+				<span> &#8226; <ion-icon name="eye"></ion-icon> {{ question.total_views }} </span>
             </small>
 			    {% if user.is_anonymous %}
 				    <p>Faça <a href="/signin?redirect=/question/{{ question.id }}">login</a> ou <a href="/signup?redirect=/question/{{ question.id }}">crie uma conta</a> para responder essa pergunta.</p>

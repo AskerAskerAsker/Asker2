@@ -162,6 +162,12 @@ button font {
 /* Menubar-end */
 
 /* Index */
+.qinfo {
+	display: block;
+}
+.qinfo span {
+	display: inline-block;
+}
 .navegacao {
     position: fixed;
     padding: 10px;
@@ -318,6 +324,17 @@ button font {
 /* Profile-end */
 
 /* Question */
+.qctrl a {
+	display: inline-block;
+}
+#stqa span {
+	margin-left: 2px;
+	font-size: 17px;
+	vertical-align: super;
+}
+#stqa {
+	padding-right: 10px;
+}
 .response-image {
   max-width: 100%;
   max-height: 400px;

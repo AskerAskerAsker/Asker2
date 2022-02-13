@@ -148,6 +148,12 @@ def voted(voter, poll):
     except:
         return False
 
+@register.simple_tag
+def starred(user, question):
+    try:
+        return question.stars.filter(username=user.username).exists()
+    except:
+        return False
 
 @register.filter(name='total_likes')
 def total_likes(response_id):

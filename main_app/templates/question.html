@@ -106,6 +106,7 @@
 						</div>
 					{% endif %}
 
+					{% starred user question as STARRED %}
 					{% if question.has_poll %}
 						{% voted user poll as VOTED %}
 						{% if not VOTED and poll.may_vote and user.is_authenticated %}
@@ -180,7 +181,21 @@
 					{% endif %}
 
                     {% if user.is_authenticated and question.creator.user.username != user.username %}
-                    <div class="vertical-spaced">
+                    <div class="vertical-spaced qctrl">
+                        {% if STARRED %}
+                            <a id="stqa" class="badge badge-pill badge-primary" href="javascript:void(0);" onclick="star_question(this, {{ question.id }});">
+								<ion-icon class="onstar text-warning" style="font-size: 24px" name="star"></ion-icon>
+								<ion-icon class="offstar hidden" style="font-size: 24px" name="star-outline"></ion-icon>
+								<span class="starcount">{{ question.total_stars }}</span>
+							</a> 
+                        {% else %}
+                            <a id="stqa" class="badge badge-pill badge-primary" href="javascript:void(0);" onclick="star_question(this, {{ question.id }});">
+								<ion-icon class="onstar text-warning hidden" style="font-size: 24px" name="star"></ion-icon>
+								<ion-icon class="offstar" style="font-size: 24px" name="star-outline"></ion-icon>
+								<span class="starcount">{{ question.total_stars }}</span>
+							</a> 
+                        {% endif %}
+						
                         {% if question in user_p.followed_questions.all %}
                             <a id="unfqa" class="clickable" href="javascript:void(0);" onclick="unfollow_question({{ question.id }});"><ion-icon class="text-success" style="font-size: 24px" title="Deixar de seguir pergunta" name="checkmark-circle-outline"></ion-icon></a> 
                             <a id="fqa" class="clickable hidden" href="javascript:void(0);" onclick="follow_question({{ question.id }});"><ion-icon style="font-size: 24px" title="Seguir pergunta" name="add-circle-outline"></ion-icon></a> 
@@ -188,7 +203,8 @@
                             <a id="unfqa" class="clickable hidden" href="javascript:void(0);" onclick="unfollow_question({{ question.id }});"><ion-icon class="text-success" style="font-size: 24px" title="Deixar de seguir pergunta" name="checkmark-circle-outline"></ion-icon></a> 
                             <a id="fqa" class="clickable" href="javascript:void(0);" onclick="follow_question({{ question.id }});"><ion-icon style="font-size: 24px" title="Seguir pergunta" name="add-circle-outline"></ion-icon></a> 
                         {% endif %}
-                        <a class="clickable" href="javascript:void(0);" onclick="report_question({{ question.id }});"><ion-icon style="font-size: 24px" title="Denunciar pergunta" name="flag-outline"></ion-icon></a>                      
+						
+                        <a class="clickable" href="javascript:void(0);" onclick="report_question({{ question.id }});"><ion-icon style="font-size: 24px" title="Denunciar pergunta" name="flag-outline"></ion-icon></a>             
                     </div>
                     {% endif %}
                     {% if 'pap' in user_permissions %}
@@ -282,7 +298,7 @@ href="/signup?redirect=/question/{{ question.id }}">crie uma conta</a> para resp
         <script src="https://cdn.jsdelivr.net/npm/linkifyjs@2.1.9/dist/linkify.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/linkifyjs@2.1.9/dist/linkify-jquery.min.js"></script>
 		<script src="/static/js/general_functions.js?version=3"></script>
-		<script src="/static/js/question.js?v=2"></script>
+		<script src="/static/js/question.js?v=2.1"></script>
         <script>
             $('.description').linkify();
         </script>

@@ -604,19 +604,22 @@ def comment(request):
     if Ban.objects.filter(ip=client_ip).exists():
         return HttpResponse('Você não pode comentar.', content_type='text/plain')
     
+    print('Músiquinha')
     up = UserProfile.objects.get(user=request.user)
-    if (timezone.now() - Comment.objects.filter(creator=up.user).latest('id').pub_date).seconds < 2:
-        comment_creator_template = '''
-                <li class="list-group-item c no-horiz-padding">
-                    <div class="comm-card" style="background-color: rgba(255,155,155,0.25); padding-left: 10px; padding-right: 10px; padding-bottom: 5px;">
-                        <p>O comentário a seguir não pôde ser enviado: </p>
-                        <p>{}</p>
-                    </div>
-                </li>
-                '''.format(html.escape(request.POST.get('text')).replace('\n', '<br>'))
+    if Comment.objects.filter(creator=up.user).exists():
+        print('Música')
+        if (timezone.now() - Comment.objects.filter(creator=up.user).latest('id').pub_date).seconds < 2:
+            comment_creator_template = '''
+                    <li class="list-group-item c no-horiz-padding">
+                        <div class="comm-card" style="background-color: rgba(255,155,155,0.25); padding-left: 10px; padding-right: 10px; padding-bottom: 5px;">
+                            <p>O comentário a seguir não pôde ser enviado: </p>
+                            <p>{}</p>
+                        </div>
+                    </li>
+                    '''.format(html.escape(request.POST.get('text')).replace('\n', '<br>'))
+                
+            return HttpResponse(comment_creator_template, content_type='text/plain')
             
-        return HttpResponse(comment_creator_template, content_type='text/plain')
-        
     comment = Comment.objects.create(response=Response.objects.get(id=request.POST.get('response_id')),
                                                                                              creator=request.user,
                                                                                              text=html.escape(request.POST.get('text')),
@@ -1661,6 +1664,23 @@ def modactivity(request):
             'previous': int(page) - 1,
     }
     return render(request, 'modactivity.html', context)
+    
+def star(request):
+    qid = request.GET.get('qid')
+    q = Question.objects.get(id=qid)    
+    if q.creator.user == request.user:
+        return HttpResponse('Proibido', content_type='text/plain')
+        
+    if q.stars.filter(username=request.user.username).exists():
+        q.stars.remove(request.user)
+        q.total_stars = q.stars.count()
+        q.save()
+    else:
+        q.stars.add(request.user)
+        q.total_stars = q.stars.count()
+        q.save()
+
+    return HttpResponse(str(q.total_stars), content_type='text/plain')
 
 def promo(request):
     return render(request, 'promo.html')

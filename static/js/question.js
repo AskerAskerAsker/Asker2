@@ -22,6 +22,31 @@ function like(likeElement, response_id) {
 	});
 }
 
+function star_question(el, qid) {
+	$.ajax({
+			url: "/question/star",
+			type: "get",
+			dataType: "html",
+			data: {
+				qid: qid,
+			},
+			complete: function(data) {
+			    var total_stars = parseInt(data.responseText);
+                if (total_stars || total_stars == 0) {
+					el.getElementsByClassName('starcount')[0].innerHTML = total_stars;
+					var off = el.getElementsByClassName('offstar')[0];
+					var on = el.getElementsByClassName('onstar')[0];
+					if (el.getElementsByClassName('offstar')[0]['classList'].contains('hidden')) {
+						off['classList'].remove('hidden');
+						on['classList'].add('hidden');
+					} else {
+						off['classList'].add('hidden');
+						on['classList'].remove('hidden');					
+					}
+				}
+			}
+		});
+}
 
 function delete_response(response_button_dom_el, response_id) {
     if (confirm('Opa! Você tem certeza que deseja apagar sua resposta?')) {

@@ -1,15 +1,11 @@
 <script src="/static/js/cookieman.js?v=1"></script>
-<link rel="stylesheet" href="/static/css/common.css?v=8.3">
+<link rel="stylesheet" href="/static/css/common.css?v=8.3.2">
 <script>
-	try {
-		if (getDarkCookie() == 'none') {
-			if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-				setDarkCookie('true');
-			} else { setDarkCookie('false'); }
-		}
-    } catch (e) {
-    	console.error(e);
-    }
+	if (getDarkCookie() == 'none') {
+		if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+			setDarkCookie('true');
+		} else { setDarkCookie('false'); }
+	}
 </script>
 <script>
     var cssfn = 'light.css';
