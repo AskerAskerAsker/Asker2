@@ -596,10 +596,26 @@ def notification(request):
 
 def comment(request):
 
+    if not request.user.is_authenticated:
+        return None
+
     client_ip = get_client_ip(request)
     if Ban.objects.filter(ip=client_ip).exists():
         return HttpResponse('Você não pode comentar.', content_type='text/plain')
-
+    
+    up = UserProfile.objects.get(user=request.user)
+    if (timezone.now() - Comment.objects.filter(creator=up.user).latest('id').pub_date).seconds < 2:
+        comment_creator_template = '''
+                <li class="list-group-item c no-horiz-padding">
+                    <div class="comm-card" style="background-color: rgba(255,155,155,0.25); padding-left: 10px; padding-right: 10px; padding-bottom: 5px;">
+                        <p>O comentário a seguir não pôde ser enviado: </p>
+                        <p>{}</p>
+                    </div>
+                </li>
+                '''.format(html.escape(request.POST.get('text')).replace('\n', '<br>'))
+            
+        return HttpResponse(comment_creator_template, content_type='text/plain')
+        
     comment = Comment.objects.create(response=Response.objects.get(id=request.POST.get('response_id')),
                                                                                              creator=request.user,
                                                                                              text=html.escape(request.POST.get('text')),
@@ -608,7 +624,8 @@ def comment(request):
     if not request.user == comment.response.creator.user:
         n = Notification.objects.create(receiver=comment.response.creator.user,
                                                                                                                     type='comment-in-response',
-                                                                                                                    text='<p><a href="/user/{}">{}</a> comentou na sua resposta na pergunta: <a href="/question/{}">"{}"</a></p>'.format(comment.creator.username, comment.creator.username, comment.response.question.id, comment.response.question.text))
+                                                                                                                    text='<p><a href="/user/{}">{}</a> comentou na sua resposta na pergunta: <a href="/question/{}">"{}"</a></p>'.format(comment.creator.username, comment.creator.username, comment.response.question.id, comment.response.question.text),
+                                                                                                                    liker_id = request.user.id)
         n.prepare()
 
     comment_creator_template = '''
