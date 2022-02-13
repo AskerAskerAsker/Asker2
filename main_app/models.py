@@ -68,7 +68,7 @@ class UserProfile(models.Model):
     avatar = models.ImageField(max_length=256, default='avatars/default-avatar.png', blank=True)
     bio = models.TextField(max_length=2048, blank=True)
     total_points = models.IntegerField(null=True, default=0, blank=True)
-    cover_photo = models.ImageField(blank=True, default='cover_photos/default-cover.png')
+    cover_photo = models.ImageField(blank=True, default=None, null=True)
 
     '''
     pap: permissão para apagar perguntas
@@ -134,7 +134,9 @@ class Question(models.Model):
     total_responses = models.IntegerField(default=0)
     total_views = models.IntegerField(null=True, default=0)
     best_answer = models.IntegerField(blank=True, null=True) # ID da melhor resposta.
-    viewers = models.TextField(null=False, blank=True, default='set()')
+    viewers = models.TextField(null=False, blank=True, default='set()')  # TODO: entry nao usada!
+    stars = models.ManyToManyField(User)
+    total_stars = models.IntegerField(default=0)
 
     def get_embedded_content(self):
         return make_embedded_content(self.description)

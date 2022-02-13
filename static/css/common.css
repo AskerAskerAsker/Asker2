@@ -526,14 +526,9 @@ main {
 .inline {
     display: inline;
 }
-.comment-form {
-  /* TODO: deletar em ver. futura, substituir por form.inline-input à la reset-pw-1-part */
-  flex-grow: 1;
-  margin-right: 10px;
-}
 .comm-form {
-  /* TODO: deletar em ver. futura, substituir por form.inline-input à la reset-pw-1-part */
   display: flex;
+  flex-direction: column;
 }
 .inline-input .left-input {
   flex-grow: 1;
@@ -542,17 +537,11 @@ main {
 .modal-body {
   padding: 1px;
 }
-
+.comm-form * {
+  margin-top: 4px;
+  width: 100% !important;
+}
 @media (min-width: 320px) and (max-width: 580px) {
-  .comm-form .btn {
-  /* TODO: deletar em ver. futura, substituir por form.inline-input à la reset-pw-1-part */
-    margin-top: 4px;
-    flex-grow: 1;
-  }
-  .comment-form {
-  /* TODO: deletar em ver. futura, substituir por form.inline-input à la reset-pw-1-part */
-    margin-right: 0px;
-  }
   .inline-input .left-input {
     margin-right: 0px;
   }

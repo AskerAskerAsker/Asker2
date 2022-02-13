@@ -408,6 +408,7 @@ def signup(request):
 
         new_user_profile = UserProfile.objects.create(user=u)
         new_user_profile.ip = get_client_ip(request)
+        new_user_profile.cover_photo = None
         new_user_profile.active = False
         new_user_profile.save()
         

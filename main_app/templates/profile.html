@@ -53,7 +53,8 @@
 	    {% if target_user_p.cover_photo %}
      
     <div style="width: 100%; height: 250px; border-radius: 0px 0px 15px 15px; background: url({{ target_user_p.cover_photo.url }}); background-repeat: no-repeat; background-position: center; background-size: cover; position: absolute; z-index: 99"> </div>
-    
+           	{% else %}
+       <div style="width: 100%; height: 250px; border-radius: 0px 0px 15px 15px; background: url('/static/images/default-cover.jpg'); background-repeat: no-repeat; background-position: center; background-size: cover; position: absolute; z-index: 99"> </div>
        {% endif %}
     
     <div style="height: 100px;"></div>
