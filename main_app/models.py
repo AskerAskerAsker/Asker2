@@ -138,6 +138,8 @@ class Question(models.Model):
     stars = models.ManyToManyField(User)
     total_stars = models.IntegerField(default=0)
 
+    videofile = models.FileField(upload_to='videos/', null=True, verbose_name="")
+
     def get_embedded_content(self):
         return make_embedded_content(self.description)
 

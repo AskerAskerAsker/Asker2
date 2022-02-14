@@ -535,11 +535,22 @@ def ask(request):
 
         q = Question.objects.create(creator=UserProfile.objects.get(user=request.user), text=text, viewers='set()', description=description.replace('\\', '\\\\'))
 
+        try:
+            video = request.FILES['video']
+
+            with open('media/videos/teste.mp4', 'wb+') as destination:
+                for chunk in video.chunks():
+                    destination.write(chunk)
+
+            q.videofile = 'media/videos/teste.mp4';
+        except:
+            pass
+
         form = UploadFileForm(request.POST, request.FILES)
         if form.is_valid():
             f = request.FILES['file']
 
-            file_name = 'qpic-{}{}'.format(timezone.now().date(), timezone.now().time()).replace(':', '')
+            file_name = 'media-{}{}'.format(timezone.now().date(), timezone.now().time()).replace(':', '')
 
             success = save_img_file(f, 'media/questions/' + file_name, (850, 850))
             if success:

@@ -65,11 +65,14 @@
                     <label for="image"><b>Inserir Imagem:</b></label>
                     
                     <input type="hidden" name="nsfw_score" value="0" id="img_nsfw_score">
-                    <input type="file" class="form-control-file" id="image" name="file" onclick="return veracity_test({{ user_p.total_points }}, {% MINIMUM_POINTS_FOR_POSTING_IMAGES %});">
+                    <input type="file" class="form-control-file" id="image" name="file" onclick="return veracity_test({{ user_p.total_points }}, {% MINIMUM_POINTS_FOR_POSTING_IMAGES %});" accept="image/*">
                     <div id="carregando-imagem" style="display: none">
                         <img src="/static/images/loading.gif" width="10%">
                         <span style="vertical-align: middle">Carregando imagem</span>
                     </div>
+
+					<label for="video"><b>Inserir Vídeo</b></label>
+					<input type="file" class="form-control-file" name="video">
                     
                     <a href="#" class="vertical-spaced clickable" onclick="togglePoll();">
                    <font color="#66CDAA"><b> +Incluir Enquete </b></font>
