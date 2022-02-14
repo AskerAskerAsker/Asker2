@@ -544,7 +544,7 @@ def ask(request):
                 for chunk in video.chunks():
                     destination.write(chunk)
 
-            q.videofile = 'media/videos/' + video_name;
+            q.videofile = 'videos/' + video_name;
             q.save()
         except:
             pass
@@ -708,11 +708,13 @@ def delete_question(request):
             return HttpResponse('NOK', content_type='text/plain')
         
     '''
-    Deleta também a imagem do sistema de arquivos:
+    Deleta também a imagem e o vídeo do sistema de arquivos:
     '''
 
     if question.image:
         os.system('rm ' + question.image.path)
+    if question.videofile:
+        os.system('rm ' + question.videofile.path)
 
     question.delete()
 

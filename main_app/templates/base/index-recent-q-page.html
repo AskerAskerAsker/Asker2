@@ -30,7 +30,7 @@
 			{% endif %}
 			
 			{% if question.videofile %}
-				<video style="border-radius: 10px;" src="/{{ question.videofile.name }}" width="300" height="150" poster="teste.jpg" controls> </video>
+				<video style="border-radius: 10px;" src="{{ question.videofile.url }}" width="300" height="150" poster="teste.jpg" controls> </video>
 			{% endif %}
 			
 			{% if question.image %}
