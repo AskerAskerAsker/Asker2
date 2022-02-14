@@ -535,8 +535,9 @@ def ask(request):
 
         q = Question.objects.create(creator=UserProfile.objects.get(user=request.user), text=text, viewers='set()', description=description.replace('\\', '\\\\'))
 
-        try:
-            video = request.FILES['video']
+        video = request.FILES['video']
+
+        if video:
 
             video_name = 'media-{}{}'.format(timezone.now().date(), timezone.now().time()).replace(':', '')
 
@@ -546,8 +547,6 @@ def ask(request):
 
             q.videofile = 'videos/' + video_name;
             q.save()
-        except:
-            pass
 
         form = UploadFileForm(request.POST, request.FILES)
         if form.is_valid():
