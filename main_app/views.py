@@ -494,6 +494,8 @@ def profile(request, username):
     except KeyError:
         pass
 
+    context['total_followers'] = up.user.followed_by.all().count()
+
     return render(request, 'profile.html', context)
 
 
