@@ -535,7 +535,12 @@ def ask(request):
 
         q = Question.objects.create(creator=UserProfile.objects.get(user=request.user), text=text, viewers='set()', description=description.replace('\\', '\\\\'))
 
-        video = request.FILES['video']
+        video = None
+
+        try:
+            video = request.FILES['video']
+        except:
+            pass
 
         if video:
 
