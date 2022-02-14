@@ -1357,10 +1357,15 @@ def report_user(request):
 
 
 def manage_reports(request):
-    
+
+    user_profile = UserProfile.objects.get(user=request.user)
+
+    user_permissions = ast.literal_eval(user_profile.permissions)
+
     if not request.user.is_superuser:
-        return HttpResponse('Você está logado como {}. Este usuário não tem permissão administrativa.'.format(request.user.username))
-    
+        if not 'pap' in user_permissions:
+            return HttpResponse('Você está logado como {}. Este usuário não tem permissão administrativa.'.format(request.user.username))
+
     reports = list(Report.objects.all())
     reports.sort(key=lambda x: x.total_reports, reverse=True)
     
