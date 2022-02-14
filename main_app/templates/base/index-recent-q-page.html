@@ -9,7 +9,7 @@
 	    <li class="list-group-item bg-main" data-id="{{ question.id }}">
 		<a href="/question/{{ question.id }}" style="text-decoration: none; color: inherit">
 
-        <div class="card-body" style="padding-bottom: 12px">
+        <div class="card-body" style="padding-bottom: 25px">
 			<div class="profile-picture-index">
 				<div class="profile-pic-small" style="background: url('{{ question.creator.avatar.url }}');">
 				</div>
@@ -22,15 +22,15 @@
 					{{ question.text }}
 				</a>
 			</h2>
-			
+
+			{% if question.videofile %}
+				<video style="border-radius: 10px;" src="{{ question.videofile.url }}" width="300" height="150" poster="teste.jpg" controls> </video>
+			{% endif %}
+
 			{% if question.description %}
             <a style="text-decoration: none; outline: none; color: inherit; font-size: 13px" href="/question/{{ question.id }}">
 				    <p class='description'>{{ question.description }}</p>
             </a>
-			{% endif %}
-			
-			{% if question.videofile %}
-				<video style="border-radius: 10px;" src="{{ question.videofile.url }}" width="300" height="150" poster="teste.jpg" controls> </video>
 			{% endif %}
 			
 			{% if question.image %}
@@ -53,9 +53,9 @@
 				{% if not user.is_anonymous %}
 					{% starred user question as STARRED %}
 					{% if STARRED %}
-					<a onclick="star_question(this, {{ question.id }});"> <ion-icon class="offstar hidden" name="star-outline"></ion-icon> <ion-icon class="onstar text-warning" name="star"></ion-icon> <span class="starcount">{{ question.total_stars }}</span> &#8226; </a>
+					<a style="font-size: 12px; padding-right: 6px;" onclick="star_question(this, {{ question.id }});"> <ion-icon class="offstar hidden" name="thumbs-up-outline"></ion-icon> <ion-icon class="onstar text-warning" name="thumbs-up"></ion-icon> <span class="starcount" style="font-size: 15px">{{ question.total_stars }}</span> &#8226; </a>
 					{% else %}
-					<a onclick="star_question(this, {{ question.id }});"> <ion-icon class="offstar" name="star-outline"></ion-icon> <ion-icon class="onstar text-warning hidden" name="star"></ion-icon> <span class="starcount">{{ question.total_stars }}</span> &#8226; </a>
+					<a style="font-size: 14px" onclick="star_question(this, {{ question.id }});"> <ion-icon class="offstar" name="thumbs-up-outline"></ion-icon> <ion-icon class="onstar text-warning hidden" name="thumbs-up"></ion-icon> <span class="starcount warning-text onstar" style="font-size: 15px">{{ question.total_stars }}</span> &#8226; </a>
 					{% endif %}
 				{% endif %}
 				<span id="response-counter-{{ question.id }}" style="color: #00CD66; font-weight: 700">
@@ -79,29 +79,8 @@
 		                        <b>Sua Resposta:</b><br>
 		                        {{ ANSWER }}
 	                        </p>
-                        </div>
-				    {% else %}
-           
-                        <div class="vertical-spaced user-response" data-iddapergunta="{{ question.id }}" style="margin-bottom: 10px; padding-top: 10px">
-						    <a class="vertical-spaced" onclick="$(this).toggle(0); $('#answer-box-{{ question.id }}').toggle(0);" style="color: inherit; font-size: 13px; opacity: 0.8; background: transparent; margin-top: -5px; margin-left: 0px">
-							    <i class="fas fa-share" style="color: #BA55D3"></i>
-							   <b style="opacity: 0.7"> Responder </b>
-						    </a>
-					    </div>					   
-                        <div id="answer-box-{{ question.id }}" style="display: none">
-						    <form onsubmit="return enviar_resposta_pergunta(this);">
-							    {% csrf_token %}
-							    <input type="hidden" name="from" value="index">
-							    <input name="question_id" type="hidden" value="{{ question.id }}">
-							    
-		                        <textarea onclick="$(this).css('height', '140px');" name="text" maxlength="5000" class="form-control form-control-sm" style="border-radius: 15px" placeholder="Sua Resposta:" required></textarea>
-                                <br>
-                                <button name="submit_btn" type="submit" style="border-radius: 30px" class="btn btn-outline-primary btn-sm">
-	                                 <i class="far fa-paper-plane"></i>
-		                             Enviar
-                                 </button>
-						    </form>
-					    </div>
+                        </div>                                                
+						  
 				    {% endif %}
 			    {% endif %}
 		    </div>
@@ -110,4 +89,3 @@
 	    {% endif %}
     {% endif %}
 {% endfor %}
-

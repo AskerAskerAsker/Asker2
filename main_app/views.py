@@ -1436,8 +1436,8 @@ def search(request):
     res_r = Response.objects.annotate(rank=SearchRank(SearchVector('text'), SearchQuery(userquery))).order_by('-rank')
     '''
     # Menos resultados, mais omissões, porém usa menos recursos e gera menos resultados irrelevantes:
-    res_q = Question.objects.annotate(rank=SearchRank(SearchVector('text', weight='A') + SearchVector('description', weight='B'), SearchQuery(userquery))).filter(rank__gte=0.3).order_by('-rank')
-    res_r = Response.objects.annotate(rank=SearchRank(SearchVector('text', weight='A'), SearchQuery(userquery))).filter(rank__gte=0.3).order_by('-rank')
+    res_q = Question.objects.annotate(rank=SearchRank(SearchVector('text', weight='A') + SearchVector('description', weight='B'), SearchQuery(userquery))).filter(rank__gte=0.3).order_by('-pub_date')
+    res_r = Response.objects.annotate(rank=SearchRank(SearchVector('text', weight='A'), SearchQuery(userquery))).filter(rank__gte=0.3).order_by('-pub_date')  # era -rank passa a ser -pub_date
 
     ITEMS_PER_PAGE = 40
     qrcount = ITEMS_PER_PAGE//2
