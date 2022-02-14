@@ -29,6 +29,10 @@
             </a>
 			{% endif %}
 			
+			{% if question.videofile %}
+				<video style="border-radius: 10px;" src="/{{ question.videofile.name }}" width="300" height="150" poster="teste.jpg" controls> </video>
+			{% endif %}
+			
 			{% if question.image %}
 			<a href="/question/{{ question.id }}"> 
 				<div class="index-qimg-container" style="padding-bottom: 9px">

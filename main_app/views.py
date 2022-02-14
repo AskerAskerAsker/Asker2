@@ -538,11 +538,14 @@ def ask(request):
         try:
             video = request.FILES['video']
 
-            with open('media/videos/teste.mp4', 'wb+') as destination:
+            video_name = 'media-{}{}'.format(timezone.now().date(), timezone.now().time()).replace(':', '')
+
+            with open('media/videos/' + video_name, 'wb+') as destination:
                 for chunk in video.chunks():
                     destination.write(chunk)
 
-            q.videofile = 'media/videos/teste.mp4';
+            q.videofile = 'media/videos/' + video_name;
+            q.save()
         except:
             pass
 

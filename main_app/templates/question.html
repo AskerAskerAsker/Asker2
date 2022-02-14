@@ -172,6 +172,8 @@
 						</div>
 					{% endif %}
 
+					<video src="/{{ question.videofile.name }}" width="300" height="150" poster="teste.jpg" controls> </video>
+
 					{% if question.creator.user.username == user.username %}
 						<form method="post" action="/delete_question" onsubmit="if(confirm('Opa! Tem certeza que deseja apagar sua resposta?')) return true; else return false;">
 							{% csrf_token %}
