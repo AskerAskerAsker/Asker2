@@ -28,6 +28,14 @@ def get_total_answers(question):
 
 
 @register.simple_tag
+def get_username_from_id(id):
+    try:
+        return User.objects.get(id=id).username
+    except:
+        return 'Ocorreu um erro ao tentar carregar o perfil. Talvez ele tenha sido deletado.'
+
+
+@register.simple_tag
 def fix_naturaltime(naturaltime_str):
 	# Enquanto a tradução do humanize estiver sem espaços - o que provavelmente será pra sempre
 	corrections = ('atrás', 'ano', 'mês', 'mes', 'semana', 'dia', 'hora', 'minuto')

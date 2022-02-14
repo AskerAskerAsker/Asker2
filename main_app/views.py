@@ -1329,15 +1329,9 @@ def report_user(request):
     obj_id = User.objects.get(username=request.POST.get('username')).id
     text = request.POST.get('text')
 
-    report = Report.objects.filter(type=type, obj_id=obj_id)
-    if report.exists():
-        report = report.first()
-        report.total_reports += 1
-        report.reporters.add(request.user)
-    else:
-        report = Report.objects.create(type=type, obj_id=obj_id, text=text, total_reports=1)
-        report.reporters.add(request.user)
-        report.save()
+    report = Report.objects.create(type=type, obj_id=obj_id, text=text, total_reports=1)
+    report.reporters.add(request.user)
+    report.save()
 
     return HttpResponse('OK')
 

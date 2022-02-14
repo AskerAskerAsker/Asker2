@@ -24,8 +24,10 @@
                 <p>
                     Tipo: {{ report.type }}<br>
                     ID: {{ report.obj_id }}<br>
+                    {% if report.type != 'u' %}
                     Total de denúncias: {{ report.total_reports }}<br>
-                    
+                    {% endif %}
+
                     {% if report.type == 'q' %}
                         {% question report.obj_id as QUESTION %}
                         Título da pergunta: <a href="/question/{{ report.obj_id }}" target="_blank">{{ QUESTION.text }}</a><br>
@@ -35,6 +37,9 @@
                         <button onclick="this.disabled = true; delete_obj_and_report({{ report.obj_id }})" class="btn btn-outline-danger btn-sm">Apagar pergunta e denúncia</button>
                         <button onclick="delete_report({{ report.obj_id }});" class="btn btn-outline-info btn-sm">Apagar denúncia sem apagar a pergunta</button>
                         <img id="loading-icon-report-obj-{{ report.obj_id }}" src="/static/images/loading.gif" width="40px" style="display: none">
+                    {% elif report.type == 'u' %}
+                        Perfil: <a href="/user/{% get_username_from_id report.obj_id %}">{% get_username_from_id report.obj_id %}</a><br>
+			Denúncia: <p>{{ report.text }}</p>
                     {% endif %}
                 </p>
             </div>
