@@ -106,10 +106,7 @@
                             {% else %}
                                <b> Silenciar </b>
                             {% endif %}
-				<button class="btn btn-outline-primary" onclick="report();"><b>Reportar<b></button>
-			        </button>{% if not TARGET_HAS_BLOCKED and target_user_p.allows_chat %}<button id="chat-button" class="btn btn-outline-primary" onclick="open_chat('{{ target_user_p.user.username }}')">
-                            <b> <ion-icon name="mail-open-outline"></ion-icon> </b>
-			        </button>{% endif %}
+			
 		        </center>
             {% endif %}
 		{% endif %}
@@ -169,6 +166,13 @@ font-weight: 800;
 </style>
      
         <br>
+<center>
+	<button class="btn btn-outline-primary" onclick="report();"><b>Reportar<b></button>
+			        </button>{% if not TARGET_HAS_BLOCKED and target_user_p.allows_chat %}<button id="chat-button" class="btn btn-outline-primary" onclick="open_chat('{{ target_user_p.user.username }}')">
+                            <b> <ion-icon name="mail-open-outline"></ion-icon> </b>
+			        </button>{% endif %}
+    </center>   
+    
 		<ul class="nav nav-tabs" id="tabs">
 			<li class="nav-item">
             <a class="nav-link bg-main-tab activity-tab movend active" style="border: none;" id="questions">
