@@ -464,12 +464,12 @@ def profile(request, username):
     if request.user.is_authenticated:
         context['permissoes_usuario_logado'] = ast.literal_eval(UserProfile.objects.get(user=request.user).permissions)
 
+    context['followers'] = user.followed_by.all()
+
     if request.user.username == username:
         user_p = UserProfile.objects.get(user=request.user)
         user_p.ip = get_client_ip(request)
         user_p.save()
-    
-        context['followers'] = user.followed_by.all()
 
         fq_page = request.GET.get('fq-page', 1)
         context['followed_questions'] = Paginator(user_p.followed_questions.all().order_by('-id'), 10).page(fq_page).object_list
