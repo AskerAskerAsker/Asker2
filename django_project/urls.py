@@ -64,6 +64,7 @@ urlpatterns = [
   path('more_questions', views.more_questions, name='more_questions'),
   path('more_popular_questions', views.more_popular_questions, name='more_popular_questions'),
   path('report', views.report, name='report'),
+  path('report_user', views.report_user, name='report_user'),
   path('delete_report_and_obj', views.delete_report_and_obj, name='delete_report_and_obj'),
   path('delete_report', views.delete_report, name='delete_report'),
   path('manage_reports', views.manage_reports, name='manage_reports'),

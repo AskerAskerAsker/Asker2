@@ -273,9 +273,10 @@ class PollVote(models.Model):
     voter = models.ForeignKey(User, on_delete=models.CASCADE)
 
 class Report(models.Model):
-    type = models.TextField(null=False) # tipos: q (question), r (response), c (comment)
+    type = models.TextField(null=False) # tipos: q (question), r (response), c (comment), u (user)
     obj_id = models.IntegerField(null=False)
     reporters = models.ManyToManyField(User)
+    text = models.CharField(max_length=1024, null=True)
     total_reports = models.IntegerField(default=0)
 
 class ModActivity(models.Model):

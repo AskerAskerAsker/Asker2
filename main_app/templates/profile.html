@@ -106,6 +106,7 @@
                             {% else %}
                                <b> Silenciar </b>
                             {% endif %}
+				<button class="btn btn-outline-primary" onclick="report();"><b>Reportar<b></button>
 			        </button>{% if not TARGET_HAS_BLOCKED and target_user_p.allows_chat %}<button id="chat-button" class="btn btn-outline-primary" onclick="open_chat('{{ target_user_p.user.username }}')">
                             <b> <ion-icon name="mail-open-outline"></ion-icon> </b>
 			        </button>{% endif %}
@@ -333,6 +334,28 @@ font-weight: 800;
 
 		{% endif %}<br>
 		</main>
+
+<div id="report_form" style="display: none; position: fixed; width: 100%; bottom: 2rem; z-index: 10;">
+  <div class="bg-faint-gradient" style="box-shadow: 0 10px 20px rgba(64, 64, 64, 0.15); border-radius: 5px; padding: 1rem; margin: 0 auto; width: 95%;">
+    <button style="float: right; border: none; background-color: transparent; color: white; font-size: 20px; margin-top: -3px;" onclick="this.parentElement.parentElement.style.display = 'none';">
+        <ion-icon name="close-outline" role="img" class="md hydrated" aria-label="close outline"></ion-icon>
+    </button>
+    
+    <h5>Reportar perfil</h5>
+    <form method="post" action="/report_user">
+        {% csrf_token %}
+        <input type="hidden" name="username" value="{{ target_user_p.user.username }}">
+        <textarea placeholder="Motivo..." class="form-control" name="text"></textarea>
+        <input class="btn btn-primary" type="submit" value="Reportar">
+    </form>
+  </div>
+</div>
+	<script>
+		function report () {
+			var report_form = document.getElementById('report_form');
+			report_form.style.display = 'block';
+		}
+	</script>
         <script src="https://cdn.jsdelivr.net/npm/linkifyjs@2.1.9/dist/linkify.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/linkifyjs@2.1.9/dist/linkify-jquery.min.js"></script>
         <script src="/static/js/profile.js?v=9.2"></script>

@@ -1324,6 +1324,24 @@ def report(request):
     return HttpResponse('OK')
 
 
+def report_user(request):
+    type = 'u'
+    obj_id = User.objects.get(username=request.POST.get('username')).id
+    text = request.POST.get('text')
+
+    report = Report.objects.filter(type=type, obj_id=obj_id)
+    if report.exists():
+        report = report.first()
+        report.total_reports += 1
+        report.reporters.add(request.user)
+    else:
+        report = Report.objects.create(type=type, obj_id=obj_id, text=text, total_reports=1)
+        report.reporters.add(request.user)
+        report.save()
+
+    return HttpResponse('OK')
+
+
 def manage_reports(request):
     
     if not request.user.is_superuser:
