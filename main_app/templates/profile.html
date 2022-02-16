@@ -74,11 +74,40 @@
         <p style="font-size: 13px; font-weight: 700">
         No Asker desde <span class="font-italic"><b>{{ target_user_p.user.date_joined.date }}.</b></span>
 	    </p>
-	<p><ion-icon name="people-outline"></ion-icon> {{ total_followers }} seguidores</p>
-        </center>
         
+        </center>
+               
 <div style="padding-top: 3px; padding-bottom: 3px;">    
-<center>        
+<center>       
+
+<table frameborder="0" style="margin-left: -10px; margin-top: 20px; border-radius: 100px; text-align: center; width: 60%; max-width: 300px; background: transparent">
+<tbody>
+<tr>
+<td style="width: 10px; opacity: 0">1</td>
+<td style="width: 10px; opacity: 0">1</td>
+<td style="padding: 5px; border-right: 0px solid rgb(110,110,110,0.3); border-height: 3px"><font style="font-size: 13px; font-weight: 500">Seguidores</font></td>
+<td style="padding: 5px; border-right: 0px solid rgb(110,110,110,0.3); border-height: 3px"><font style="font-size: 13px; font-weight: 500">Perguntas </font></td>
+<td style="padding: 5px; border-right: 0px solid rgb(110,110,110,0.3); border-height: 3px"><font style="font-size: 13px; font-weight: 500">Respostas </font></td>
+<td style="padding: 5px"><b style="font-size: 15px; font-weight: 900">Pontos</b></td>
+<td style="width: 10px; opacity: 0">2</td>
+<td style="width: 10px; opacity: 0">2</td>
+</tr>
+<tr style="margin-top: -10px">
+<td style="width: 10px; opacity: 0">3</td>
+<td style="width: 10px; opacity: 0">3</td>
+<td style="padding: 5px 5px 5px 5px; font-weight: 500">{{ total_followers }}</td>
+<td style="padding: 5px 5px 5px 5px; font-weight: 500">{{target_user_p.total_questions}}</td>
+<td style="padding: 5px 5px 5px 5px; font-weight: 500">{{target_user_p.total_responses}}</td>
+<td style="padding: 5px 5px 5px 5px; font-weight: 900">{{target_user_p.total_points}}</td>
+<td style="width: 10px; opacity: 0">4</td>
+<td style="width: 10px; opacity: 0">4</td>
+</tr>
+</tbody>
+</table> 
+
+
+
+
         {% if target_user_p.user.username != user.username %}
             {% if not user.is_anonymous %}
 		        {% afollowb user.username target_user_p.user.username as FOLLOWED %}
@@ -86,27 +115,40 @@
 		        {% asilenceb user.username target_user_p.user.username as SILENCED %}
 		        {% ablockb target_user_p.user.username user.username as TARGET_HAS_BLOCKED %}
 
+<br>
                 <center class="btn-group justified vertical-spaced" style="font-weight: 500; border-radius: 100px" role="group">
-                    {% if target_user_p.followable %}
-			        <button id="follow-button" class="btn btn-outline-primary" onclick="follow_user('{{ target_user_p.user.username }}')">
+                
+                {% if target_user_p.followable %}
+			       <span style="padding-right: 15px">
+                   <button id="follow-button" class="btn btn-primary" style="border-radius: 30px; width: 100px" onclick="follow_user('{{ target_user_p.user.username }}')">
                             {% if FOLLOWED %}
-                               <b> Seguindo </b>
+                               <b style="font-weight: 900"> Seguindo </b>
                             {% else %}
                                <b> Seguir </b>
                             {% endif %}
-			        </button>{% endif %}<button id="block-button" class="btn btn-outline-primary" onclick="block_user('{{ target_user_p.user.username }}')">
+			        </button>
+                   </span>
+                {% endif %}
+                
+                <button id="block-button" class="" style="border: none; background: transparent; color: rgb(156,156,156); font-size: 14px;" onclick="block_user('{{ target_user_p.user.username }}')">
                             {% if BLOCKED %}
                                <b> Bloqueado </b>
                             {% else %}
                                <b> Bloquear </b>
                             {% endif %}
-			        </button><button id="silence-button" class="btn btn-outline-primary" onclick="silence_user('{{ target_user_p.user.username }}')">
+			   </button>
+                
+                <button id="silence-button" class="" style="border: none; background: transparent; color: rgb(156,156,156); font-size: 14px;" onclick="silence_user('{{ target_user_p.user.username }}')">
                             {% if SILENCED %}
                                <b> Silenciado </b>
                             {% else %}
                                <b> Silenciar </b>
                             {% endif %}
-			
+			 {% if not TARGET_HAS_BLOCKED and target_user_p.allows_chat %}
+    <button id="chat-button" style="border: none; background: transparent" onclick="open_chat('{{ target_user_p.user.username }}')">
+       <b style="color: #1E90FF"> <ion-icon name="chatbubble-ellipses-outline"></ion-icon> </b>
+    </button>
+    {% endif %}
 		        </center>
             {% endif %}
 		{% endif %}
@@ -115,32 +157,16 @@
         
 <center>
 
-<table frameborder="0" style="margin-left: -10px; margin-top: 20px; border-radius: 100px; width: 80%; max-width: 400px;" class="bg-faint-gradient">
-<tbody>
-<tr>
-<td style="width: 40px; opacity: 0">1</td>
-<td style="width: 40px; opacity: 0">1</td>
-<td style="padding: 13px"><font style="font-size: 15px; font-weight: 500">Perguntas</font></td>
-<td style="padding: 13px"><font style="font-size: 15px; font-weight: 500">Respostas</font></td>
-<td style="padding: 13px"><b style="font-size: 18px; font-weight: 900">Pontos</b></td>
-<td style="width: 40px; opacity: 0">2</td>
-<td style="width: 40px; opacity: 0">2</td>
-</tr>
-<tr>
-<td style="width: 40px; opacity: 0">3</td>
-<td style="width: 40px; opacity: 0">3</td>
-<td style="padding: 10px 13px 10px 13px; font-weight: 500">{{target_user_p.total_questions}}</td>
-<td style="padding: 10px 13px 10px 13px; font-weight: 500">{{target_user_p.total_responses}}</td>
-<td style="padding: 10px 13px 10px 13px; font-weight: 900">{{target_user_p.total_points}}</td>
-<td style="width: 40px; opacity: 0">4</td>
-<td style="width: 40px; opacity: 0">4</td>
-</tr>
-</tbody>
-</table> 
-
 	    <p id="bio" style="line-height: 16px; font-size: 13px; padding-top: 30px">	   
 			     {{ target_user_p.bio|linebreaksbr }}
 	    </p>
+
+<center>
+<div style="padding-top: 10px">
+	<button class="btn btn-outline-primary" style="border: none; border-radius: 100px; font-weight: 700; font-size: 15px; color: #D8BFD8" onclick="report();"><b>Reportar<ion-icon name="alert-circle-outline"></ion-icon><b></button>
+</div>
+</center>   
+    
 
 
     	{% if target_user_p.user.username == user.username %}
@@ -164,15 +190,9 @@ color: #43CD80;
 font-weight: 800;
 }
 </style>
-     
-        <br>
-<center>
-	<button class="btn btn-outline-primary" onclick="report();"><b>Reportar<b></button>
-			        </button>{% if not TARGET_HAS_BLOCKED and target_user_p.allows_chat %}<button id="chat-button" class="btn btn-outline-primary" onclick="open_chat('{{ target_user_p.user.username }}')">
-                            <b> <ion-icon name="mail-open-outline"></ion-icon> </b>
-			        </button>{% endif %}
-    </center>   
-    
+
+<br>
+
 		<ul class="nav nav-tabs" id="tabs">
 			<li class="nav-item">
             <a class="nav-link bg-main-tab activity-tab movend active" style="border: none;" id="questions">
@@ -339,18 +359,21 @@ font-weight: 800;
 		{% endif %}<br>
 		</main>
 
-<div id="report_form" style="display: none; position: fixed; width: 100%; bottom: 2rem; z-index: 10;">
-  <div class="bg-faint-gradient" style="box-shadow: 0 10px 20px rgba(64, 64, 64, 0.15); border-radius: 5px; padding: 1rem; margin: 0 auto; width: 95%;">
+<div id="report_form" style="display: none; position: fixed; z-index: 99999999999999999999999999999999999999; width: 100%; bottom: 2rem; z-index: 10;">
+  <div class="bg-faint-gradient" style="box-shadow: 0 10px 20px rgba(64, 64, 64, 0.15); position: relative; z-index: 99999999999999999999999999999999999999; border-radius: 5px; padding: 1rem; margin: 0 auto; width: 95%;">
     <button style="float: right; border: none; background-color: transparent; color: white; font-size: 20px; margin-top: -3px;" onclick="this.parentElement.parentElement.style.display = 'none';">
         <ion-icon name="close-outline" role="img" class="md hydrated" aria-label="close outline"></ion-icon>
     </button>
     
-    <h5>Reportar perfil</h5>
-    <form method="post" action="/report_user">
+    <h5 style="font-weight: 900">Denuncie<ion-icon name="alert-circle-outline"></ion-icon></h5>
+  <font size="2">Envie a sua denuncia para a <b>Equipe Asker</b>.</font>
+  <br>
+    <form method="post" action="/report_user" style="padding-top: 10px; padding-bottom: 10px">
         {% csrf_token %}
         <input type="hidden" name="username" value="{{ target_user_p.user.username }}">
-        <textarea placeholder="Motivo..." class="form-control" name="text"></textarea>
-        <input class="btn btn-primary" type="submit" value="Reportar">
+        <textarea placeholder="Escreva o que está acontecendo..." class="form-control" name="text" style="border-radius: 20px; font-size: 13px; height: 80px"></textarea>
+       <br>
+    <input class="btn btn-primary" style="border-radius: 30px; font-size: 12px; font-weight: 800" type="submit" value="Denunciar Usuário">
     </form>
   </div>
 </div>
