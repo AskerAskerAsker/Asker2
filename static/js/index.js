@@ -181,6 +181,7 @@ for (let i in descriptions) {
 	});
 }
 
+var UPD_INTERVAL = 0;
 async function check_for_update() {
     try {
         var last_known_q = document.getElementById("novas_questoes").getElementsByClassName("list-group-item")[0].getAttribute("data-id");
@@ -212,7 +213,12 @@ async function check_for_update() {
                         document.title = org_title;
                     }
                 }
-                if (new_questions > 0) {
+                if (new_questions > 29) {
+                    button.addEventListener('click', function(e) { location.reload(); });
+                    button.style.display = 'table';
+                    btn_count.innerHTML = '30+';
+                    clearInterval(UPD_INTERVAL);
+                } else if (new_questions > 0) {
                     button.style.display = 'table';
                     btn_count.innerHTML = new_questions;
                 }
@@ -220,7 +226,7 @@ async function check_for_update() {
 			},
 	});    
 }
-setInterval(check_for_update, 35000);
+UPD_INTERVAL = setInterval(check_for_update, 35000);
 
 function update_recent() {
     var last_known_q = document.getElementById("novas_questoes").getElementsByClassName("list-group-item")[0].getAttribute("data-id");
