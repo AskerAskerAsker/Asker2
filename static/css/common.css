@@ -303,6 +303,23 @@ button font {
 /* Error-end */
 
 /* Profile */
+.spacer-h {
+	width: 3px;
+	opacity: 0;
+}
+.uinfo-title {
+	padding: 5px;
+	border-right: 0px solid rgb(110,110,110,0.3);
+}
+.uinfo-title font {
+	font-size: 12px;
+	font-weight: 900;
+}
+.uinfo-val {
+	padding: 3px;
+	font-size: 13px;
+	font-weight: 400;
+}
 #bio {
     width: 80%;
 }
@@ -571,37 +588,3 @@ main {
   }
 }
 /* General-end */
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

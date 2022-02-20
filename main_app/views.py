@@ -153,7 +153,6 @@ def save_answer(request):
     })
 
 def index(request):
-
     context = {}
 
     context['initial'] = 'popular'
@@ -162,8 +161,6 @@ def index(request):
     elif request.path == '/feed':
         if request.user.is_authenticated:
             context['initial'] = 'feed'
-
-    #context['questoes_recentes'] = Question.objects.order_by('-id')[:15]
 
     try:
         context['popular_questions'] = cache.get('p_questions')

@@ -81,7 +81,7 @@
 		        {% ablockb target_user_p.user.username user.username as TARGET_HAS_BLOCKED %}
 
         
-        <center class="btn-group justified vertical-spaced" style="font-weight: 500; max-width: 400px; border-radius: 100px; margin-left: 20px; padding-top: 10px" role="group">
+        <center class="btn-group justified vertical-spaced" style="font-weight: 500; max-width: 400px; border-radius: 100px; margin: auto; padding-top: 10px" role="group">
                 
                 {% if target_user_p.followable %}
 			       <span style="padding-right: 15px">
@@ -130,28 +130,28 @@
 
 
 <table frameborder="0" style="margin-left: -10px; border-radius: 100px; text-align: center; width: 50%; max-width: 300px; background: transparent">
-<tbody>
-<tr>
-<td style="width: 3px; opacity: 0">1</td>
-<td style="width: 3px; opacity: 0">1</td>
-<td style="padding: 5px; border-right: 0px solid rgb(110,110,110,0.3);"><font style="font-size: 12px; font-weight: 900">Seguidores</font></td>
-<td style="padding: 5px; border-right: 0px solid rgb(110,110,110,0.3);"><font style="font-size: 12px; font-weight: 900">Perguntas </font></td>
-<td style="padding: 5px; border-right: 0px solid rgb(110,110,110,0.3);"><font style="font-size: 12px; font-weight: 900">Respostas </font></td>
-<td style="padding: 5px"><b style="font-size: 13px; font-weight: 900">Pontos</b></td>
-<td style="width: 3px; opacity: 0">2</td>
-<td style="width: 6px; opacity: 0">2</td>
-</tr>
-<tr style="margin-top: -10px">
-<td style="width: 3px; opacity: 0">3</td>
-<td style="width: 3px; opacity: 0">3</td>
-<td style="padding: 3px 3px 3px 3px; font-size: 13px; font-weight: 400">{{ total_followers }}</td>
-<td style="padding: 3px 3px 3px 3px; font-size: 13px; font-weight: 400">{{target_user_p.total_questions}}</td>
-<td style="padding: 3px 3px 3px 3px; font-size: 13px; font-weight: 400">{{target_user_p.total_responses}}</td>
-<td style="padding: 3px 3px 3px 3px; font-size: 14px; font-weight: 400">{{target_user_p.total_points}}</td>
-<td style="width: 3px; opacity: 0">4</td>
-<td style="width: 3px; opacity: 0">4</td>
-</tr>
-</tbody>
+	<tbody>
+		<tr>
+			<td class="spacer-h">1</td>
+			<td class="spacer-h">1</td>
+			<td class="uinfo-title"><font>Seguidores</font></td>
+			<td class="uinfo-title"><font>Perguntas</font></td>
+			<td class="uinfo-title"><font>Respostas</font></td>
+			<td class="uinfo-title"><font>Pontos</font></td>
+			<td class="spacer-h">2</td>
+			<td class="spacer-h">2</td>
+		</tr>
+			<tr style="margin-top: -10px">
+			<td class="spacer-h">3</td>
+			<td class="spacer-h">3</td>
+			<td class="uinfo-val">{{ total_followers }}</td>
+			<td class="uinfo-val">{{target_user_p.total_questions}}</td>
+			<td class="uinfo-val">{{target_user_p.total_responses}}</td>
+			<td class="uinfo-val">{{target_user_p.total_points}}</td>
+			<td class="spacer-h">4</td>
+			<td class="spacer-h">4</td>
+		</tr>
+	</tbody>
 </table> 
  
 </center> 
