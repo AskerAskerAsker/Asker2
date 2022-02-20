@@ -47,14 +47,14 @@
 	{% endif %}
 
 
-	<main style="border: none">
+	<main style="border: none" style="width: 100%">
        <div class="card bg-main" style="border: none" id="uinfo">
     
 	    {% if target_user_p.cover_photo %}
      
-    <div style="width: 100%; height: 250px; border-radius: 0px 0px 15px 15px; background: url({{ target_user_p.cover_photo.url }}); background-repeat: no-repeat; background-position: center; background-size: cover; position: absolute; z-index: 99"> </div>
+    <div style="width: 100%; height: 210px; border-radius: 0px 0px 15px 15px; background: url({{ target_user_p.cover_photo.url }}); background-repeat: no-repeat; background-position: center; background-size: cover; position: absolute; z-index: 99"> </div>
            	{% else %}
-       <div style="width: 100%; height: 250px; border-radius: 0px 0px 15px 15px; background: url('/static/images/default-cover.jpg'); background-repeat: no-repeat; background-position: center; background-size: cover; position: absolute; z-index: 99"> </div>
+       <div style="width: 100%; height: 210px; border-radius: 0px 0px 15px 15px; background: url('/static/images/default-cover.jpg'); background-repeat: no-repeat; background-position: center; background-size: cover; position: absolute; z-index: 99"> </div>
        {% endif %}
     
     <div style="height: 100px;"></div>
@@ -62,7 +62,7 @@
 	    <div class="card-body" style="border: none;">  
     
 		<center id="center1">
-		  <div style="margin-top: 40px; border-radius: 300px; background: url({{target_user_p.avatar.url}}); width: 130px; height: 129px; background-position: center center; background-repeat: no-repeat; background-size: cover; position: relative; z-index: 999">		      
+		  <div style="margin-top: 15px; border-radius: 300px; background: url({{target_user_p.avatar.url}}); width: 115px; height: 114px; background-position: center center; background-repeat: no-repeat; background-size: cover; position: relative; z-index: 999">		      
 		  </div>
 		 
        
@@ -71,52 +71,17 @@
             <b>{{ target_user_p.user.username }}</b>
         </h3>
         
-        <p style="font-size: 13px; font-weight: 700">
-        No Asker desde <span class="font-italic"><b>{{ target_user_p.user.date_joined.date }}.</b></span>
-	    </p>
-        
         </center>
-               
-<div style="padding-top: 3px; padding-bottom: 3px;">    
-<center>       
-
-<table frameborder="0" style="margin-left: -10px; margin-top: 20px; border-radius: 100px; text-align: center; width: 60%; max-width: 300px; background: transparent">
-<tbody>
-<tr>
-<td style="width: 10px; opacity: 0">1</td>
-<td style="width: 10px; opacity: 0">1</td>
-<td style="padding: 5px; border-right: 0px solid rgb(110,110,110,0.3); border-height: 3px"><font style="font-size: 13px; font-weight: 500">Seguidores</font></td>
-<td style="padding: 5px; border-right: 0px solid rgb(110,110,110,0.3); border-height: 3px"><font style="font-size: 13px; font-weight: 500">Perguntas </font></td>
-<td style="padding: 5px; border-right: 0px solid rgb(110,110,110,0.3); border-height: 3px"><font style="font-size: 13px; font-weight: 500">Respostas </font></td>
-<td style="padding: 5px"><b style="font-size: 15px; font-weight: 900">Pontos</b></td>
-<td style="width: 10px; opacity: 0">2</td>
-<td style="width: 10px; opacity: 0">2</td>
-</tr>
-<tr style="margin-top: -10px">
-<td style="width: 10px; opacity: 0">3</td>
-<td style="width: 10px; opacity: 0">3</td>
-<td style="padding: 5px 5px 5px 5px; font-weight: 500">{{ total_followers }}</td>
-<td style="padding: 5px 5px 5px 5px; font-weight: 500">{{target_user_p.total_questions}}</td>
-<td style="padding: 5px 5px 5px 5px; font-weight: 500">{{target_user_p.total_responses}}</td>
-<td style="padding: 5px 5px 5px 5px; font-weight: 900">{{target_user_p.total_points}}</td>
-<td style="width: 10px; opacity: 0">4</td>
-<td style="width: 10px; opacity: 0">4</td>
-</tr>
-</tbody>
-</table> 
-
-
-
-
-        {% if target_user_p.user.username != user.username %}
+ 
+             {% if target_user_p.user.username != user.username %}
             {% if not user.is_anonymous %}
 		        {% afollowb user.username target_user_p.user.username as FOLLOWED %}
 		        {% ablockb user.username target_user_p.user.username as BLOCKED %}
 		        {% asilenceb user.username target_user_p.user.username as SILENCED %}
 		        {% ablockb target_user_p.user.username user.username as TARGET_HAS_BLOCKED %}
 
-<br>
-                <center class="btn-group justified vertical-spaced" style="font-weight: 500; border-radius: 100px" role="group">
+        
+        <center class="btn-group justified vertical-spaced" style="font-weight: 500; max-width: 400px; border-radius: 100px; margin-left: 20px; padding-top: 10px" role="group">
                 
                 {% if target_user_p.followable %}
 			       <span style="padding-right: 15px">
@@ -150,33 +115,75 @@
     </button>
     {% endif %}
 		        </center>
-            {% endif %}
+               
+     {% endif %}
 		{% endif %}
+        
+        
+        
+<div style="padding-bottom: 3px;">    
+<center>       
+
+  <p style="padding-top: 5px; padding-bottom: 10px; font-size: 11px; opacity: 0.5; font-weight: 500">
+       <span class="font-italic"> No Asker desde <b>{{ target_user_p.user.date_joined.date }}.</b></span>
+   </p>
+
+
+<table frameborder="0" style="margin-left: -10px; border-radius: 100px; text-align: center; width: 50%; max-width: 300px; background: transparent">
+<tbody>
+<tr>
+<td style="width: 3px; opacity: 0">1</td>
+<td style="width: 3px; opacity: 0">1</td>
+<td style="padding: 5px; border-right: 0px solid rgb(110,110,110,0.3);"><font style="font-size: 12px; font-weight: 900">Seguidores</font></td>
+<td style="padding: 5px; border-right: 0px solid rgb(110,110,110,0.3);"><font style="font-size: 12px; font-weight: 900">Perguntas </font></td>
+<td style="padding: 5px; border-right: 0px solid rgb(110,110,110,0.3);"><font style="font-size: 12px; font-weight: 900">Respostas </font></td>
+<td style="padding: 5px"><b style="font-size: 13px; font-weight: 900">Pontos</b></td>
+<td style="width: 3px; opacity: 0">2</td>
+<td style="width: 6px; opacity: 0">2</td>
+</tr>
+<tr style="margin-top: -10px">
+<td style="width: 3px; opacity: 0">3</td>
+<td style="width: 3px; opacity: 0">3</td>
+<td style="padding: 3px 3px 3px 3px; font-size: 13px; font-weight: 400">{{ total_followers }}</td>
+<td style="padding: 3px 3px 3px 3px; font-size: 13px; font-weight: 400">{{target_user_p.total_questions}}</td>
+<td style="padding: 3px 3px 3px 3px; font-size: 13px; font-weight: 400">{{target_user_p.total_responses}}</td>
+<td style="padding: 3px 3px 3px 3px; font-size: 14px; font-weight: 400">{{target_user_p.total_points}}</td>
+<td style="width: 3px; opacity: 0">4</td>
+<td style="width: 3px; opacity: 0">4</td>
+</tr>
+</tbody>
+</table> 
+ 
 </center> 
 </div>       
         
 <center>
 
+
 	    <p id="bio" style="line-height: 16px; font-size: 13px; padding-top: 30px">	   
 			     {{ target_user_p.bio|linebreaksbr }}
 	    </p>
 
-<center>
+
 <div style="padding-top: 10px">
-	<button class="btn btn-outline-primary" style="border: none; border-radius: 100px; font-weight: 700; font-size: 15px; color: #D8BFD8" onclick="report();"><b>Reportar<ion-icon name="alert-circle-outline"></ion-icon><b></button>
+	<button class="btn btn-outline-primary" style="border: none; border-radius: 100px; opacity: 0.6; font-weight: 700; font-size: 15px; color: #B03060" onclick="report();"><b>Reportar<ion-icon name="alert-circle-outline"></ion-icon><b></button>
 </div>
+    
+
 </center>   
     
 
 
     	{% if target_user_p.user.username == user.username %}
             <center>
-		    <div id="edit-profile" class="vertical-spaced"><a href="/user/{{ user.username }}/edit" style="text-decoration: none; outline: none; font-size: 13px"><b>Configurações <ion-icon name="brush-outline"></ion-icon></b></a></div>
+		    <div id="edit-profile" class="vertical-spaced"><a href="/user/{{ user.username }}/edit" style="text-decoration: none; outline: none; font-size: 14px"><b>Configurações <ion-icon name="brush-outline"></ion-icon></b></a></div>
             </center>
 		{% endif %}
         
         
 </center>    
+
+<br><br><br>
         
 		{% if target_user_p.user.username == user.username or not target_user_p.hide_activity or 'pap' in permissoes_usuario_logado or user.is_superuser %}
 		
@@ -193,7 +200,7 @@ font-weight: 800;
 
 <br>
 
-		<ul class="nav nav-tabs" id="tabs">
+		<ul class="nav nav-tabs" id="tabs" style="width: 100%">
 			<li class="nav-item">
             <a class="nav-link bg-main-tab activity-tab movend active" style="border: none;" id="questions">
             <i class="fas fa-share" style="color: #BA55D3; font-size: 18px; padding-right: 10px"></i> Perguntas</a>
@@ -220,13 +227,13 @@ font-weight: 800;
 			{% endif %}
 		</ul>
 
-		<section id="questions-section" style="border: none">
-			<div class="questions-card card bg-main" style="border: none">
+		<section id="questions-section" style="border: none; width: 100%">
+			<div class="questions-card card bg-main" style="border: none; width: 100%">
 				<ul class="list-group list-group-flush" id="qs">
 					{% for question in questions %}
 					<li class="list-group-item bg-main">
 						<div class="question card-body">
-							<a href="/question/{{ question.id }}">{{ question.text }}</a><br>
+							<a href="/question/{{ question.id }}" style="text-decoration: none">{{ question.text }}</a><br>
 							<span class="small-text">Perguntada em: {{ question.pub_date|naturalday }}</span>
 							{% if question.best_answer == None and target_user_p.user.username == user.username %}
 								<br><span class="small-text">Sem Melhor Resposta</span>
@@ -248,13 +255,13 @@ font-weight: 800;
 			</div>
 		</section>
 
-		<section id="responses-section" class="hidden-section" style="border: none">
-			<div class="responses-card card bg-main" style="border: none; width: 90%">
+		<section id="responses-section" class="hidden-section" style="border: none; width: 100%">
+			<div class="responses-card card bg-main" style="border: none; width: 100%">
 				<ul class="list-group list-group-flush" id="rs">
 					{% for response in responses %}
 					<li class="list-group-item bg-main">
 						<div class="response card-body">
-							<a href="/question/{{ response.question.id }}">{{ response.question.text }}</a><br>
+							<a href="/question/{{ response.question.id }}" style="text-decoration: none">{{ response.question.text }}</a><br>
 							<p>
 								{% if response.question.best_answer == response.id %}
 									<span class="badge badge-pill badge-primary">🏆 Melhor resposta</span>
@@ -284,7 +291,7 @@ font-weight: 800;
 					{% for question in followed_questions %}
 					<li class="list-group-item bg-main">
 						<div class="question card-body">
-							<a href="/question/{{ question.id }}">{{ question.text }}</a><br>
+							<a href="/question/{{ question.id }}" style="text-decoration: none">{{ question.text }}</a><br>
 							<span class="small-text">Perguntada em: {{ question.pub_date|naturalday }}</span>
 						</div>
 					</li>
@@ -365,13 +372,13 @@ font-weight: 800;
         <ion-icon name="close-outline" role="img" class="md hydrated" aria-label="close outline"></ion-icon>
     </button>
     
-    <h5 style="font-weight: 900">Denuncie<ion-icon name="alert-circle-outline"></ion-icon></h5>
-  <font size="2">Envie a sua denuncia para a <b>Equipe Asker</b>.</font>
+    <h5 style="font-weight: 900">Denuncie!</h5>
+  <font size="2">Envie a sua denuncia para a <b>Asker</b>.</font>
   <br>
     <form method="post" action="/report_user" style="padding-top: 10px; padding-bottom: 10px">
         {% csrf_token %}
         <input type="hidden" name="username" value="{{ target_user_p.user.username }}">
-        <textarea placeholder="Escreva o que está acontecendo..." class="form-control" name="text" style="border-radius: 20px; font-size: 13px; height: 80px"></textarea>
+        <textarea placeholder="Escreva o que está acontecendo..." name="text" style="background-color: white; border-radius: 20px; font-size: 13px; height: 80px"></textarea>
        <br>
     <input class="btn btn-primary" style="border-radius: 30px; font-size: 12px; font-weight: 800" type="submit" value="Denunciar Usuário">
     </form>

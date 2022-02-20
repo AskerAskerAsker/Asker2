@@ -163,7 +163,7 @@ def index(request):
         if request.user.is_authenticated:
             context['initial'] = 'feed'
 
-    context['questoes_recentes'] = Question.objects.order_by('-id')[:15]
+    #context['questoes_recentes'] = Question.objects.order_by('-id')[:15]
 
     try:
         context['popular_questions'] = cache.get('p_questions')
@@ -1229,6 +1229,8 @@ def update_index(request):
     nq = Question.objects.filter(id__gt=last_known_q).order_by("-id")
     if len(nq) == 0:
         return HttpResponse('-1')
+    elif len(nq) > 29:
+        return HttpResponse('-1')
 
     nq_context = {'questions': nq, 'user_p': up}
     
@@ -1723,3 +1725,12 @@ def star(request):
 
 def promo(request):
     return render(request, 'promo.html')
+
+
+def novadx(request):
+    return render(request, 'novadx.html')
+
+
+def add(request):
+    return render(request, 'add.html')
+

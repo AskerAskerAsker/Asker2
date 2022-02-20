@@ -46,10 +46,10 @@
                 </ul>
                 <div class="page-btn-container">
                 	{% if notifications.has_next %}
-                	<a class="page-btn btn btn-primary" style="flex: 1; border-radius: 30px;" href="/notifications?page={{ notifications.next_page_number }}">Mais Antigas</a>
+                	<a class="page-btn btn btn-primary" style="flex: 1; border-radius: 30px; text-decoration: none" href="/notifications?page={{ notifications.next_page_number }}">Mais Antigas</a>
                 	{% endif %}
                 	{% if notifications.has_previous %}
-                	<a class="page-btn btn btn-primary" style="flex: 1; border-radius: 30px;" href="/notifications?page={{ notifications.previous_page_number }}">Mais Recentes</a>
+                	<a class="page-btn btn btn-primary" style="flex: 1; border-radius: 30px; text-decoration: none" href="/notifications?page={{ notifications.previous_page_number }}">Mais Recentes</a>
                 	{% endif %}
                 </div>
             </section>

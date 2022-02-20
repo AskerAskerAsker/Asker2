@@ -39,7 +39,7 @@
     
     <center> 
     
-    <br><br>
+    <br><br><br>
     
     <img src="{{user_p.avatar.url}}" style="border-radius: 100px; width: 75px"></img>
     
@@ -59,9 +59,16 @@
             <form method="post" enctype="multipart/form-data" onsubmit="enviar_pergunta(this)" id="form_pergunta">
                 {% csrf_token %}
                 <div class="form-group ask-form">
-                    <input class="form-control" type="text" name="question" style="border-radius: 20px; font-weight: 500" placeholder="Título da Pergunta:" autocomplete="off" maxlength="180">
-                    <textarea width="100px" maxlength="5000" class="form-control" style="min-height: 250px; border-radius: 20px; font-size: 12px; margin-top: 10px" placeholder="Descrição (opcional):" name="description"></textarea>
+                    <input class="form-control" type="text" name="question" style="border-radius: 20px; font-weight: 500" placeholder="Título da Pergunta:" autocomplete="off" maxlength="180" required="">
+                    <textarea width="100px" maxlength="5000" class="form-control" style="min-height: 250px; border-radius: 20px; font-size: 12px; margin-top: 10px" placeholder="Descrição (Opcional):" name="description"></textarea>
                 <br>
+                
+                 <a href="#" class="vertical-spaced clickable" onclick="togglePoll();">
+                   <font color="#66CDAA"><b> +Incluir Enquete </b></font>
+                    </a>
+                
+                <br>
+                
                     <label for="image"><b>Inserir Imagem:</b></label>
                     
                     <input type="hidden" name="nsfw_score" value="0" id="img_nsfw_score">
@@ -71,14 +78,14 @@
                         <span style="vertical-align: middle">Carregando imagem</span>
                     </div>
 
+                <br>
+                
 					<div>
 						<label for="video"><b>Inserir Vídeo</b></label>
 						<input type="file" class="form-control-file" name="video">
                     </div>
                     
-                    <a href="#" class="vertical-spaced clickable" onclick="togglePoll();">
-                   <font color="#66CDAA"><b> +Incluir Enquete </b></font>
-                    </a>
+                   
                <BR>     
                     <div class="card" id="poll-box" style="display: none;"><div class="card-body">
                         <input id="choices-counter" type="hidden" name="choices-count" value="0">
@@ -109,7 +116,7 @@
                 </div>
             </form>
      <br>
-            <p>
+            <p style="font-size: 12px">
                 Suporte:
                 <a href="mailto:mail.asker.fun@gmail.com">mail.asker.fun@gmail.com</a>
             </p>

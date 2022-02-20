@@ -214,6 +214,7 @@ async function check_for_update() {
                     }
                 }
                 if (new_questions > 29) {
+                    button.getElementsByTagName('button')[0].removeAttribute('onclick');
                     button.addEventListener('click', function(e) { location.reload(); });
                     button.style.display = 'table';
                     btn_count.innerHTML = '30+';
