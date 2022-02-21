@@ -20,7 +20,9 @@ import os
 import html
 import ast
 import io
+import subprocess
 from PIL import Image, ImageFile, UnidentifiedImageError, ImageSequence
+
 
 def compress_animated(bio, max_size, max_frames):
     im = Image.open(bio)
@@ -533,14 +535,12 @@ def ask(request):
         q = Question.objects.create(creator=UserProfile.objects.get(user=request.user), text=text, viewers='set()', description=description.replace('\\', '\\\\'))
 
         video = None
-
         try:
             video = request.FILES['video']
         except:
             pass
 
         if video:
-
             video_name = 'media-{}{}'.format(timezone.now().date(), timezone.now().time()).replace(':', '')
 
             with open('media/videos/' + video_name, 'wb+') as destination:
@@ -548,6 +548,11 @@ def ask(request):
                     destination.write(chunk)
 
             q.videofile = 'videos/' + video_name;
+            
+            video_path = 'media/videos/' + video_name
+            thumb_path = 'videos/' + video_name + '.jpg'
+            subprocess.call(['ffmpeg', '-i', video_path, '-ss', '00:00:00.000', '-vf', 'scale=320:-2', '-hide_banner', '-loglevel', 'warning', '-vframes', '1', 'media/' + thumb_path])
+            q.videothumb = thumb_path
             q.save()
 
         form = UploadFileForm(request.POST, request.FILES)

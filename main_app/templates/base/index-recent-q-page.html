@@ -24,7 +24,37 @@
 			</h2>
 
 			{% if question.videofile %}
-				<video style="border-radius: 10px;" src="{{ question.videofile.url }}" width="300" height="150" poster="teste.jpg" controls> </video>
+				<div class="index-qvid-btn" onclick="load_vid(this, '{{ question.videofile }}')">
+					<div class="index-qvid">
+						{% if question.videothumb %}
+                        <div style="background: url('{{ question.videothumb.url }}');" class="index-qimg qvid-thumb-container">
+                            <img class="qvid-thumb" src="{{ question.videothumb.url }}">
+                        </div>
+						
+						{% else %}
+						<img class="index-qimg" src="/static/images/default-thumb.jpg">
+						{% endif %}
+						<div class="qvid-container"></div>
+						{% comment %}
+						<video class="qvid-file" style="max-height: 500px; width: 100%; visibility: hidden;" src="{{ question.videofile.url }}"muted> </video>
+						{% endcomment %}
+						<div class="qvid-controls" style="display: flex; background-color: black; height: 40px; font-size: 22px; color: white;">
+							<div>
+								<a class="qvplay"><ion-icon name="play-outline"></ion-icon></a>
+								<a class="qvpause hidden"><ion-icon name="pause-outline"></ion-icon></a>
+							</div>
+							<div class="qvid-bar" style="flex-grow: 1; background-color: whitesmoke; height: 0.8vh; margin: auto 15px;">
+								<div class="qvid-prog" style="height: 100%; background: linear-gradient(to left, #f16fa1, #9056f1)"></div>
+							</div>
+							<div>
+								<a class="qvmt"><ion-icon name="volume-mute-outline"></ion-icon></a>
+								<a class="qvunmt hidden"><ion-icon name="volume-high-outline"></ion-icon></a>
+								<a class="qvexpand"><ion-icon name="expand-outline"></ion-icon></a>
+							</div>
+						</div>
+					</div>
+				</div>
+				<br>
 			{% endif %}
 
 			{% if question.description %}
@@ -34,9 +64,8 @@
 			{% endif %}
 			
 			{% if question.image %}
-			<a href="/question/{{ question.id }}"> 
 				<div class="index-qimg-container" style="padding-bottom: 9px">
-							<button class="index-qimg-btn" onclick="image_toggle(this);">
+						<button class="index-qimg-btn" onclick="image_toggle(this);">
 						<div class="overflow-guide">
 							<div class="separator-100"></div>
 							<ion-icon name="chevron-down-outline"></ion-icon>
@@ -46,7 +75,6 @@
 						</div>
 					</button>
 				</div>
-			</a>
 			{% endif %}
 	   
             <small class="text-muted qinfo">

@@ -399,3 +399,82 @@ function star_question(el, qid) {
 			}
 		});
 }
+
+function prepare_video(el) {
+	var vid = el.getElementsByClassName('qvid-file')[0];
+	var prog = el.getElementsByClassName('qvid-prog')[0];
+	var play = el.getElementsByClassName('qvplay')[0];
+	var pause = el.getElementsByClassName('qvpause')[0];
+	var mt = el.getElementsByClassName('qvmt')[0];
+	var unmt = el.getElementsByClassName('qvunmt')[0];
+	var expand = el.getElementsByClassName('qvexpand')[0];
+	
+	var fullscreen = vid.webkitRequestFullscreen || vid.mozRequestFullScreen || vid.msRequestFullscreen;
+	
+	function toggleplay() {
+		if (vid.paused) {
+			vid.play();
+			play['classList'].add('hidden');	
+			pause['classList'].remove('hidden');
+		} else {
+			vid.pause();
+			play['classList'].remove('hidden');
+			pause['classList'].add('hidden');
+		}
+	}
+	
+	play.onclick = toggleplay;
+	pause.onclick = toggleplay;
+	vid.onclick = toggleplay;
+	
+	mt.onclick = function() {
+		vid.muted = false;
+		mt['classList'].add('hidden');	
+		unmt['classList'].remove('hidden');	
+	};
+	unmt.onclick = function() {
+		vid.muted = true;
+		mt['classList'].remove('hidden');	
+		unmt['classList'].add('hidden');	
+	};
+	
+	expand.onclick = function() {
+		fullscreen.call(vid);
+	};
+	
+	vid.addEventListener('timeupdate', function() {
+		var vidprog = vid.currentTime / vid.duration;
+		prog.style.width = vidprog * 100 + '%';
+	});
+}
+
+function prepare_videos() {
+	vid_els = document.getElementsByClassName('index-qvid');
+	for (var i = 0; i < vid_els.length; i++) {
+		console.log(vid_els[i]);
+		var el = vid_els[i];
+		prepare_video(el);
+	}
+}
+
+function load_vid(el, vid_url) {
+	var vid_container = el.getElementsByClassName('qvid-container')[0];
+	var vid_el = document.createElement('video');
+	vid_el['classList'].add('qvid-file');
+	vid_el.src = 'media/' + vid_url;
+	vid_el.muted = true;
+	vid_container.appendChild(vid_el);
+	//vid_container.innerHTML = '<video class="qvid-file" style="max-height: 500px; width: 100%;" src="' + vid_url + '"muted></video>'
+	el.onclick = function() { };
+	var vid_thumb = el.getElementsByClassName('index-qimg')[0];
+	vid_thumb.remove();
+	
+	vid_el.addEventListener('loadeddata', (e) => {
+		if(vid_el.readyState >= 3){
+			prepare_video(el);
+			vid_el.play();
+		}
+	});
+	
+
+}
