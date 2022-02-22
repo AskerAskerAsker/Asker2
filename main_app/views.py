@@ -7,7 +7,7 @@ from django.contrib.auth import authenticate, login, logout as django_logout
 from django.contrib.auth.models import User
 from django.contrib.humanize.templatetags.humanize import naturalday, naturaltime
 from django.core.cache import cache
-from main_app.models import UserProfile, Question, Response, Comment, Notification, Poll, PollChoice, PollVote, Ban, Report, ConfirmationCode, ModActivity, Chat, ChatMessage
+from main_app.models import UserProfile, Question, Response, Comment, Notification, Poll, PollChoice, PollVote, Ban, Report, ConfirmationCode, ModActivity, Chat, ChatMessage, UserIP
 from main_app.templatetags.main_app_extras import fix_naturaltime, formatar_descricao, get_total_answers, chat_counterpart
 from main_app.forms import UploadFileForm
 from django_project import general_rules
@@ -21,6 +21,7 @@ import html
 import ast
 import io
 import subprocess
+import ipinfo
 from PIL import Image, ImageFile, UnidentifiedImageError, ImageSequence
 
 
@@ -83,24 +84,43 @@ def get_client_ip(request):
         ip = request.META.get('REMOTE_ADDR')
     return ip
 
-
 def calculate_popular_questions():
     last_id = Question.objects.all().last().id
     id_range = (last_id - 100, last_id)
     popular_questions = Question.objects.filter(id__range=id_range).order_by('-total_responses')[:40]
     return popular_questions
 
+def register_ip(ip_addr):
+    h = ipinfo.getHandler(secret.IPINFO_TOKEN)
+    details = h.getDetails(ip_addr)
+    UserIP.objects.create(ip=ip_addr, type=details.country)
+	
+def toggle_ip_check(request):
+    if not request.user.is_superuser:
+        if not 'pap' in user_permissions:
+            return HttpResponse('OK')
 
-'''
- Essa função salva uma resposta. Sempre quando um usuário
-envia uma resposta para uma pergunta, a resposta passa por aqui
-para ser salva (no banco de dados).
-'''
+    general_rules.CHECK_IP_LOCATION = not general_rules.CHECK_IP_LOCATION
+    return HttpResponse(str(general_rules.CHECK_IP_LOCATION), content_type='text/plain')
+    
+def validate_ip(request):
+    uip_obj = UserIP.objects.get(ip=get_client_ip(request))
+    print(uip_obj, uip_obj.ip, uip_obj.type)
+    if not uip_obj:
+        register_ip(get_client_ip(request))
+        uip_obj = UserIP.objects.get(ip=get_client_ip(request))
+    if uip_obj.type not in general_rules.ALLOWED_IP_TYPES:
+        print('Not allowed')
+        return False
+    return True
+	
 def save_answer(request):
-
     client_ip = get_client_ip(request)
     if Ban.objects.filter(ip=client_ip).exists():
         return HttpResponse('Você não pode responder perguntas.', content_type='text/plain')
+    elif general_rules.CHECK_IP_LOCATION:
+        if not validate_ip(request):
+            return HttpResponse('Você não pode responder perguntas.', content_type='text/plain')
 
     question = Question.objects.get(id=request.POST.get('question_id'))
 
@@ -501,11 +521,14 @@ def profile(request, username):
 def ask(request):
 
     if request.user.is_anonymous:
-        return redirect('/question/%d' % Question.objects.all().last().id)
+        return redirect('/news')
 
     client_ip = get_client_ip(request)
     if Ban.objects.filter(ip=client_ip).exists():
-        return redirect('/question/%d' % Question.objects.all().last().id)
+        return redirect('/news')
+    elif general_rules.CHECK_IP_LOCATION:
+        if not validate_ip(request):
+            return redirect('/news')
 
     '''
     Controle de spam
@@ -618,18 +641,18 @@ def notification(request):
 
 
 def comment(request):
-
     if not request.user.is_authenticated:
         return None
 
     client_ip = get_client_ip(request)
     if Ban.objects.filter(ip=client_ip).exists():
-        return HttpResponse('Você não pode comentar.', content_type='text/plain')
+        return HttpResponse('<p>Você não pode comentar.</p>', content_type='text/plain')
+    elif general_rules.CHECK_IP_LOCATION:
+        if not validate_ip(request):
+            return HttpResponse('<p>Você não pode comentar.</p>', content_type='text/plain')
     
-    print('Músiquinha')
     up = UserProfile.objects.get(user=request.user)
     if Comment.objects.filter(creator=up.user).exists():
-        print('Música')
         if (timezone.now() - Comment.objects.filter(creator=up.user).latest('id').pub_date).seconds < 2:
             comment_creator_template = '''
                     <li class="list-group-item c no-horiz-padding">
@@ -691,7 +714,6 @@ def rank(request):
 
 
 def edit_response(request):
-
     response = Response.objects.get(creator=UserProfile.objects.get(user=request.user), id=request.POST.get('response_id'))
     response.text = request.POST.get('text')
     response.save()
@@ -737,7 +759,6 @@ def delete_comment(request):
 
 
 def edit_profile(request, username):
-
     from urllib.parse import unquote
     username = unquote(username)
 
@@ -924,7 +945,6 @@ def follow_user(request, username):
     return HttpResponse('Added', content_type='text/plain')
 
 def follow_question(request, question_id):
-
     q = Question.objects.get(id=question_id)
     u_p = UserProfile.objects.get(user=request.user)
     if u_p == q.creator:
@@ -956,7 +976,6 @@ def is_a_valid_user(username, email, password):
 
     return True
 
-
 ''' A função abaixo faz a validação de um novo comentário. '''
 def is_a_valid_comment(text):
     if len(text) > 300:
@@ -964,7 +983,6 @@ def is_a_valid_comment(text):
     return True
 
 def choose_best_answer(request):
-
     answer_id = request.GET.get('answer_id')
     r = Response.objects.get(id=answer_id)
     q = r.question
@@ -993,7 +1011,6 @@ def choose_best_answer(request):
 
     return HttpResponse('OK', content_type='text/plain')
 
-
 def delete_account(request):
     if not request.user.is_authenticated:
         return HttpResponse('Proibido.', content_type='text/plain')
@@ -1007,7 +1024,6 @@ def delete_account(request):
 
     return render(request, 'delete-account.html')
 
-
 def rules(request):
     context = {}
 
@@ -1017,10 +1033,8 @@ def rules(request):
 
     return render(request, 'rules.html', context)
 
-
 def activity(request):
     return redirect('/user/' + request.user.username)
-
 
 def vote_on_poll(request):
     if request.method != 'POST':
@@ -1107,7 +1121,6 @@ def get_index_feed_page(request):
     return render(request, 'base/index-feed-page.html', context)
     
 def more_popular_questions(request):
-
     page = request.GET.get('page')
 
     questions = cache.get('p_questions')
@@ -1159,7 +1172,6 @@ def more_popular_questions(request):
 
     return JsonResponse(para_retornar, safe=False)
 
-
 def more_questions_old(request):
     #original version - for json
 
@@ -1202,7 +1214,6 @@ def more_questions_old(request):
             )
 
     return JsonResponse(para_retornar, safe=False)
-
 
 def more_questions(request):
     # Para a página inicial
@@ -1295,7 +1306,6 @@ def get_more_questions(request):
 
     return JsonResponse(json)
 
-
 def get_more_responses(request):
     page = request.GET.get('r_page', 2)
     user_id = request.GET.get('user_id')
@@ -1327,8 +1337,14 @@ def get_more_responses(request):
 
     return JsonResponse(json)
 
-
 def report(request):
+    client_ip = get_client_ip(request)
+    if Ban.objects.filter(ip=client_ip).exists():
+        return redirect('/news')
+    elif general_rules.CHECK_IP_LOCATION:
+        if not validate_ip(request):
+            return redirect('/news')
+            
     type = request.GET.get('type')
     obj_id = request.GET.get('obj_id')
     reporter = request.user
@@ -1347,8 +1363,14 @@ def report(request):
     
     return HttpResponse('OK')
 
-
 def report_user(request):
+    client_ip = get_client_ip(request)
+    if Ban.objects.filter(ip=client_ip).exists():
+        return redirect('/news')
+    elif general_rules.CHECK_IP_LOCATION:
+        if not validate_ip(request):
+            return redirect('/news')
+            
     type = 'u'
     obj_id = User.objects.get(username=request.POST.get('username')).id
     text = request.POST.get('text')
@@ -1359,11 +1381,8 @@ def report_user(request):
 
     return HttpResponse('OK')
 
-
 def manage_reports(request):
-
     user_profile = UserProfile.objects.get(user=request.user)
-
     user_permissions = ast.literal_eval(user_profile.permissions)
 
     if not request.user.is_superuser:
@@ -1396,12 +1415,10 @@ def delete_report_and_obj(request):
     
     return HttpResponse('OK', content_type='text/plain')
 
-
 def delete_report(request):
     report = Report.objects.get(obj_id=request.GET.get('obj_id'))
     report.delete()
     return HttpResponse('OK', content_type='text/plain')
-
 
 def confirm_account(request):
     code = request.GET.get('code')
@@ -1483,6 +1500,13 @@ def open_chat(request):
     context = dict()
     uname = request.GET.get('u')
     target_up = UserProfile.objects.get(user=User.objects.get(username=uname))
+        
+    client_ip = get_client_ip(request)
+    if Ban.objects.filter(ip=client_ip).exists():
+        return redirect('/user/' + target_up.user.username)
+    elif general_rules.CHECK_IP_LOCATION:
+        if not validate_ip(request):
+            return redirect('/user/' + target_up.user.username)
     
     if request.user.is_authenticated:
         up = UserProfile.objects.get(user=request.user)
@@ -1507,6 +1531,13 @@ def open_chat(request):
     return redirect('/chat?c=' + str(c.id))
 
 def chats(request):
+    client_ip = get_client_ip(request)
+    if Ban.objects.filter(ip=client_ip).exists():
+        return redirect('/user/' + request.user.username)
+    elif general_rules.CHECK_IP_LOCATION:
+        if not validate_ip(request):
+            return redirect('/user/' + request.user.username)
+            
     context = dict()
     if request.user.is_authenticated:
         up = UserProfile.objects.get(user=request.user)
@@ -1520,6 +1551,13 @@ def chats(request):
     return render(request, 'chats.html', context)
 
 def chat(request):
+    client_ip = get_client_ip(request)
+    if Ban.objects.filter(ip=client_ip).exists():
+        return redirect('/news')
+    elif general_rules.CHECK_IP_LOCATION:
+        if not validate_ip(request):
+            return redirect('/news')
+
     context = dict()
     chat_id = request.GET.get('c', -1)
     try:
@@ -1728,11 +1766,8 @@ def star(request):
 def promo(request):
     return render(request, 'promo.html')
 
-
 def novadx(request):
     return render(request, 'novadx.html')
 
-
 def add(request):
     return render(request, 'add.html')
-
