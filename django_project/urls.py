@@ -82,6 +82,7 @@ urlpatterns = [
   path('markviewed', views.markviewed, name='markviewed'),
   path('msgrm', views.remove_msg, name='msgrm'),
   path('open_chat', views.open_chat, name='open_chat'),
+  path('toggle_ipch', views.toggle_ip_check, name='toggle_ipch'),
   path('admin/', admin.site.urls),
   path('promo', views.promo, name='promo'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

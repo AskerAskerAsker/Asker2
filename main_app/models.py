@@ -309,3 +309,6 @@ class ChatMessage(models.Model):
     image = models.ImageField(null=True, blank=True)
     hide = models.BooleanField(default=False)
     
+class UserIP(models.Model):
+    ip = models.TextField(null=False)
+    type = models.TextField(null=False)
