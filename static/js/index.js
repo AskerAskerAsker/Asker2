@@ -402,6 +402,7 @@ function star_question(el, qid) {
 
 function prepare_video(el) {
 	var vid = el.getElementsByClassName('qvid-file')[0];
+	var bar = el.getElementsByClassName('qvid-bar')[0];
 	var prog = el.getElementsByClassName('qvid-prog')[0];
 	var play = el.getElementsByClassName('qvplay')[0];
 	var pause = el.getElementsByClassName('qvpause')[0];
@@ -442,19 +443,18 @@ function prepare_video(el) {
 		fullscreen.call(vid);
 	};
 	
+	bar.addEventListener('click', function(e) {
+		var x = e.pageX;
+		var min = this.getBoundingClientRect().left;
+		var tot = this.offsetWidth;
+		var pct = (x-min)/tot;
+		vid.currentTime = pct * vid.duration;
+	});
+	
 	vid.addEventListener('timeupdate', function() {
 		var vidprog = vid.currentTime / vid.duration;
 		prog.style.width = vidprog * 100 + '%';
 	});
-}
-
-function prepare_videos() {
-	vid_els = document.getElementsByClassName('index-qvid');
-	for (var i = 0; i < vid_els.length; i++) {
-		console.log(vid_els[i]);
-		var el = vid_els[i];
-		prepare_video(el);
-	}
 }
 
 function load_vid(el, vid_url) {
@@ -464,7 +464,7 @@ function load_vid(el, vid_url) {
 	vid_el.src = 'media/' + vid_url;
 	vid_el.muted = true;
 	vid_container.appendChild(vid_el);
-	//vid_container.innerHTML = '<video class="qvid-file" style="max-height: 500px; width: 100%;" src="' + vid_url + '"muted></video>'
+	
 	el.onclick = function() { };
 	var vid_thumb = el.getElementsByClassName('index-qimg')[0];
 	vid_thumb.remove();
@@ -475,6 +475,4 @@ function load_vid(el, vid_url) {
 			vid_el.play();
 		}
 	});
-	
-
 }

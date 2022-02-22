@@ -21,7 +21,12 @@
 	><div class="lmsg"> <!-- hmiJEd3j -->
 	{% endif %}
 		<div class="txt bg-main" id="m-{{ message.id }}">
-			<p> <b>{{ message.creator }}</b>
+        <p> 
+        <a href="https://asker.fun/user/{{ message.creator }}" style="text-decoration: none">
+        <b>  
+        {{ message.creator }}
+        </b>
+        </a>
 			    <span title='{{ message.pub_date }}'class="small-text left-spaced">{% fix_naturaltime message.pub_date|naturaltime %}</span>
 			</p>
 			{% if not message.hide %}

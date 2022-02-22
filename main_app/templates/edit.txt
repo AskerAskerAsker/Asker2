@@ -5,38 +5,25 @@ https://codepen.io/suez/full/eNwwGp
 
  https://codepen.io/tgaychey/pen/PROMVy
   
-  
-Docinha@hotmail.com
-dr949336@gmail.com
-geydson0.com@gmail.com
-
-lilithh44@hotmail.com
-gupizzaa@gmail.com
-
-moraes6622@gmail.com
 
 
-grafiodito@gmail.com
+---
+corrigir lentidao na search.html
 
-mariw86281@xtrempro.com
-
-
-caio-alves2001@hotmail.com
-
-
-
-aonsa01@yahoo.com
+---
+aparecer notificações para o autor quando alguem curtir a sua pergunta com link para perfil exemplo:
+usuario12 curtiu a sua pergunta "qual sua cor preferida?"
 
 
-
-james.samers25@gmail.com
-
-
-
-Manoel7883@gmail.com
+--
+colocar like nas perguntas populares
 
 
-tegoha8124@ineedsa.com
+--
+postar imagens apenas com 200 pontos ou mais
 
 
-kevenalves20@hotmail.com
+--
+enviar imagens no chat apenas com 800 pontos ou mais
+
+
