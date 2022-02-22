@@ -13,6 +13,7 @@ from main_app.forms import UploadFileForm
 from django_project import general_rules
 from urllib.parse import unquote
 from django.contrib.postgres.search import SearchVector, SearchRank, SearchQuery
+import secret
 import random
 import json
 import time
@@ -96,21 +97,24 @@ def register_ip(ip_addr):
     UserIP.objects.create(ip=ip_addr, type=details.country)
 	
 def toggle_ip_check(request):
+    user_p = UserProfile.objects.get(user=request.user)
+    permissions = ast.literal_eval(user_p.permissions)
     if not request.user.is_superuser:
-        if not 'pap' in user_permissions:
+        if not 'pap' in permissions:
             return HttpResponse('OK')
 
     general_rules.CHECK_IP_LOCATION = not general_rules.CHECK_IP_LOCATION
     return HttpResponse(str(general_rules.CHECK_IP_LOCATION), content_type='text/plain')
     
 def validate_ip(request):
-    uip_obj = UserIP.objects.get(ip=get_client_ip(request))
-    print(uip_obj, uip_obj.ip, uip_obj.type)
+    try:
+        uip_obj = UserIP.objects.get(ip=get_client_ip(request))
+    except:
+        uip_obj = None
     if not uip_obj:
         register_ip(get_client_ip(request))
         uip_obj = UserIP.objects.get(ip=get_client_ip(request))
     if uip_obj.type not in general_rules.ALLOWED_IP_TYPES:
-        print('Not allowed')
         return False
     return True
 	
