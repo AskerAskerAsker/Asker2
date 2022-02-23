@@ -7,7 +7,7 @@ from django.contrib.auth import authenticate, login, logout as django_logout
 from django.contrib.auth.models import User
 from django.contrib.humanize.templatetags.humanize import naturalday, naturaltime
 from django.core.cache import cache
-from main_app.models import UserProfile, Question, Response, Comment, Notification, Poll, PollChoice, PollVote, Ban, Report, ConfirmationCode, ModActivity, Chat, ChatMessage, UserIP
+from main_app.models import UserProfile, Question, Response, Comment, Notification, Poll, PollChoice, PollVote, Ban, Report, ConfirmationCode, ModActivity, Chat, ChatMessage, UserIP, Setting
 from main_app.templatetags.main_app_extras import fix_naturaltime, formatar_descricao, get_total_answers, chat_counterpart
 from main_app.forms import UploadFileForm
 from django_project import general_rules
@@ -102,9 +102,22 @@ def toggle_ip_check(request):
     if not request.user.is_superuser:
         if not 'pap' in permissions:
             return HttpResponse('OK')
-
-    general_rules.CHECK_IP_LOCATION = not general_rules.CHECK_IP_LOCATION
-    return HttpResponse(str(general_rules.CHECK_IP_LOCATION), content_type='text/plain')
+            
+    try:
+        check_ip = Setting.objects.get(setting='check_ip_location')
+    except Setting.DoesNotExist:
+        check_ip = Setting.objects.create(setting='check_ip_location', value=1)
+    check_ip.value = 1 - check_ip.value
+    check_ip.save()
+    
+    return HttpResponse(str(check_ip.value == True), content_type='text/plain')
+    
+def should_ip_check():    
+    try:
+        check_ip = Setting.objects.get(setting='check_ip_location').value
+        return check_ip == True
+    except Setting.DoesNotExist:
+        return False
     
 def validate_ip(request):
     try:
@@ -122,7 +135,7 @@ def save_answer(request):
     client_ip = get_client_ip(request)
     if Ban.objects.filter(ip=client_ip).exists():
         return HttpResponse('Você não pode responder perguntas.', content_type='text/plain')
-    elif general_rules.CHECK_IP_LOCATION:
+    elif should_ip_check():
         if not validate_ip(request):
             return HttpResponse('Você não pode responder perguntas.', content_type='text/plain')
 
@@ -207,9 +220,6 @@ def index(request):
 
 
 def question(request, question_id):
-
-    user_ip = get_client_ip(request)
-
     q = Question.objects.filter(id=question_id)
     if q.exists():
         q = q.first()
@@ -222,34 +232,15 @@ def question(request, question_id):
                                  'redirect': return_to}
         return render(request, 'error.html', context)
 
-    responses = Response.objects.filter(question=q).order_by('-total_likes')
+    responses = Response.objects.filter(question=q).order_by('-total_likes', 'id')
 
-    context = {'question': q,
-                                             'responses': responses}
+    context = {'question': q, 'responses': responses}
 
     if not request.user.is_anonymous:
         user_p = UserProfile.objects.get(user=request.user)
         context['user_permissions'] = ast.literal_eval(user_p.permissions)
         context['user_p'] = user_p
         context['answered'] = False
-
-        # verifica se já é possível mostrar o anúncio de notificação.
-        infos = json.loads(user_p.infos)
-
-        if 'ultima_visualizacao_de_anuncio_notificacao' in infos.keys():
-            if time.time() - infos['ultima_visualizacao_de_anuncio_notificacao'] > 345600: # só mostra o anúncio em forma de notificação de 4 em 4 dias.
-                context['PODE_MOSTRAR_ANUNCIO_NOTIFICACAO'] = True
-                infos['ultima_visualizacao_de_anuncio_notificacao'] = time.time()
-                infos['ultima_visualizacao_de_anuncio_notificacao_contagem'] += 1
-        else:
-            context['PODE_MOSTRAR_ANUNCIO_NOTIFICACAO'] = True
-            infos['ultima_visualizacao_de_anuncio_notificacao'] = time.time()
-            infos['ultima_visualizacao_de_anuncio_notificacao_contagem'] = 1
-
-        # salva as informações (UserProfile.infos) atualizadas do usuário.
-        user_p.infos = json.dumps(infos)
-        user_p.save()
-
 
         for response in responses:
             if response.id == request.user.id:
@@ -261,14 +252,10 @@ def question(request, question_id):
         context['poll_choices'] = PollChoice.objects.filter(poll=context['poll'])
         context['poll_votes'] = PollVote.objects.filter(poll=context['poll'])
 
-    if request.GET.get('nabift') == 'y':
-        context['NO_SHOW_ADS'] = True
-
     return render(request, 'question.html', context)
 
 
 def like(request):
-
     answer_id = request.GET.get('answer_id')
 
     r = Response.objects.get(id=answer_id)
@@ -341,7 +328,6 @@ def delete_response(request):
 
 
 def signin(request):
-
     r = request.GET.get('redirect')
 
     if r == None:
@@ -369,7 +355,6 @@ def signin(request):
 
 
 def signup(request):
-
     '''
     Bloqueia criação de conta pelo navegador TOR.
     '''
@@ -476,7 +461,6 @@ def user_does_not_exists(request):
 
 
 def profile(request, username):
-
     username = unquote(username)
 
     user = User.objects.get(username=username)
@@ -530,7 +514,7 @@ def ask(request):
     client_ip = get_client_ip(request)
     if Ban.objects.filter(ip=client_ip).exists():
         return redirect('/news')
-    elif general_rules.CHECK_IP_LOCATION:
+    elif should_ip_check():
         if not validate_ip(request):
             return redirect('/news')
 
@@ -651,7 +635,7 @@ def comment(request):
     client_ip = get_client_ip(request)
     if Ban.objects.filter(ip=client_ip).exists():
         return HttpResponse('<p>Você não pode comentar.</p>', content_type='text/plain')
-    elif general_rules.CHECK_IP_LOCATION:
+    elif should_ip_check():
         if not validate_ip(request):
             return HttpResponse('<p>Você não pode comentar.</p>', content_type='text/plain')
     
@@ -1345,7 +1329,7 @@ def report(request):
     client_ip = get_client_ip(request)
     if Ban.objects.filter(ip=client_ip).exists():
         return redirect('/news')
-    elif general_rules.CHECK_IP_LOCATION:
+    elif should_ip_check():
         if not validate_ip(request):
             return redirect('/news')
             
@@ -1371,7 +1355,7 @@ def report_user(request):
     client_ip = get_client_ip(request)
     if Ban.objects.filter(ip=client_ip).exists():
         return redirect('/news')
-    elif general_rules.CHECK_IP_LOCATION:
+    elif should_ip_check():
         if not validate_ip(request):
             return redirect('/news')
             
@@ -1508,7 +1492,7 @@ def open_chat(request):
     client_ip = get_client_ip(request)
     if Ban.objects.filter(ip=client_ip).exists():
         return redirect('/user/' + target_up.user.username)
-    elif general_rules.CHECK_IP_LOCATION:
+    elif should_ip_check():
         if not validate_ip(request):
             return redirect('/user/' + target_up.user.username)
     
@@ -1538,7 +1522,7 @@ def chats(request):
     client_ip = get_client_ip(request)
     if Ban.objects.filter(ip=client_ip).exists():
         return redirect('/user/' + request.user.username)
-    elif general_rules.CHECK_IP_LOCATION:
+    elif should_ip_check():
         if not validate_ip(request):
             return redirect('/user/' + request.user.username)
             
@@ -1558,7 +1542,7 @@ def chat(request):
     client_ip = get_client_ip(request)
     if Ban.objects.filter(ip=client_ip).exists():
         return redirect('/news')
-    elif general_rules.CHECK_IP_LOCATION:
+    elif should_ip_check():
         if not validate_ip(request):
             return redirect('/news')
 
@@ -1611,8 +1595,7 @@ def sendmsg(request):
         try:
             if (timezone.now() - ChatMessage.objects.filter(creator=up.user).latest('id').pub_date).seconds < 1:
                 return HttpResponse('Proibido', content_type='text/plain')
-        except:
-            # excecao para 'DoesNotExist' - caso nao haja nenhuma mensagem no chat
+        except ChatMessage.DoesNotExist:
             pass
         if chat_counterpart(up, c).blocked_users.filter(userprofile=up).exists():
             return HttpResponse('Proibido', content_type='text/plain')
@@ -1626,18 +1609,21 @@ def sendmsg(request):
     
     message.text = text
     if not text:
-        message.text = 'Foto'
-        form = UploadFileForm(request.POST, request.FILES)
-        if form.is_valid():
-            f = request.FILES['file']
+        if up.total_points < 500:
+            message.text = 'Você precisa de pelo menos 500 pontos para enviar fotos.'
+        else:
+            message.text = 'Foto'
+            form = UploadFileForm(request.POST, request.FILES)
+            if form.is_valid():
+                f = request.FILES['file']
 
-            chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-_)(0123456789'
-            file_name = ''.join(random.choice(chars) for i in range(32))
+                chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-_)(0123456789'
+                file_name = ''.join(random.choice(chars) for i in range(32))
 
-            success = save_img_file(f, 'media/chat_photos/' + file_name, (1200, 1200))
-            if success:
-                message.image = success
-        
+                success = save_img_file(f, 'media/chat_photos/' + file_name, (1200, 1200))
+                if success:
+                    message.image = success
+            
     message.save()
     
     c.last_activity = timezone.now()

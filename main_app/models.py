@@ -93,9 +93,6 @@ class UserProfile(models.Model):
                                             related_name='silenced_by',
                                             blank=True)
 
-    # informações diversas:
-    infos = models.TextField(default='{}') # <- JSON aqui.
-    
     new_notifications = models.IntegerField(default=0, null=False, blank=False)
 
     followable = models.BooleanField(default=True)
@@ -134,7 +131,6 @@ class Question(models.Model):
     total_responses = models.IntegerField(default=0)
     total_views = models.IntegerField(null=True, default=0)
     best_answer = models.IntegerField(blank=True, null=True) # ID da melhor resposta.
-    viewers = models.TextField(null=False, blank=True, default='set()')  # TODO: entry nao usada!
     stars = models.ManyToManyField(User)
     total_stars = models.IntegerField(default=0)
 
@@ -256,7 +252,6 @@ class Notification(models.Model):
 class Ban(models.Model): # todos os IP's banidos:
     ip = models.TextField(null=False, primary_key=True)
 
-
 class Poll(models.Model):
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
     is_anonymous = models.BooleanField(default=True)
@@ -312,3 +307,11 @@ class ChatMessage(models.Model):
 class UserIP(models.Model):
     ip = models.TextField(null=False)
     type = models.TextField(null=False)
+    
+class Setting(models.Model):
+    '''
+    Para configurações programáticas,
+    que precisam ser alteradas no runtime
+    '''
+    setting = models.TextField(max_length=20, null=False, unique=True)
+    value = models.IntegerField(null=False)
