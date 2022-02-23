@@ -543,7 +543,7 @@ def ask(request):
         if len(text) > 181 or len(description) > 5000 or text[-1] != '?':
             return redirect('/news')
 
-        q = Question.objects.create(creator=UserProfile.objects.get(user=request.user), text=text, viewers='set()', description=description.replace('\\', '\\\\'))
+        q = Question.objects.create(creator=UserProfile.objects.get(user=request.user), text=text, description=description.replace('\\', '\\\\'))
 
         video = None
         try:
