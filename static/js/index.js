@@ -527,11 +527,16 @@ function isVisible(element) {
 }
 
 let load_more = document.getElementById('load-more-recent-btn');
+let load_more_popular_btn = document.getElementById('load-more-popular-btn');
 let players = document.getElementsByClassName('index-qvid-btn');
 window.onscroll = function () {
     
     if (element_of_load_more_is_visible(load_more)) {
         load_more_recent();
+    }
+    
+    if (element_of_load_more_is_visible(load_more_popular_btn)) {
+        load_more_popular(load_more_popular_btn, load_more_popular_btn.nextElementSibling, popular_page);
     }
     
     
