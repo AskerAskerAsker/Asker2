@@ -489,9 +489,9 @@ function load_vid(el, vid_url) {
  */
 
 /* Função que verifica se o elemento está visível para o usuário. */
-/*
+
 //Visível se parte do elemento é visível.
-function isVisible(elem) {
+function element_of_load_more_is_visible(elem) {
     if (!(elem instanceof Element)) throw Error('DomUtil: elem is not an element.');
     const style = getComputedStyle(elem);
     if (style.display === 'none') return false;
@@ -514,7 +514,7 @@ function isVisible(elem) {
         if (pointContainer === elem) return true;
     } while (pointContainer = pointContainer.parentNode);
     return false;
-}*/
+}
 // visível se todo o elemento é visível
 function isVisible(element) {
     const rect = element.getBoundingClientRect();
@@ -526,8 +526,15 @@ function isVisible(element) {
     );
 }
 
+let load_more = document.getElementById('load-more-recent-btn');
 let players = document.getElementsByClassName('index-qvid-btn');
 window.onscroll = function () {
+    
+    if (element_of_load_more_is_visible(load_more)) {
+        load_more_recent();
+    }
+    
+    
     for (let i in players) {
         player = players[i];
         video = player.getElementsByClassName('qvid-file')[0];
