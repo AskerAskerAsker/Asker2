@@ -366,8 +366,8 @@ font-weight: 800;
 		{% endif %}<br>
 		</main>
 
-<div id="report_form" style="display: none; position: fixed; z-index: 99999999999999999999999999999999999999; width: 100%; bottom: 2rem; z-index: 10;">
-  <div class="bg-faint-gradient" style="box-shadow: 0 10px 20px rgba(64, 64, 64, 0.15); position: relative; z-index: 99999999999999999999999999999999999999; border-radius: 5px; padding: 1rem; margin: 0 auto; width: 95%;">
+<div id="report_form" style="display: none; position: fixed; z-index: 999999999999999999999999999999999999999999999999999999999999999; width: 100%; bottom: 2rem; z-index: 10;">
+  <div class="bg-faint-gradient" style="box-shadow: 0 10px 20px rgba(64, 64, 64, 0.15); position: relative; z-index: 999999999999999999999999999999999999999999999999999999999999999; border-radius: 5px; padding: 1rem; margin: 0 auto; width: 95%;">
     <button style="float: right; border: none; background-color: transparent; color: white; font-size: 20px; margin-top: -3px;" onclick="this.parentElement.parentElement.style.display = 'none';">
         <ion-icon name="close-outline" role="img" class="md hydrated" aria-label="close outline"></ion-icon>
     </button>
@@ -375,10 +375,10 @@ font-weight: 800;
     <h5 style="font-weight: 900">Denuncie!</h5>
   <font size="2">Envie a sua denuncia para a <b>Asker</b>.</font>
   <br>
-    <form method="post" action="/report_user" style="padding-top: 10px; padding-bottom: 10px">
+    <form method="post" action="/report_user" style="padding-top: 10px; width: 100%; padding-bottom: 10px">
         {% csrf_token %}
         <input type="hidden" name="username" value="{{ target_user_p.user.username }}">
-        <textarea placeholder="Escreva o que está acontecendo..." name="text" style="background-color: white; border-radius: 20px; font-size: 13px; height: 80px"></textarea>
+        <textarea placeholder="Escreva o que está acontecendo..." name="text" style="border: none; background-color: white; border-radius: 20px; font-size: 13px; width: 200px; height: 80px"></textarea>
        <br>
     <input class="btn btn-primary" style="border-radius: 30px; font-size: 12px; font-weight: 800" type="submit" value="Denunciar Usuário">
     </form>
