@@ -63,7 +63,7 @@ function activate_img_btns() {
 function enviar_resposta_pergunta(form) {
 	form.style.opacity = 0.5;
 	form.submit_btn.disabled = true;
-	
+
 	$.ajax({
 		url: '/save_answer',
 		type: 'post',
@@ -71,13 +71,13 @@ function enviar_resposta_pergunta(form) {
 		complete: function(data) {
 			var response_counter = document.getElementById('response-counter-' + form.question_id.value);
 			response_counter.innerText = Number(response_counter.innerText) + 1;
-            
+
             if (response_counter.innerText == '1') {
                 document.getElementById('response-sentence-' + form.question_id.value).innerText = 'Resposta';
             } else {
                 document.getElementById('response-sentence-' + form.question_id.value).innerText = 'Respostas';
             }
-            
+
 			form.parentElement.innerHTML = data.responseText;
 		},
 	});
@@ -96,7 +96,7 @@ function renderizar_questoes_populares(popular_questions) {
     for (var index = 0; index < 20; ++index) {
     try { questoes_populares.innerHTML += '<li class="list-group-item bg-main questao" data-id="'+popular_questions[index].id+'">' +
 												'<div class="card-body" style="border: none; background: transparent">' +
-													'<div class="profile-picture-index"><div class="profile-pic-small" style="background:url(\'' + popular_questions[index].question_creator_avatar + '\');"></div> <span class="qcreator-small">' + popular_questions[index].creator + '</span></div>' + 
+													'<div class="profile-picture-index"><div class="profile-pic-small" style="background:url(\'' + popular_questions[index].question_creator_avatar + '\');"></div> <span class="qcreator-small">' + popular_questions[index].creator + '</span></div>' +
 													'<div class="flexbox" style="border: none; background: transparent">' +
 														'<h2 style="font-size: 16px" class="question-title fg-1">' +
 															'<a style="text-decoration: none; outline: none" class="q-title" href="/question/'+popular_questions[index].id+'">' +
@@ -107,8 +107,8 @@ function renderizar_questoes_populares(popular_questions) {
 													(popular_questions[index].description != '' ? '<p class="description">'+popular_questions[index].description+'</p>' : '') +
 									   '<small class="text-muted" style="color: #40E0D0">' +
 															(popular_questions[index].total_answers == 1 ? '<span style="color: #00CD66; font-weight: 800" id="response-counter-'+popular_questions[index].id+'">1</span> <span style="color: #00CD66; font-weight: 800" id="response-sentence-'+popular_questions[index].id+'">Resposta</span>' : '<span style="color: #00CD66; font-weight: 800" id="response-counter-'+popular_questions[index].id+'">'+popular_questions[index].total_answers+'</span> <span style="color: #00CD66" id="response-sentence-'+popular_questions[index].id+'">Respostas</span>') + ' | ' + popular_questions[index].pub_date +
-														'</small>' +                  
-											  
+														'</small>' +
+
 											'</li>'; } catch (e) {
 											}
     }
@@ -159,7 +159,7 @@ function load_more_recent() {
                     document.getElementById('novas_questoes').innerHTML += '<div class="end"><p>Fim! <i class="far fa-sad-cry" aria-hidden="true"></i></p></div>'
                 } else if (data.responseText.includes(success_str)) {
                     icon.style.display = 'none';
-                    button.style.display = 'block'; 
+                    button.style.display = 'block';
                     q_list = document.getElementById('lista_de_questoes_recentes');
                     q_list.innerHTML += data.responseText;
                 let descriptions = document.getElementsByClassName('description');
@@ -202,7 +202,7 @@ async function check_for_update() {
 
                 new_notifications = data.responseJSON['nn'];
                 new_questions = data.responseJSON['nq'];
-    
+
                 if (notif_badge) {
                     if (new_notifications > 0) {
                         notif_badge.innerHTML = new_notifications;
@@ -225,7 +225,7 @@ async function check_for_update() {
                 }
 
 			},
-	});    
+	});
 }
 UPD_INTERVAL = setInterval(check_for_update, 35000);
 
@@ -260,7 +260,7 @@ function update_recent() {
 }
 
 function load_more_popular(button, icon, page) {
-    
+
 	button.style.display = 'none';
 	icon.style.display = 'block';
 	$.ajax({
@@ -271,7 +271,7 @@ function load_more_popular(button, icon, page) {
 					page: page,
 			},
 			complete: function(data) {
-                
+
                 try {
                     if (data.responseJSON.empty == 'true') {
                         icon.style.display = 'none';
@@ -318,7 +318,7 @@ function load_more_feed() {
                     document.getElementById('feed').innerHTML += '<div class="end"><p>Fim! <i class="far fa-sad-cry" aria-hidden="true"></i><br>Você ainda pode responder às <a href="/news">perguntas recentes.</a></p></div>'
                 } else {
                     icon.style.display = 'none';
-                    button.style.display = 'block'; 
+                    button.style.display = 'block';
                     feedlist = document.getElementById('feed_list');
                     feedlist.innerHTML += data.responseText;
                     feed_sp += 1;
@@ -364,14 +364,16 @@ botao_seguindo.onclick = function () {
 }
 
 /* Desativa o botão de responder para quem não confirmou o e-mail. */
-if (!conta_ativa) {
-    var botoes_responder = document.getElementsByClassName('botao_responder');
-    for (var i = 0; i < botoes_responder.length; ++i) {
-        botoes_responder[i].onclick = function () {
-            alert('Confirme Sua Conta Pelo e-mail Enviado Para Responder Perguntas.');
-            return 0;
-        };
-    }
+if (typeof conta_ativa !== 'undefined') {
+	if (!conta_ativa) {
+	    var botoes_responder = document.getElementsByClassName('botao_responder');
+	    for (var i = 0; i < botoes_responder.length; ++i) {
+	        botoes_responder[i].onclick = function () {
+	            alert('Confirme Sua Conta Pelo e-mail Enviado Para Responder Perguntas.');
+	            return 0;
+	        };
+	    }
+	}
 }
 
 function star_question(el, qid) {
@@ -393,7 +395,7 @@ function star_question(el, qid) {
 						on['classList'].add('hidden');
 					} else {
 						off['classList'].add('hidden');
-						on['classList'].remove('hidden');					
+						on['classList'].remove('hidden');
 					}
 				}
 			}
@@ -409,13 +411,13 @@ function prepare_video(el) {
 	var mt = el.getElementsByClassName('qvmt')[0];
 	var unmt = el.getElementsByClassName('qvunmt')[0];
 	var expand = el.getElementsByClassName('qvexpand')[0];
-	
+
 	var fullscreen = vid.webkitRequestFullscreen || vid.mozRequestFullScreen || vid.msRequestFullscreen;
-	
+
 	function toggleplay() {
 		if (vid.paused) {
 			vid.play();
-			play['classList'].add('hidden');	
+			play['classList'].add('hidden');
 			pause['classList'].remove('hidden');
 		} else {
 			vid.pause();
@@ -423,26 +425,26 @@ function prepare_video(el) {
 			pause['classList'].add('hidden');
 		}
 	}
-	
+
 	play.onclick = toggleplay;
 	pause.onclick = toggleplay;
 	vid.onclick = toggleplay;
-	
+
 	mt.onclick = function() {
 		vid.muted = false;
-		mt['classList'].add('hidden');	
-		unmt['classList'].remove('hidden');	
+		mt['classList'].add('hidden');
+		unmt['classList'].remove('hidden');
 	};
 	unmt.onclick = function() {
 		vid.muted = true;
-		mt['classList'].remove('hidden');	
-		unmt['classList'].add('hidden');	
+		mt['classList'].remove('hidden');
+		unmt['classList'].add('hidden');
 	};
-	
+
 	expand.onclick = function() {
 		fullscreen.call(vid);
 	};
-	
+
 	bar.addEventListener('click', function(e) {
 		var x = e.pageX;
 		var min = this.getBoundingClientRect().left;
@@ -450,7 +452,7 @@ function prepare_video(el) {
 		var pct = (x-min)/tot;
 		vid.currentTime = pct * vid.duration;
 	});
-	
+
 	vid.addEventListener('timeupdate', function() {
 		var vidprog = vid.currentTime / vid.duration;
 		prog.style.width = vidprog * 100 + '%';
@@ -464,11 +466,11 @@ function load_vid(el, vid_url) {
 	vid_el.src = 'media/' + vid_url;
 	vid_el.muted = true;
 	vid_container.appendChild(vid_el);
-	
+
 	el.onclick = function() { };
 	var vid_thumb = el.getElementsByClassName('index-qimg')[0];
 	vid_thumb.remove();
-	
+
 	vid_el.addEventListener('loadeddata', (e) => {
 		if(vid_el.readyState >= 3){
 			prepare_video(el);
@@ -476,3 +478,71 @@ function load_vid(el, vid_url) {
 		}
 	});
 }
+
+
+/*
+ * Verifica se tem algum vídeo aparecendo na tela;
+ * Se estiver aparecendo:
+ *  reproduz o vídeo no mudo
+ * Se não:
+ *  Não faz nada.
+ */
+
+/* Função que verifica se o elemento está visível para o usuário. */
+/*
+//Visível se parte do elemento é visível.
+function isVisible(elem) {
+    if (!(elem instanceof Element)) throw Error('DomUtil: elem is not an element.');
+    const style = getComputedStyle(elem);
+    if (style.display === 'none') return false;
+    if (style.visibility !== 'visible') return false;
+    if (style.opacity < 0.1) return false;
+    if (elem.offsetWidth + elem.offsetHeight + elem.getBoundingClientRect().height +
+        elem.getBoundingClientRect().width === 0) {
+        return false;
+    }
+    const elemCenter   = {
+        x: elem.getBoundingClientRect().left + elem.offsetWidth / 2,
+        y: elem.getBoundingClientRect().top + elem.offsetHeight / 2
+    };
+    if (elemCenter.x < 0) return false;
+    if (elemCenter.x > (document.documentElement.clientWidth || window.innerWidth)) return false;
+    if (elemCenter.y < 0) return false;
+    if (elemCenter.y > (document.documentElement.clientHeight || window.innerHeight)) return false;
+    let pointContainer = document.elementFromPoint(elemCenter.x, elemCenter.y);
+    do {
+        if (pointContainer === elem) return true;
+    } while (pointContainer = pointContainer.parentNode);
+    return false;
+}*/
+// visível se todo o elemento é visível
+function isVisible(element) {
+    const rect = element.getBoundingClientRect();
+    return (
+        rect.top >= 0 &&
+        rect.left >= 0 &&
+        rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+        rect.right <= (window.innerWidth || document.documentElement.clientWidth)
+    );
+}
+
+let players = document.getElementsByClassName('index-qvid-btn');
+window.onscroll = function () {
+    for (let i in players) {
+        player = players[i];
+        video = player.getElementsByClassName('qvid-file')[0];
+
+        player.click();
+        video.pause();
+
+        if (isVisible(video)) {
+            video.play();
+            player.getElementsByClassName('qvplay')[0].classList.add('hidden');
+            player.getElementsByClassName('qvpause')[0].classList.remove('hidden');
+        } else {
+            video.pause();
+            player.getElementsByClassName('qvplay')[0].classList.remove('hidden');
+            player.getElementsByClassName('qvpause')[0].classList.add('hidden');
+        }
+    }
+};

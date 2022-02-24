@@ -1,14 +1,17 @@
 var darkbtn = document.getElementById('dark-mode');
 var org_title = document.title;
-darkbtn.addEventListener('click', function() {
-    if (getDarkCookie() == 'true') {
-        setDarkCookie(false);
-        document.getElementById('theme-css').href = '/static/css/' + 'light.css' + cssversion;
-    } else {
-        setDarkCookie(true);
-        document.getElementById('theme-css').href = '/static/css/' + 'dark.css' + cssversion;
-    }
-});
+
+if (darkbtn != null) {
+	darkbtn.addEventListener('click', function() {
+	    if (getDarkCookie() == 'true') {
+	        setDarkCookie(false);
+	        document.getElementById('theme-css').href = '/static/css/' + 'light.css' + cssversion;
+	    } else {
+	        setDarkCookie(true);
+	        document.getElementById('theme-css').href = '/static/css/' + 'dark.css' + cssversion;
+	    }
+	});
+}
 
 async function check_for_notifications() {
     try {
