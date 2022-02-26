@@ -626,6 +626,19 @@ main {
 /* General-end */
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
 @use postcss-mixins;
 @use postcss-nested;
 @use postcss-simple-vars;
@@ -651,10 +664,6 @@ $card-height-mobile: 12rem;
   font-family: "Open Sans";
 }
 
-body {
-  background-color: #555;
-}
-
 .content-wrapper {
   margin: 0 auto;
   max-width: 1200px;
@@ -676,7 +685,7 @@ body {
   border-radius: 0.5rem;
   flex: 1;
   min-width: 290px;
-  box-shadow: 0 0 1rem rgba(0, 0, 0, 0.5);
+  box-shadow: 0 0 1rem rgba(0, 0, 0, 0.9);
   -webkit-backface-visibility: hidden;
   -moz-backface-visibility: hidden;
   -webkit-transform: translate3d(0, 0, 0);
@@ -784,4 +793,3 @@ body {
     }
   }
 }
-
