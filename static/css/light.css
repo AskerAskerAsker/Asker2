@@ -27,7 +27,8 @@
     color: #212529;
 }
 .bg-main {
-	background-color: white !important;
+  background-color: white !important;
+  color: black;
 }
 .bg-outer {
   background-color: whitesmoke !important;
@@ -47,5 +48,8 @@
 .bg-faint-gradient {
     background: linear-gradient(#f16fa1, #9056f1);
     color: white !important; 
+}
+#notif-badge {
+  color: white !important;
 }
 /* General */

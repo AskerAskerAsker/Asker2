@@ -57,7 +57,6 @@ ol, ul {
 .menu {
   display: flex;
   flex-direction: row;
-  background: linear-gradient(#FF00FF, #4876FF);
   border-radius: 0px 0px 20px 20px;
   box-shadow: 0 10px 20px rgba(64, 64, 64, 0.15);
 }
