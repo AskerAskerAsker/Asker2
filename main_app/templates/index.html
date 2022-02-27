@@ -101,24 +101,24 @@ popular_questions_=[
       {% endif %}
 			
        		{% if not user.is_authenticated %}
-			<a id="botao-popular" style="padding-right: 10px; text-decoration: none; outline: none; color: #CFCFCF; cursor: pointer; font-size: 14px">Populares</a>
+			<a id="botao-popular" style="padding-right: 10px; text-decoration: none; outline: none; cursor: pointer; font-size: 14px">Populares</a>
 			{% else %}
-            <a id="botao-popular" style="padding-right: 10px; text-decoration: none; outline: none; color: rgb(190, 190, 190); cursor: pointer; font-size: 14px">Populares</a>
+            <a id="botao-popular" style="padding-right: 10px; text-decoration: none; outline: none; cursor: pointer; font-size: 14px">Populares</a>
        		{% endif %}
        
        {% if not user.is_authenticated %}
-       <a class="left-spaced"  id="botao-recentes" style="padding-right: 10px; text-decoration: none; color: #CFCFCF; outline: none; cursor: pointer; border none; font-size: 14px">Recentes</a>
+       <a class="left-spaced"  id="botao-recentes" style="padding-right: 10px; text-decoration: none; outline: none; cursor: pointer; border none; font-size: 14px">Recentes</a>
 	   {% else %}
-       <a class="left-spaced"  id="botao-recentes" style="padding-right: 10px; text-decoration: none; outline: none; color: rgb(190, 190, 190); cursor: pointer; border none; font-size: 14px">Recentes</a>
+       <a class="left-spaced"  id="botao-recentes" style="padding-right: 10px; text-decoration: none; outline: none; cursor: pointer; border none; font-size: 14px">Recentes</a>
 	   {% endif %}
        
        {% if user.is_authenticated %}
-			<a class="left-spaced" id="botao-seguindo" style="padding-right: 10px; text-decoration: none; outline: none; color: rgb(190, 190, 190); cursor: pointer; border none; font-size: 14px">Seguindo</a>
+			<a class="left-spaced" id="botao-seguindo" style="padding-right: 10px; text-decoration: none; outline: none; cursor: pointer; border none; font-size: 14px">Seguindo</a>
        
        {% else %}
        <a id="botao-popular" style="font-weight: 700; font-size: 15px; text-decoration: none; color: white; outline: none" href="/signin?redirect={{ request.get_full_path }}">Login &#10152;</a>
        
-			<a class="hidden" id="botao-seguindo" style="padding-right: 8px; text-decoration: none; outline: none; cursor: pointer; color: rgb(190, 190, 190); border none; font-size: 14px">Seguindo</a>
+			<a class="hidden" id="botao-seguindo" style="padding-right: 8px; text-decoration: none; outline: none; cursor: pointer; border none; font-size: 14px">Seguindo</a>
 			{% endif %}
    
 		</div>
