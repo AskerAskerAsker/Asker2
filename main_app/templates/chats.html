@@ -38,7 +38,7 @@
 					{% for chat in chats %}
 						{% chat_last_message chat as last_message %}
 						{% if last_message %}
-						<li class="list-group-item bg-main" STYLE="PADDING: 0PX; padding-left: 10px; padding-right: 10px">
+						<li class="list-group-item bg-main">
 							{% chat_new_messages user_p chat as new_chat_m %}
 							<div class="card-body" {% if new_chat_m %} style="background-color: rgba(0, 123, 255, 15%); border-radius: 15px;" {% endif %}>
 								<a href="/chat?c={{ chat.id }}" style="text-decoration: none;">

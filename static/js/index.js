@@ -328,7 +328,6 @@ function load_more_feed() {
 }
 
 botao_popular.onclick = function () {
-    document.getElementById("logo").href = "/";
     botao_popular.style.fontWeight = '900';
     botao_recentes.style.fontWeight = '400';
     botao_seguindo.style.fontWeight = '400';
@@ -339,7 +338,6 @@ botao_popular.onclick = function () {
 	document.body.scrollTop = document.documentElement.scrollTop = 0;
 }
 botao_recentes.onclick = function () {
-    document.getElementById("logo").href = "/news";
     botao_popular.style.fontWeight = '400';
     botao_recentes.style.fontWeight = '900';
     botao_seguindo.style.fontWeight = '400';
@@ -351,7 +349,6 @@ botao_recentes.onclick = function () {
 	document.body.scrollTop = document.documentElement.scrollTop = 0;
 }
 botao_seguindo.onclick = function () {
-    document.getElementById("logo").href = "/feed";
     botao_popular.style.fontWeight = '400';
     botao_recentes.style.fontWeight = '400';
     botao_seguindo.style.fontWeight = '900';

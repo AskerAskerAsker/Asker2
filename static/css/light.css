@@ -1,15 +1,3 @@
-/* Index */
-.navegacao a {
-    color: black;
-}
-.navegacao a:hover {
-    color: black;
-}
-.navegacao {
-    background-image: linear-gradient(to right, #87CEFF, rgb(232,232,232,0.9));
-}
-/* Index-end */
-
 /* Question */
 .poster-info {
   color: #343a40;
