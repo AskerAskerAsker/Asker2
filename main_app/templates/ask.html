@@ -63,10 +63,6 @@
                     <textarea width="100px" maxlength="5000" class="form-control" style="min-height: 250px; border-radius: 20px; font-size: 12px; margin-top: 10px" placeholder="Descrição (Opcional):" name="description"></textarea>
                 <br>
                 
-                 <a href="#" class="vertical-spaced clickable" onclick="togglePoll();">
-                   <font color="#66CDAA"><b> +Incluir Enquete </b></font>
-                    </a>
-                
                 <br>
                 
                     <label for="image"><b>Inserir Imagem:</b></label>
@@ -84,9 +80,14 @@
 						<label for="video"><b>Inserir Vídeo</b></label>
 						<input type="file" class="form-control-file" name="video">
                     </div>
-                    
-                   
-               <BR>     
+						
+					   
+				   <br>     
+					   
+					<a href="javascript: void(0);" class="vertical-spaced clickable" onclick="togglePoll();">
+						<font color="#66CDAA"><b> +Incluir Enquete </b></font>
+					</a>
+					
                     <div class="card" id="poll-box" style="display: none;"><div class="card-body">
                         <input id="choices-counter" type="hidden" name="choices-count" value="0">
                         <input type="checkbox" name="is-multichoice" id="is-multichoice"><label class="left-spaced" for="is-multichoice">Permitir Múltiplas Escolhas</label>
@@ -94,20 +95,20 @@
                             <div class="poll-choice" id="choice-1">
                                 <span>Opção 1:</span>
                                 <br>
-                                <input class="form-control poll-choice-text" type="text" name="choice-1" autocomplete="off" maxlength="60">
+                                <input class="form-control poll-choice-text bg-outer-when-dark" type="text" name="choice-1" autocomplete="off" maxlength="60">
                             </div>
  
                             <div class="poll-choice" id="choice-2">
                                 <span>Opção 2:</span>
                                 <br>
-                                <input class="form-control poll-choice-text" type="text" name="choice-2" autocomplete="off" maxlength="60">
+                                <input class="form-control poll-choice-text bg-outer-when-dark" type="text" name="choice-2" autocomplete="off" maxlength="60">
                             </div>
                         </div>
  
-                        <a href="#" class="clickable" style="float:left;" onclick="addPollChoice();"> 
+                        <a href="javascript: void(0);" class="clickable" style="float:left;" onclick="addPollChoice();"> 
                         <font color="#66CDAA"><b>+Mais</b></font>
                         </a>
-                        <a href="#" class="clickable" style="float:right;" onclick="removePollChoice();">
+                        <a href="javascript: void(0);" class="clickable" style="float:right;" onclick="removePollChoice();">
                          Remover 
                         </a>
                     </div></div>
@@ -144,7 +145,7 @@ if (getDarkCookie() == 'true') {
         var newChoiceDiv = document.createElement('div');
         newChoiceDiv.class = 'poll-choice';
         newChoiceDiv.id = 'choice-' + pollChoices;
-        newChoiceDiv.innerHTML += '<span>Opção '+ pollChoices +':</span><br><input class="form-control poll-choice-text" type="text" name="choice-'+ pollChoices +'" autocomplete="off" maxlength="60" required>';
+        newChoiceDiv.innerHTML += '<span>Opção '+ pollChoices +':</span><br><input class="form-control poll-choice-text bg-outer-when-dark" type="text" name="choice-'+ pollChoices +'" autocomplete="off" maxlength="60" required>';
         choicesDiv.appendChild(newChoiceDiv);
  
         document.getElementById('choices-counter').value = pollChoices;

@@ -95,7 +95,7 @@ var questoes_populares = document.getElementById("lista_de_questoes_populares");
 function renderizar_questoes_populares(popular_questions) {
     for (var index = 0; index < 20; ++index) {
     try { questoes_populares.innerHTML += '<li class="list-group-item bg-main questao" data-id="'+popular_questions[index].id+'">' +
-												'<div class="card-body" style="border: none; background: transparent">' +
+												'<div class="card-body" style="border: none;">' +
 													'<div class="profile-picture-index"><div class="profile-pic-small" style="background:url(\'' + popular_questions[index].question_creator_avatar + '\');"></div> <span class="qcreator-small">' + popular_questions[index].creator + '</span></div>' +
 													'<div class="flexbox" style="border: none; background: transparent">' +
 														'<h2 style="font-size: 16px" class="question-title fg-1">' +

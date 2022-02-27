@@ -17,28 +17,28 @@ body {
   color: #f8f9fa;
 }
 .bg-main-tab.active {
-  background-color: #343a40 !important;
-  color: #f8f9fa !important;
-  border-color: rgba(0,0,0,.125) !important;
+  border: none !important;
+  background: transparent;
 }
 .bg-main-tab {
-  color: #f8f9fa !important;
-  border-color: rgba(0,0,0,.125) !important;
+  border: none !important;
+  background: transparent;
 }
 .bg-main-tab:hover {
-  border-color: rgba(0,0,0,.125) !important;
-  background-color: #394046 !important;
+  border: none !important;
+  background: transparent;
 }
-.bg-outer {
-  background-color: #343a40 !important;
+.bg-outer, .bg-outer-when-dark {
+  background-color: #292929 !important;
   color: #f8f9fa;
 }
 .bg-inner, .bg-inner-when-dark {
   background-color: #394046 !important;
+  background-color: #333 !important;
   color: #f8f9fa;
 }
 .bg-innermost, .bg-innermost-when-dark {
-  background-color: #454d54 !important;
+  background-color: #363636 !important;
   color: #f8f9fa;
 }
 .bg-faint-gradient {
@@ -47,18 +47,18 @@ body {
 }
 .form-control {
   border: 1px solid rgba(0,0,0,.125) !important;
-  background-color: #343a40 !important;
+  background-color: #292929 !important;
   color: #f8f9fa !important;
 }
 .form-control:focus {
-  background-color: #343a40;
+  background-color: #292929;
   color: #f8f9fa;
 }
 .text-muted {
   color: #f8f9fa !important;
 }
 hr {
-    border-color: #343a40;
+    border-color: #292929;
 }
 .clickable, .clickable:hover {
     color: #f8f9fa !important;
@@ -75,15 +75,17 @@ hr {
 .menu font {
     color: white;
 }
+.card-body, .menu {
+	box-shadow: 2px 2px 10px rgba(0,0,0,0.4), -2px -2px 10px rgba(255,255,255,0.08);
+	background: linear-gradient(to bottom right,rgba(255,255,255,0.01),rgba(0,0,0,0.1))
+}
 /* General-end */
 
 /* Ask */
 #poll-box {
-  background-color: #343a40 !important;
   color: #f8f9fa !important;
 }
 .poll-choice-text {
-  background-color: #454d54 !important;
   color: #f8f9fa !important;
 }
 /* Ask-end */

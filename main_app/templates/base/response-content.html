@@ -3,7 +3,7 @@
 
 {% if not response.creator.ban %}
 
-	<li class="list-group-item bg-main no-horiz-padding resposta" style="border: none">
+	<li class="list-group-item bg-main resposta">
 		<div class="card-body" style="border: none">
 			<div class="poster-container">
 				<a class="poster-info" href="/user/{{ response.creator.user.username }}">							
@@ -79,23 +79,25 @@
 			<div class="heart-comment" style="border: none">
 				<i><img width="16px" src="/static/images/comments.png?version=3" class="icon hc-icon" onclick="$(this.parentElement.nextElementSibling.nextElementSibling).toggle(200);"></i>
 				<span class="comment">{{ response.id|total_comments }}</span>
-				<!-- Comentários -->
-				<div class="card comments bg-inner" style="display: none; border: none; ">
-					<ul class="comments-ul list-group list-group-flush" style="font-size: 15px; font-weight: 500">
-						{{ response.id|list_comments:request|safe }}
-					</ul>
+				
+				<div class="card comments" style="display: none">
+					<div class="card-body bg-outer">
+						<ul class="comments-ul list-group list-group-flush" style="font-size: 15px; font-weight: 500">
+							{{ response.id|list_comments:request|safe }}
+						</ul>
 
-					<center style="display: none">
-						<img src="/static/images/loading.gif" width="10%">
-					</center>
+						<center style="display: none">
+							<img src="/static/images/loading.gif" width="10%">
+						</center>
 
-					<form class="form-inline comm-form" onsubmit="make_comment(this); return false;">
-						{% csrf_token %}
-						<input type="hidden" name="response_id" value="{{ response.id }}">
-						<input type="hidden" name="question_id" value="{{ question.id }}">
-                        <textarea onclick="$(this).css('height', '110px');" class="form-control" maxlength="300" autocomplete="off" name="text" style="font-size: 14px; font-weight: 700; border-radius: 10px" placeholder="Seu Comentário:" required></textarea>
-                        <input onclick="$(this.previousElementSibling).css('height', '60px');" class="btn btn-primary" type="submit" style="border-radius: 30px; font-size: 14px; font-weight: 700" value="Comentar">
-					</form>
+						<form class="form-inline comm-form" onsubmit="make_comment(this); return false;">
+							{% csrf_token %}
+							<input type="hidden" name="response_id" value="{{ response.id }}">
+							<input type="hidden" name="question_id" value="{{ question.id }}">
+							<textarea onclick="$(this).css('height', '110px');" class="form-control bg-main" maxlength="300" autocomplete="off" name="text" style="font-size: 14px; font-weight: 700; border-radius: 10px" placeholder="Seu Comentário:" required></textarea>
+							<input onclick="$(this.previousElementSibling).css('height', '60px');" class="btn btn-primary" type="submit" style="border-radius: 30px; font-size: 14px; font-weight: 700" value="Comentar">
+						</form>
+					</div>
 				</div>
 				
 			</div>

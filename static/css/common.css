@@ -58,7 +58,6 @@ ol, ul {
   display: flex;
   flex-direction: row;
   border-radius: 0px 0px 20px 20px;
-  box-shadow: 0 10px 20px rgba(64, 64, 64, 0.15);
 }
 .menu-list {
   margin: 0;
@@ -177,7 +176,7 @@ button font {
     position: fixed;
     padding: 5px 10px;
     padding-top: 2px;
-    top: 54px;
+    top: 55px;
     border-radius: 100px;
     margin-bottom: 10px;
 }
@@ -203,9 +202,6 @@ button font {
 }
 .profile-picture-index {
 	padding-bottom: 7px;
-}
-.questao {
-	overflow-x: hidden;
 }
 #new-q-btn button {
 	border: none;
@@ -528,7 +524,8 @@ button font {
 }
 .card {
     margin-bottom: 2px;
-	border: none;
+	border: none !important;
+	background: transparent;
 }
 #tabs {
 	width: 100%;
@@ -578,8 +575,6 @@ main {
     font-size: 80%;
 }
 .list-group-item {
-  /*Corrige BS*/
-  /*border-top: 1px solid rgba(0, 0, 0, .125);*/
   border: none !important; /* Retira border-top */
 }
 
@@ -630,8 +625,21 @@ main {
 }
 /* General-end */
 
-li .card-body {
+/* Neo */
+.card {
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+  background: transparent !important;	
+}
+.card-body {
   overflow: hidden;
   border-radius: 0.5rem;
   box-shadow: 0 0 1rem rgba(0, 0, 0, 0.2);
 }
+.list-group-item {
+  padding: .75rem 0px !important;
+}
+.questao card-body {
+	overflow-x: hidden;
+}
+/* Neo-end */

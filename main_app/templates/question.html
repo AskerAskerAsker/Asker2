@@ -57,18 +57,11 @@
 	<div style="display: none">
     {% include "includes/navbar.html" %}
     </div>
-    
-    
-  
- 
-    
-<br><br><br>
-
-
+    <div class="separator-75"></div>
 		<main>
-			<div class="card bg-main" style="border: none;">
-				<div class="card-body" style="border: none;">
-					
+			<section>
+			<div class="card bg-main">
+				<div class="card-body">
 					<div class="poster-container">
 						<a class="poster-info" href="/user/{{ question.creator.user.username }}">
 							<div class="poster-profile-pic-container">
@@ -226,6 +219,7 @@
                     {% endif %}
 				</div>
 			</div>
+	</section>
 
             {% if user.is_anonymous %}
                 <div class="text-center bg-main" style="margin: 15px">
@@ -266,13 +260,12 @@ href="/signup?redirect=/question/{{ question.id }}">crie uma conta</a> para resp
 					{% if not ANSWERED %}
 						{% ablockb question.creator.user.username user.username as BLOCKED %}
 						{% if not BLOCKED %}
-							<form id="formulario_de_resposta" style="padding-left: 20px; padding-right: 20px">
+						<div class="card">
+							<form class="card-body" id="formulario_de_resposta" style="padding: 15px 20px;">
 								{% csrf_token %}
 								<input type="hidden" name="question_id" value="{{ question.id }}">
-								
-	 <br>
-	 
-  <textarea id="sua-resposta" maxlength="5000" class="form-control large-compact" style="font-size: 13px; font-weight: 600; border-radius: 10px" placeholder="Sua Resposta:" name="text" required="required" onclick="$(this).css('height', '140px')"></textarea><br>
+				
+  <textarea id="sua-resposta" maxlength="5000" class="form-control large-compact" style="font-size: 13px; font-weight: 600; border-radius: 10px; margin-bottom: 15px;" placeholder="Sua Resposta:" name="text" required="required" onclick="$(this).css('height', '140px')"></textarea>
 								
 	<button class="btn btn-outline-primary" type="submit" style="font-size: 14px; font-weight: 700; border-radius: 30px" id="botao_enviar_resposta">
 		<i class="far fa-paper-plane"></i>
@@ -287,9 +280,11 @@ href="/signup?redirect=/question/{{ question.id }}">crie uma conta</a> para resp
 								<input type="file" accept="image/*" name="file" id="upload-photo" onclick="return veracity_test({{ user_p.total_points }}, {% MINIMUM_POINTS_FOR_POSTING_IMAGES %});">
 								<img src="/static/images/close-icon.png" width="20px" style="display: none; cursor: pointer;" id="delete-photo-icon">
 							</form>
-							<img src="/static/images/loading.gif" width="30px" style="display: none;" id="response-loading-gif">
+						</div>
+						<img src="/static/images/loading.gif" width="30px" style="display: none;" id="response-loading-gif">
+							
 						{% else %}
-							Pergunta Indisponível.
+							Pergunta indisponível.
 						{% endif %}
 					{% endif %}
 				{% endif %}

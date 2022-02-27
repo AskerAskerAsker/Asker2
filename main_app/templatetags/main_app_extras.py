@@ -108,9 +108,9 @@ def list_comments(response_id, request):
 		comments_page = ''
 		for comment in comments:
 			if request.user == comment.creator:
-				comments_page += comment_creator_template.format(comment.creator.username, UserProfile.objects.get(user=comment.creator).avatar.url, comment.creator.username, naturaltime(comment.pub_date), comment.id, comment.text.replace('\n', '<br>'))
+				comments_page += comment_creator_template.format(comment.creator.username, UserProfile.objects.get(user=comment.creator).avatar.url, comment.creator.username, fix_naturaltime(naturaltime(comment.pub_date)), comment.id, comment.text.replace('\n', '<br>'))
 			else:
-				comments_page += comment_template.format(comment.creator.username, UserProfile.objects.get(user=comment.creator).avatar.url, comment.creator.username, naturaltime(comment.pub_date), comment.text.replace('\n', '<br>'))
+				comments_page += comment_template.format(comment.creator.username, UserProfile.objects.get(user=comment.creator).avatar.url, comment.creator.username, fix_naturaltime(naturaltime(comment.pub_date)), comment.text.replace('\n', '<br>'))
 		return comments_page
 	
 	return ''
