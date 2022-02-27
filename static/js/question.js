@@ -37,8 +37,8 @@ function star_question(el, qid) {
 					var off = el.getElementsByClassName('offstar')[0];
 					var on = el.getElementsByClassName('onstar')[0];
 					if (el.getElementsByClassName('offstar')[0]['classList'].contains('hidden')) {
-						off['classList'].remove('hidden');
-						on['classList'].add('hidden');
+						//off['classList'].remove('hidden');
+						//on['classList'].add('hidden');
 					} else {
 						off['classList'].add('hidden');
 						on['classList'].remove('hidden');					
