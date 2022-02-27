@@ -1743,9 +1743,10 @@ def star(request):
         return HttpResponse('Proibido', content_type='text/plain')
         
     if q.stars.filter(username=request.user.username).exists():
-        q.stars.remove(request.user)
-        q.total_stars = q.stars.count()
-        q.save()
+        #q.stars.remove(request.user)
+        #q.total_stars = q.stars.count()
+        #q.save()
+        pass
     else:
         q.stars.add(request.user)
         q.total_stars = q.stars.count()

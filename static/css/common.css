@@ -448,7 +448,10 @@ button font {
 }
 .comments {
   margin-top: 14px !important;
-  padding: 10px;
+  padding: 10px 0px !important;
+}
+.comments .card-body {
+  padding: 15px;
 }
 .comm-card {
   padding-top: 1.25rem;
@@ -515,6 +518,10 @@ button font {
 /* Notification-end */
 
 /* General */
+.nav-tabs .nav-link.active {
+    background: transparent;
+    font-weight: 800;
+}
 .hidden {
     display: none !important;
 }
