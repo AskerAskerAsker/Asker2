@@ -29,7 +29,46 @@
 	<body>
 
     {% if user.is_authenticated %}
-	    {% include "includes/menubar.html" %}
+	      
+<script>
+function voltar() {
+window.history.back();
+}
+</script>
+
+<center>
+    <div id="menubar" class="containerem" style="height: 37px; padding: 0px; position: fixed">
+        <div class="menu bg-main" style="width: 100%; padding-bottom: 3px; border-radius: 0px 0px 25px 25px; max-width: 190px; align-items: center; justify-content: center;">
+       
+        <ul class="menu-list" style="margin-top: 5px; align-items: center">
+
+        
+      <li class="menu-item">
+     <a> <button class="menu-button" onclick="voltar()">
+      <font style="font-size: 19px; font=weight: 900">
+  <ion-icon name="arrow-undo-outline"></ion-icon>
+      </font>
+      </button>
+     </a>
+      </li>
+          
+        <a href="/"><li class="menu-item">
+          <button class="menu-button" style="padding-bottom: 8px">
+             <img width="88px" src="https://i.imgur.com/ym4eX3y.png"></img>
+          </button></li>
+          </a>
+           
+   
+      {% if user.is_authenticated %}
+			<a href="/user/{{ user.username }}" class="menu-button" id="botao-seguind" style="text-decoration: none; outline: none; cursor: pointer;">
+       <img src="{{user_p.avatar.url}}" style="border-radius: 300px; width: 25px; height: 25px;"></img>
+            </a>  
+      {% endif %}
+      
+        </ul>
+        </div>
+    </div>
+</center>
     {% endif %}
     
     {% if not user.is_authenticated %}
@@ -44,9 +83,8 @@
 	<div class="separator-75"></div>
 
 	<main>
-        <div class="card bg-main" id="uinfo">
-	    <div class="card-body" style="position: relative;">
-		
+        <div class="card bg-main" id="uinfo" style="margin-top: -80px">
+	 
 	    {% if target_user_p.cover_photo %}
      
     <div style="width: 100%; height: 210px; border-radius: 0px 0px 15px 15px; background: url({{ target_user_p.cover_photo.url }}); background-repeat: no-repeat; background-position: center; background-size: cover; position: absolute; z-index: 99; top: 0; left: 0;"> </div>
@@ -64,7 +102,7 @@
 		 
        
         <br>
-        <h3 style="font-size: 30px; font-weight: 900">
+        <h3 style="font-size: 25px; font-weight: 900">
             <b>{{ target_user_p.user.username }}</b>
         </h3>
         
@@ -78,7 +116,7 @@
 		        {% ablockb target_user_p.user.username user.username as TARGET_HAS_BLOCKED %}
 
         
-        <center class="btn-group justified vertical-spaced" style="font-weight: 500; max-width: 400px; border-radius: 100px; margin: auto; padding-top: 10px" role="group">
+        <center class="btn-group justified vertical-spaced" style="font-weight: 500; margin-left: -20px; max-width: 400px; border-radius: 100px; margin: auto; padding-top: 10px" role="group">
                 
                 {% if target_user_p.followable %}
 			       <span style="padding-right: 15px">
@@ -121,7 +159,7 @@
 <div style="padding-bottom: 3px;">    
 <center>       
 
-  <p style="padding-top: 5px; padding-bottom: 10px; font-size: 11px; opacity: 0.5; font-weight: 500">
+  <p style="padding-top: 13px; padding-bottom: 10px; font-size: 11px; opacity: 0.5; font-weight: 500">
        <span class="font-italic"> No Asker desde <b>{{ target_user_p.user.date_joined.date }}.</b></span>
    </p>
 
@@ -131,10 +169,10 @@
 		<tr>
 			<td class="spacer-h">1</td>
 			<td class="spacer-h">1</td>
-			<td class="uinfo-title"><font>Seguidores</font></td>
-			<td class="uinfo-title"><font>Perguntas</font></td>
-			<td class="uinfo-title"><font>Respostas</font></td>
-			<td class="uinfo-title"><font>Pontos</font></td>
+			<td class="uinfo-title"><font style="font-size: 15px">Seguidores</font></td>
+			<td class="uinfo-title"><font style="font-size: 15px">Perguntas</font></td>
+			<td class="uinfo-title"><font style="font-size: 15px">Respostas</font></td>
+			<td class="uinfo-title"><font style="font-size: 15px">Pontos</font></td>
 			<td class="spacer-h">2</td>
 			<td class="spacer-h">2</td>
 		</tr>
@@ -181,7 +219,7 @@
         
         
 </center>  
-</div><div>  
+</div>  
 
 <br><br><br>
         
@@ -374,8 +412,8 @@ font-weight: 800;
 		{% endif %}<br>
 		</main>
 
-<div id="report_form" style="display: none; position: fixed; z-index: 99999; width: 100%; bottom: 2rem; z-index: 10;">
-  <div class="bg-faint-gradient" style="box-shadow: 0 10px 20px rgba(64, 64, 64, 0.15); position: relative; z-index: 99999; border-radius: 5px; padding: 1rem; margin: 0 auto; width: 95%;">
+<div id="report_form" style="display: none; position: fixed; z-index: 9999999999999; width: 100%; bottom: 2rem; z-index: 10;">
+  <div class="bg-faint-gradient" style="box-shadow: 0 10px 20px rgba(64, 64, 64, 0.15); position: relative; z-index: 9999999999999; border-radius: 5px; padding: 1rem; margin: 0 auto; width: 95%;">
     <button style="float: right; border: none; background-color: transparent; color: white; font-size: 20px; margin-top: -3px;" onclick="this.parentElement.parentElement.style.display = 'none';">
         <ion-icon name="close-outline" role="img" class="md hydrated" aria-label="close outline"></ion-icon>
     </button>
@@ -386,8 +424,8 @@ font-weight: 800;
     <form method="post" action="/report_user" style="padding-top: 10px; width: 100%; padding-bottom: 10px">
         {% csrf_token %}
         <input type="hidden" name="username" value="{{ target_user_p.user.username }}">
-        <textarea placeholder="Escreva o que está acontecendo..." name="text" style="border: none; background-color: white; border-radius: 20px; font-size: 13px; width: 200px; height: 80px"></textarea>
-       <br>
+        <input type="text" placeholder="Escreva o que está acontecendo..." name="text" style="border: none; background-color: white; border-radius: 10px; width: 95%; height: 60px; max-with: 400px; font-size: 13px;"></input>
+       <br><br>
     <input class="btn btn-primary" style="border-radius: 30px; font-size: 12px; font-weight: 800" type="submit" value="Denunciar Usuário">
     </form>
   </div>

@@ -10,10 +10,6 @@ https://codepen.io/suez/full/eNwwGp
 ---
 corrigir lentidao na search.html
 
----
-aparecer notificações para o autor quando alguem curtir a sua pergunta com link para perfil exemplo:
-usuario12 curtiu a sua pergunta "qual sua cor preferida?"
-
 
 --
 colocar like nas perguntas populares
@@ -21,9 +17,5 @@ colocar like nas perguntas populares
 
 --
 postar imagens apenas com 200 pontos ou mais
-
-
---
-enviar imagens no chat apenas com 800 pontos ou mais
 
 

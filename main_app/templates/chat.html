@@ -6,6 +6,9 @@
         <title>Mensagens</title>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
+  	    <meta name="theme-color" content="#68228B" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="#68228B" />
+        <meta name="msapplication-navbutton-color" content="#68228B" />
 		<style id="wait">
 			body {
 				visibility: hidden;
@@ -32,7 +35,46 @@
 
     <body style="height: 100%;">
         {% if user.is_authenticated %}
-	        {% include "includes/menubar.html" %}
+	       
+<script>
+function voltar() {
+window.history.back();
+}
+</script>
+
+<center>
+    <div id="menubar" class="containerem" style="height: 38px; padding: 0px; position: fixed">
+        <div class="menu bg-main" style="width: 100%; padding-bottom: 3px; border-radius: 0px 0px 25px 25px; max-width: 200px; align-items: center; justify-content: center;">
+       
+        <ul class="menu-list" style="margin-top: 5px; align-items: center">
+
+        
+      <li class="menu-item">
+     <a> <button class="menu-button" onclick="voltar()">
+      <font style="font-size: 19px; font=weight: 900">
+  <ion-icon name="arrow-undo-outline"></ion-icon>
+      </font>
+      </button>
+     </a>
+      </li>
+          
+        <a href="/"><li class="menu-item">
+          <button class="menu-button" style="padding-bottom: 8px">
+             <img width="88px" src="https://i.imgur.com/ym4eX3y.png"></img>
+          </button></li>
+          </a>
+           
+   
+      {% if user.is_authenticated %}
+			<a href="/user/{{ user.username }}" class="menu-button" id="botao-seguind" style="text-decoration: none; outline: none; cursor: pointer;">
+       <img src="{{user_p.avatar.url}}" style="border-radius: 300px; width: 25px; height: 25px;"></img>
+            </a>  
+      {% endif %}
+      
+        </ul>
+        </div>
+    </div>
+</center>
         {% endif %}
         <main style="height: 100%; display: flex; flex-direction: column;">
 			<div>
@@ -56,9 +98,9 @@
 				<br><br>
             </section>
 			
-			<div style="padding-left: 30px; padding-right: 30px; padding-bottom: 10px; padding-top: 20px; background: transparent; display: flex; flex-direction: row;">
+			<div class="card-body" style="padding-left: 30px; padding-right: 30px; padding-bottom: 20px; padding-top: 20px; background: transparent; display: flex; flex-direction: row;">
 				<br>
-				<textarea id="msg_txtarea" maxlength="260" class="form-control large-compact" style="font-size: 11px; font-weight: 600; border-radius: 20px; height: 100%; margin-right: 3px;" placeholder="Fale Aqui..." name="text" onkeypress="txt_v();"></textarea>
+				<textarea id="msg_txtarea" maxlength="260" class="form-control large-compact" style="font-size: 11px; font-weight: 600; border-radius: 10px; height: 100%; margin-right: 3px; border: none" placeholder="Fale Aqui..." name="text" onkeypress="txt_v();"></textarea>
 				<div style="display: flex; flex-direction: column; padding-left: 10px">
 
 				<form style="text-align: center;" method="post" enctype="multipart/form-data" id="img-form">

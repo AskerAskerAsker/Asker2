@@ -6,6 +6,9 @@
         <title>Suas Notificações</title>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#68228B" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="#68228B" />
+        <meta name="msapplication-navbutton-color" content="#68228B" />
 		<style id="wait">
 			body {
 				visibility: hidden;
@@ -29,16 +32,19 @@
         {% endif %}
         <main style="border: none">
          
-        <BR><BR><BR><BR>
+        <BR><BR><BR>
         
-        <center>  <h4 style="font-weight: 900"><b>Notificações</b></h4> </center>
+        <center> 
+        <h5 style="font-weight: 900; color: #C71585; padding-bottom: 10px"><b>Notificações</b></h5> 
+        </center>
         
+  
             <section class="card notifications bg-main" style="border: none">
                 <ul class="list-group list-group-flush">
                 	{% for notification in notifications %}
                     <li class="list-group-item bg-main notif">
 	                    <div class="card-body">
-	                        <p class="ntime light-text">{% fix_naturaltime notification.creation_date|naturaltime %}</p>
+	                        <p class="ntime light-text" style="font-size: 13px">{% fix_naturaltime notification.creation_date|naturaltime %}</p>
 	                        <p class="ntext">{{ notification.text|safe }}</p>
                         </div>
                     </li>
