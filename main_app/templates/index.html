@@ -128,7 +128,9 @@ popular_questions_=[
        
 	</div>
 
-<br><br>
+<br><br><br><br>
+
+
 </center>
 
 {% if not user_p.active and not user.is_anonymous %}
@@ -151,6 +153,8 @@ popular_questions_=[
 	</center>
 {% endif %}
 
+<br>
+
 {% if user.is_authenticated %}
 <main>
 {% else %}
@@ -161,8 +165,6 @@ popular_questions_=[
 	var mostrar_primeiro = "{{ initial }}";
 </script>
 
-
-<br>
 
 <section class="card" id="novas_questoes"> 
     <center id="top-spinner" style="display: none"><i class="fas fa-spinner fa-3x fa-spin"></i></center>

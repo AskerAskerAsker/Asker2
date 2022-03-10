@@ -15,6 +15,10 @@
 <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script> 
 <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
 
+<meta name="theme-color" content="#68228B" />
+<meta name="apple-mobile-web-app-status-bar-style" content="#68228B" />
+<meta name="msapplication-navbutton-color" content="#68228B" />
+
 {% include "includes/themehandler.html" %}
 </head>
 
@@ -23,11 +27,13 @@
         {% if user.is_authenticated %}
 	        {% include "includes/menubar.html" %}
         {% endif %}
-		{% include "includes/navbar.html" %}
     
+    <div style="opacity: 0.1">
+		{% include "includes/navbar.html" %}
+    </div>
   
     
-    <main style="padding: 50px 20px">
+    <main style="padding: 35px 20px">
 
      <h4 style="font-weight: 900"><b>Edite Seu Perfil!</b></h4>
  Edite seu nome de usuário, capa, foto do perfil, biografia e sua privacidade. <br> 
@@ -63,7 +69,7 @@
         <form method="post">
             {% csrf_token %}
             <input type="hidden" name="type" value="remove-cover">
-            <input type="submit" value="Remover Capa Atual do Perfil" style="border-radius: 30px" class="btn btn-outline-danger btn-sm">
+            <input type="submit" value="Remover Capa Atual do Perfil" style="border: none" class="btn btn-outline-danger btn-sm">
         </form>
 
         <br>
@@ -118,19 +124,19 @@
 			<input type="hidden" name="type" value="privacy">
 			{% csrf_token %}
 			{% if user_p.hide_activity %}
-				<input type="checkbox" name="hide-activity" id="hide-activity" checked> <label class="inline" for="hide-activity">Esconder atividade do perfil</label><br>
+				<input type="checkbox" name="hide-activity" id="hide-activity" checked> <label class="inline" for="hide-activity">Ocultar Atividade do Perfil.</label><br>
 			{% else %}
-				<input type="checkbox" name="hide-activity" id="hide-activity"> <label class="inline" for="hide-activity">Esconder atividade do perfil</label><br>
+				<input type="checkbox" name="hide-activity" id="hide-activity"> <label class="inline" for="hide-activity">Ocultar Atividade do Perfil.</label><br>
 			{% endif %}
 			{% if user_p.followable %}
-				<input type="checkbox" name="followable" id="followable" checked> <label class="inline" for="followable">Permitir novos seguidores</label><br>
+				<input type="checkbox" name="followable" id="followable" checked> <label class="inline" for="followable">Permitir Novos Seguidores</label><br>
 			{% else %}
-				<input type="checkbox" name="followable" id="followable"> <label class="inline" for="followable">Permitir novos seguidores</label><br>
+				<input type="checkbox" name="followable" id="followable"> <label class="inline" for="followable">Permitir Novos Seguidores</label><br>
 			{% endif %}
 			{% if user_p.allows_chat %}
-				<input type="checkbox" name="allows-chat" id="allows-chat" checked> <label class="inline" for="allows-chat">Permitir novas conversas</label><br>
+				<input type="checkbox" name="allows-chat" id="allows-chat" checked> <label class="inline" for="allows-chat">Permitir Novas Conversas</label><br>
 			{% else %}
-				<input type="checkbox" name="allows-chat" id="allows-chat"> <label class="inline" for="allows-chat">Permitir novas conversas</label><br>
+				<input type="checkbox" name="allows-chat" id="allows-chat"> <label class="inline" for="allows-chat">Permitir Novas Conversas</label><br>
 			{% endif %}
 			<input class="btn btn-primary vertical-spaced" type="submit" style="border-radius: 30px" value="Alterar Privacidade">
 		</form>
@@ -138,7 +144,7 @@
     <br><br>
 		{% if user.username == user_p.user.username %}
 		<hr>
-		<p>Seu email: {{ user.email }}</p>
+    <p><B>Seu Email</B>: {{ user.email }}</p>
        
       <a href="/logout"><font color="#fff" style="color: red; font-weight: 900">Desconectar-se</font></a>
     
