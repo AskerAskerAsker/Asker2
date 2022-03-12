@@ -571,13 +571,10 @@ window.onscroll = function () {
         player = players[i];
 		if (typeof player === 'object') {
 			video = player.getElementsByClassName('qvid-file')[0];
-
 			player.click();
-			
 			if (typeof video === 'undefined') {
 				continue;
 			}
-			
 			video.pause();
 
 			if (is_completely_visible(video)) {

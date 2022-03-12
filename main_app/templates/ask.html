@@ -18,9 +18,7 @@
 <meta name="msapplication-navbutton-color" content="#68228B" />
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/css/bootstrap.min.css">
 {% include "includes/themehandler.html" %}
-
 <script>function format_form(e){"?"!=e.question.value[e.question.value.length-1]&&(e.question.value+="?")}</script>
- 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://kit.fontawesome.com/1f965a8b94.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
@@ -28,11 +26,9 @@
 <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
 </head>
 <body>
-    
     {% if user.is_authenticated %}
         {% include "includes/menubar.html" %}
     {% endif %}
-
 <div style="display: none">
     {% include "includes/navbar.html" %}
 </div>
@@ -50,14 +46,14 @@
     </a>
     </center>
     
-        {% if user_p.active %}
+    {% if user_p.active %}
         <div id="inner" style="padding: 20px">
             <form method="post" enctype="multipart/form-data" onsubmit="enviar_pergunta(this)" id="form_pergunta">
                 {% csrf_token %}
                 <div class="form-group ask-form">
                     <input class="form-control" type="text" name="question" style="border-radius: 20px; font-weight: 500" placeholder="Título da Pergunta:" autocomplete="off" maxlength="180" required="">
                     <textarea width="100px" maxlength="5000" class="form-control" style="min-height: 250px; border-radius: 20px; font-size: 12px; margin-top: 10px" placeholder="Descrição (Opcional):" name="description"></textarea>
-                <br><br>
+                    <br><br>
                 
                     <label for="image"><b>Inserir Imagem:</b></label>
                     
@@ -67,21 +63,15 @@
                         <img src="/static/images/loading.gif" width="10%">
                         <span style="vertical-align: middle">Carregando imagem</span>
                     </div>
-
-                <br>
-                
+                    <br>
 					<div>
 						<label for="video"><b>Inserir Vídeo:</b></label>
 						<input type="file" class="form-control-file" name="video" accept="video/*" onchange="check_vid_size(this);">
                     </div>
-						
-					   
 				   <br>     
-					   
 					<a href="javascript: void(0);" class="vertical-spaced clickable" onclick="togglePoll();">
 						<font color="#66CDAA"><b> +Incluir Enquete </b></font>
 					</a>
-					
                     <div class="card" id="poll-box" style="display: none;"><div class="card-body">
                         <input id="choices-counter" type="hidden" name="choices-count" value="0">
                         <input type="checkbox" name="is-multichoice" id="is-multichoice"><label class="left-spaced" for="is-multichoice">Permitir Múltiplas Escolhas</label>
@@ -91,174 +81,39 @@
                                 <br>
                                 <input class="form-control poll-choice-text bg-outer-when-dark" type="text" name="choice-1" autocomplete="off" maxlength="60">
                             </div>
- 
                             <div class="poll-choice" id="choice-2">
                                 <span>Opção 2:</span>
                                 <br>
                                 <input class="form-control poll-choice-text bg-outer-when-dark" type="text" name="choice-2" autocomplete="off" maxlength="60">
                             </div>
                         </div>
- 
                         <a href="javascript: void(0);" class="clickable" style="float:left;" onclick="addPollChoice();"> 
                         <font color="#66CDAA"><b>+Mais</b></font>
                         </a>
                         <a href="javascript: void(0);" class="clickable" style="float:right;" onclick="removePollChoice();">
                          Remover 
                         </a>
-                    </div></div>
- 
+                        </div>
+                    </div>
                     <input class="btn btn-primary" type="submit" value="Publicar Pergunta" style="border-radius: 30px; font-weight: 800" id="botao_fazer_pergunta" onclick="enviar_pergunta();">
                 </div>
             </form>
-     <br>
+            <br>
             <p style="font-size: 12px">
                 Suporte:
                 <a href="mailto:mail.asker.fun@gmail.com">mail.asker.fun@gmail.com</a>
             </p>
         </div>
  
-{{ error|safe }}
-{% else %}
-<div class="alert alert-info"><p>Confirme seu email abrindo o link enviado para ele.<br>Este é o email usado na tela de cadastro: {{ user.email }}</p><p>Caso não encontre o email, verifique na pasta de spam.</p></div>
-{% endif %}
+    {{ error|safe }}
+    {% else %}
+        <div class="alert alert-info"><p>Confirme seu email abrindo o link enviado para ele.<br>Este é o email usado na tela de cadastro: {{ user.email }}</p><p>Caso não encontre o email, verifique na pasta de spam.</p></div>
+    {% endif %}
     </main>
-<script>
-if (getDarkCookie() == 'true') {
-    document.getElementsByClassName('navbar')[0].classList.add("navbar-dark");
-    document.getElementsByClassName('navbar')[0].classList.remove("navbar-light");
-}
-</script>
-<script>
-    var pollChoices = 2;
- 
-    function addPollChoice() {
-        if (pollChoices == 12) { return 0; }
-        pollChoices += 1;
-        var choicesDiv = document.getElementById('poll-choices');
- 
-        var newChoiceDiv = document.createElement('div');
-        newChoiceDiv.class = 'poll-choice';
-        newChoiceDiv.id = 'choice-' + pollChoices;
-        newChoiceDiv.innerHTML += '<span>Opção '+ pollChoices +':</span><br><input class="form-control poll-choice-text bg-outer-when-dark" type="text" name="choice-'+ pollChoices +'" autocomplete="off" maxlength="60" required>';
-        choicesDiv.appendChild(newChoiceDiv);
- 
-        document.getElementById('choices-counter').value = pollChoices;
-    }
- 
-    function removePollChoice() {
-        if (pollChoices == 2) { return 0; }
-        let choiceDiv = document.getElementById('choice-' + pollChoices);
-        choiceDiv.remove();
-        pollChoices -= 1;
-        document.getElementById('choices-counter').value = pollChoices;
-    }
- 
-    function togglePoll() {
-        let counter = document.getElementById('choices-counter');
-        let pollBox = document.getElementById('poll-box');
-        let pollChoicesTexts = document.getElementsByClassName('poll-choice-text');
-        if (counter.value == 0) {
-            pollBox.style = 'display: flex;';
-            counter.value = pollChoices;
-            for (var i = 0; i < pollChoicesTexts.length; i++) {
-                pollChoicesTexts[i].required = true;
-            }
-        } else {
-            pollBox.style = 'display: none;';
-            counter.value = 0;
-            for (var i = 0; i < pollChoicesTexts.length; i++) {
-                pollChoicesTexts[i].required = false;
-            }
-        }
-    }
-</script>
-<script src="/static/js/general_functions.js?version=2"></script>
- 
-<script>
-    function enviar_pergunta(form) {
-        form.submit();
-        format_form(form);
-        botao_perguntar = document.getElementById("botao_fazer_pergunta");
-        botao_perguntar.disabled = true;
-    }
-</script>
- 
-<!-- NSFW detector -->
-<script src="https://cdnjs.deepai.org/deepai.min.js"></script>
-<script>
-    
-    deepai.setApiKey("2826d443-8d49-4d03-aaab-6cf13a6f86fe");
-    
-    /* Analisador de imagem (nsfw) */
-    function analisar_imagem() {
-        /* Desativa o botão de perguntar */
-        
-        /* Ativa o aviso "carregando imagem" */
-        document.getElementById("carregando-imagem").style.display = "block";
-        
-        (async function nsfw_detector() {
-            try {
-                var resp = await deepai.callStandardApi("nsfw-detector", {
-                                image: document.getElementById("image"),
-                });
-                
-                nsfw_score = resp["output"]["nsfw_score"];
-                
-                /*
-                 * nsfw_score > 0.8: imagem não vai ser enviada.
-                 * nsfw_score <= 0.6: imagem vai ser enviada.
-                 */
-                
-                if (nsfw_score > 0.8) {
-                    document.getElementById("image").value = null;
-                    
-                    alert("Impossível enviar imagem.");
-                    
-                    /* Desativa o aviso "carregando imagem" */
-                    document.getElementById("carregando-imagem").style.display = "none";
-                    
-                    botao_perguntar.disabled = false;
-                    
-                    return;
-                }
-                
-                
-                /* muda o nsfw_score no input oculto. */
-                document.getElementById("img_nsfw_score").value = nsfw_score;
-                
-                /* Desativa o aviso "carregando imagem" */
-                document.getElementById("carregando-imagem").style.display = "none";
-                
-                botao_perguntar.disabled = false;
-                
-                return;
-                
-            } catch (e) {
-                /* Se der erro, envia a imagem de qualquer forma. */
-                /* Desativa o aviso "carregando imagem" */
-                document.getElementById("carregando-imagem").style.display = "none";
-                
-                botao_perguntar.disabled = false;
-                
-                return;
-            }
-        })();
-    }
-    
-    /* Analisa a imagem quando o usuário preenche o campo de imagem no formulário. */
-    document.getElementById("image").onchange = analisar_imagem;
-</script>
-<script>
-	function check_vid_size(el) {
-		var s = el.files[0].size;
-		if (s > 3100000) {
-			alert('Tamanho máximo de vídeo excedido.');
-			el.value = null;
-		}
-	}
-</script>
-<script src="/static/js/common.js?v=1.5"></script>
- 
+    <script src="https://cdnjs.deepai.org/deepai.min.js"></script> <!-- NSFW detector  -->
+    <script src="/static/js/ask.js?v=1.0"></script>
+    <script src="/static/js/general_functions.js?v=2.0"></script>
+    <script src="/static/js/common.js?v=1.5"></script>
 </body>
 </html>
 
