@@ -181,54 +181,41 @@ for (let i in descriptions) {
 	});
 }
 
-var UPD_INTERVAL = 0;
-async function check_for_update() {
-	console.log('FuckYou'); /*TODO OBVIOUS*/
-    try {
-        var last_known_q = document.getElementById("novas_questoes").getElementsByClassName("list-group-item")[0].getAttribute("data-id");
-        var notif_badge = document.getElementById('notif-badge');
-        var button = document.getElementById('new-q-btn');
-        var btn_count = document.getElementById('new-q-count');
-    } catch (e) {
-        return 0;
-    }
-	$.ajax({
-			url: "/update_index_check",
-			type: "get",
-			dataType: "json",
-			data: {
-				last_known_q: last_known_q,
-			},
-			complete: function(data) {
-
-                new_notifications = data.responseJSON['nn'];
-                new_questions = data.responseJSON['nq'];
-
-                if (notif_badge) {
-                    if (new_notifications > 0) {
-                        notif_badge.innerHTML = new_notifications;
-                        notif_badge.style.display = 'block';
-                        document.title = "(" + new_notifications + ") " + org_title;
-                    } else {
-                        notif_badge.style.display = 'none';
-                        document.title = org_title;
-                    }
-                }
-                if (new_questions > 29) {
-                    button.getElementsByTagName('button')[0].removeAttribute('onclick');
-                    button.addEventListener('click', function(e) { location.reload(); });
-                    button.style.display = 'table';
-                    btn_count.innerHTML = '30+';
-                    clearInterval(UPD_INTERVAL);
-                } else if (new_questions > 0) {
-                    button.style.display = 'table';
-                    btn_count.innerHTML = new_questions;
-                }
-
-			},
-	});
+function open_popular() {
+    botao_popular.style.fontWeight = '900';
+    botao_recentes.style.fontWeight = '400';
+    botao_seguindo.style.fontWeight = '400';
+    document.getElementById("questoes_populares").style.display = "block";
+    document.getElementById("novas_questoes").style.display = "none";
+    document.getElementById("feed").style.display = "none";
+    window.history.replaceState("object or string", "Title", "/");
+	document.body.scrollTop = document.documentElement.scrollTop = 0;
 }
-UPD_INTERVAL = setInterval(check_for_update, 5000); /*TODO 35 TO 5*/
+function open_recent() {
+    botao_popular.style.fontWeight = '400';
+    botao_recentes.style.fontWeight = '900';
+    botao_seguindo.style.fontWeight = '400';
+    document.getElementById("questoes_populares").style.display = "none";
+    document.getElementById("novas_questoes").style.display = "block";
+    document.getElementById("feed").style.display = "none";
+    window.history.replaceState("object or string", "Title", "/news");
+    if (!recent_exists) { load_more_recent(); }
+	document.body.scrollTop = document.documentElement.scrollTop = 0;
+}
+function open_feed() {
+    botao_popular.style.fontWeight = '400';
+    botao_recentes.style.fontWeight = '400';
+    botao_seguindo.style.fontWeight = '900';
+    document.getElementById("questoes_populares").style.display = "none";
+    document.getElementById("novas_questoes").style.display = "none";
+    document.getElementById("feed").style.display = "block";
+    window.history.replaceState("object or string", "Title", "/feed");
+    if (feed_page == 1 && feed_sp == 0) { load_more_feed(); }
+	document.body.scrollTop = document.documentElement.scrollTop = 0;
+}
+botao_popular.onclick = open_popular;
+botao_recentes.onclick = open_recent;
+botao_seguindo.onclick = open_feed;
 
 function update_recent() {
     var last_known_q = document.getElementById("novas_questoes").getElementsByClassName("list-group-item")[0].getAttribute("data-id");
@@ -236,6 +223,7 @@ function update_recent() {
     var icon = document.getElementById('top-spinner');
 	button.style.display = 'none';
 	icon.style.display = 'none';
+	open_recent();
 	$.ajax({
 			url: "/update_index",
 			type: "get",
@@ -259,6 +247,64 @@ function update_recent() {
 			},
 	});
 }
+
+var UPD_INTERVAL = 0;
+async function check_for_update() {
+    try {
+        var last_known_q = document.getElementById("novas_questoes").getElementsByClassName("list-group-item")[0].getAttribute("data-id");
+        var notif_badge = document.getElementById('notif-badge');
+    } catch (e) {
+        var last_known_q = -1;
+		var notif_badge = null;
+    }
+	var button = document.getElementById('new-q-btn');
+	var btn_count = document.getElementById('new-q-count');
+	$.ajax({
+			url: "/update_index_check",
+			type: "get",
+			dataType: "json",
+			data: {
+				last_known_q: last_known_q,
+			},
+			complete: function(data) {
+
+                new_notifications = data.responseJSON['nn'];
+                new_questions = data.responseJSON['nq'];
+
+                if (notif_badge) {
+                    if (new_notifications > 0) {
+                        notif_badge.innerHTML = new_notifications;
+                        notif_badge.style.display = 'block';
+                        document.title = "(" + new_notifications + ") " + org_title;
+                    } else {
+                        notif_badge.style.display = 'none';
+                        document.title = org_title;
+                    }
+                }
+				if (new_questions == -1) {
+                    button.getElementsByTagName('button')[0].removeAttribute('onclick');
+                    button.onclick = function(e) {
+						open_recent();
+						var button = document.getElementById('new-q-btn');
+						button.onclick = update_recent;
+						button.style.display = 'none';
+					};
+                    button.style.display = 'table';
+                    btn_count.innerHTML = 'Ver';
+				} else if (new_questions > 29) {
+                    button.getElementsByTagName('button')[0].removeAttribute('onclick');
+                    button.addEventListener('click', function(e) { location.reload(); });
+                    button.style.display = 'table';
+                    btn_count.innerHTML = '30+';
+                    clearInterval(UPD_INTERVAL);
+                } else if (new_questions > 0) {
+                    button.style.display = 'table';
+                    btn_count.innerHTML = new_questions;
+                }
+			},
+	});
+}
+UPD_INTERVAL = setInterval(check_for_update, 35000);
 
 function load_more_popular(button, icon, page) {
 
@@ -326,39 +372,6 @@ function load_more_feed() {
                 }
 			},
 	});
-}
-
-botao_popular.onclick = function () {
-    botao_popular.style.fontWeight = '900';
-    botao_recentes.style.fontWeight = '400';
-    botao_seguindo.style.fontWeight = '400';
-    document.getElementById("questoes_populares").style.display = "block";
-    document.getElementById("novas_questoes").style.display = "none";
-    document.getElementById("feed").style.display = "none";
-    window.history.replaceState("object or string", "Title", "/");
-	document.body.scrollTop = document.documentElement.scrollTop = 0;
-}
-botao_recentes.onclick = function () {
-    botao_popular.style.fontWeight = '400';
-    botao_recentes.style.fontWeight = '900';
-    botao_seguindo.style.fontWeight = '400';
-    document.getElementById("questoes_populares").style.display = "none";
-    document.getElementById("novas_questoes").style.display = "block";
-    document.getElementById("feed").style.display = "none";
-    window.history.replaceState("object or string", "Title", "/news");
-    if (!recent_exists) { load_more_recent(); }
-	document.body.scrollTop = document.documentElement.scrollTop = 0;
-}
-botao_seguindo.onclick = function () {
-    botao_popular.style.fontWeight = '400';
-    botao_recentes.style.fontWeight = '400';
-    botao_seguindo.style.fontWeight = '900';
-    document.getElementById("questoes_populares").style.display = "none";
-    document.getElementById("novas_questoes").style.display = "none";
-    document.getElementById("feed").style.display = "block";
-    window.history.replaceState("object or string", "Title", "/feed");
-    if (feed_page == 1 && feed_sp == 0) { load_more_feed(); }
-	document.body.scrollTop = document.documentElement.scrollTop = 0;
 }
 
 /* Desativa o botão de responder para quem não confirmou o e-mail. */

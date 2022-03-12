@@ -1226,7 +1226,11 @@ def update_index(request):
         up = UserProfile.objects.get(user=request.user)
         nn = up.new_notifications
 
-    last_known_q = request.GET.get('last_known_q')
+    last_known_q = int(request.GET.get('last_known_q'))
+    last_q = Question.objects.last().id
+    if last_q - last_known_q > 200:
+         return HttpResponse('-1')
+         
     nq = Question.objects.filter(id__gt=last_known_q).order_by("-id")
     if len(nq) == 0:
         return HttpResponse('-1')
@@ -1238,12 +1242,17 @@ def update_index(request):
     return render(request, 'base/index-recent-q-page.html', nq_context)
 
 def update_index_check(request):
-    up = UserProfile.objects.get(user=request.user)
-    nn = up.new_notifications
+    nn = 0
+    if not request.user.is_anonymous:
+        up = UserProfile.objects.get(user=request.user)
+        nn = up.new_notifications
 
-    last_known_q = request.GET.get('last_known_q')
+    last_known_q = int(request.GET.get('last_known_q'))
+    last_q = Question.objects.last().id
+    if last_q - last_known_q > 200 or last_known_q < 1:
+         return JsonResponse({'nn': nn, 'nq': -1})
+         
     nq = Question.objects.filter(id__gt=last_known_q).order_by("id")
-    nq_context = {'questions': nq, 'user_p': up}
     
     return JsonResponse({'nn': nn, 'nq': len(nq)})
 
@@ -1774,3 +1783,4 @@ def novadx(request):
 
 def add(request):
     return render(request, 'add.html')
+

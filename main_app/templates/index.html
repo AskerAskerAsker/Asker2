@@ -86,9 +86,13 @@ popular_questions_=[
 			<a class="clickable left-spaced" id="botao-seguindo">Seguindo</a>
 		</div>
 		{% endif %}
+	{% if user.is_authenticated %}
 	<div id="new-q-btn" style="position: fixed; top: 115px">
-		<button class="btn" style="padding-left: 13px; padding-right: 13px; box-shadow: 0 0 0.9em rgb(238, 220, 130, 0.6); background-image: linear-gradient(to right, #104E8B, #00B2EE);" onclick="update_recent()">
-		<p style="margin-bottom: 0px; color: white; font-weight: 800">+<span id="new-q-count">0</span> Novas Postagens</p>
+	{% else %}
+	<div id="new-q-btn" style="position: fixed; top: 80px">
+	{% endif %}
+		<button class="btn btn-primary" onclick="update_recent()">
+		<p style="margin-bottom: 0px; font-weight: 800"><span id="new-q-count">0</span> Novas Postagens</p>
 		</button>
 	</div>
 </div>
