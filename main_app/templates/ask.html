@@ -36,17 +36,10 @@
 <div style="display: none">
     {% include "includes/navbar.html" %}
 </div>
-
-
     <main>
-    
     <center> 
-    
     <br><br><br>
-    
     <img src="{{user_p.avatar.url}}" style="border-radius: 100px; width: 75px"></img>
-    
-    
     <br><br>
     <h5 style="font-weight: 800">
     Compartilhe uma Pergunta...
@@ -64,9 +57,7 @@
                 <div class="form-group ask-form">
                     <input class="form-control" type="text" name="question" style="border-radius: 20px; font-weight: 500" placeholder="Título da Pergunta:" autocomplete="off" maxlength="180" required="">
                     <textarea width="100px" maxlength="5000" class="form-control" style="min-height: 250px; border-radius: 20px; font-size: 12px; margin-top: 10px" placeholder="Descrição (Opcional):" name="description"></textarea>
-                <br>
-                
-                <br>
+                <br><br>
                 
                     <label for="image"><b>Inserir Imagem:</b></label>
                     
@@ -81,7 +72,7 @@
                 
 					<div>
 						<label for="video"><b>Inserir Vídeo:</b></label>
-						<input type="file" class="form-control-file" name="video">
+						<input type="file" class="form-control-file" name="video" accept="video/*" onchange="check_vid_size(this);">
                     </div>
 						
 					   
@@ -257,7 +248,17 @@ if (getDarkCookie() == 'true') {
     /* Analisa a imagem quando o usuário preenche o campo de imagem no formulário. */
     document.getElementById("image").onchange = analisar_imagem;
 </script>
+<script>
+	function check_vid_size(el) {
+		var s = el.files[0].size;
+		if (s > 3100000) {
+			alert('Tamanho máximo de vídeo excedido.');
+			el.value = null;
+		}
+	}
+</script>
 <script src="/static/js/common.js?v=1.5"></script>
  
 </body>
 </html>
+

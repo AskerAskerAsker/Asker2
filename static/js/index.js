@@ -163,13 +163,12 @@ function load_more_recent() {
                     q_list = document.getElementById('lista_de_questoes_recentes');
                     q_list.innerHTML += data.responseText;
                 let descriptions = document.getElementsByClassName('description');
-for (let i in descriptions) {
-  try {
-    descriptions[i].innerText = descriptions[i].innerText.replaceAll('&quot;', '"');
-  } catch {}
-}
-
-                    recent_exists = true;
+				for (let i in descriptions) {
+					try {
+						descriptions[i].innerText = descriptions[i].innerText.replaceAll('&quot;', '"');
+					} catch {}
+				}
+                recent_exists = true;
                 }
 				icon.style.display = 'none';
 				button.style.display = 'block';
@@ -389,28 +388,28 @@ if (typeof conta_ativa !== 'undefined') {
 
 function star_question(el, qid) {
 	$.ajax({
-			url: "/question/star",
-			type: "get",
-			dataType: "html",
-			data: {
-				qid: qid,
-			},
-			complete: function(data) {
-			    var total_stars = parseInt(data.responseText);
-                if (total_stars || total_stars == 0) {
-					el.getElementsByClassName('starcount')[0].innerHTML = total_stars;
-					var off = el.getElementsByClassName('offstar')[0];
-					var on = el.getElementsByClassName('onstar')[0];
-					if (el.getElementsByClassName('offstar')[0]['classList'].contains('hidden')) {
-						//off['classList'].remove('hidden');
-						//on['classList'].add('hidden');
-					} else {
-						off['classList'].add('hidden');
-						on['classList'].remove('hidden');
-					}
+		url: "/question/star",
+		type: "get",
+		dataType: "html",
+		data: {
+			qid: qid,
+		},
+		complete: function(data) {
+			var total_stars = parseInt(data.responseText);
+			if (total_stars || total_stars == 0) {
+				el.getElementsByClassName('starcount')[0].innerHTML = total_stars;
+				var off = el.getElementsByClassName('offstar')[0];
+				var on = el.getElementsByClassName('onstar')[0];
+				if (el.getElementsByClassName('offstar')[0]['classList'].contains('hidden')) {
+					//off['classList'].remove('hidden');
+					//on['classList'].add('hidden');
+				} else {
+					off['classList'].add('hidden');
+					on['classList'].remove('hidden');
 				}
 			}
-		});
+		}
+	});
 }
 
 function prepare_video(el) {
@@ -422,6 +421,9 @@ function prepare_video(el) {
 	var mt = el.getElementsByClassName('qvmt')[0];
 	var unmt = el.getElementsByClassName('qvunmt')[0];
 	var expand = el.getElementsByClassName('qvexpand')[0];
+	var curr_time = el.getElementsByClassName('qvctime')[0];
+	var total_time = el.getElementsByClassName('qvttltime')[0];
+	var controls = el.getElementsByClassName('qvid-controls')[0];
 
 	var fullscreen = vid.webkitRequestFullscreen || vid.mozRequestFullScreen || vid.msRequestFullscreen;
 
@@ -439,7 +441,20 @@ function prepare_video(el) {
 
 	play.onclick = toggleplay;
 	pause.onclick = toggleplay;
-	vid.onclick = toggleplay;
+	vid.onclick = function() {
+		if (controls.style.height == '0px') {
+			controls.style.height = '42px';
+		} else {
+			controls.style.height = '0px';
+			toggleplay();
+		}
+	};
+	el.onmouseenter = function() {
+		controls.style.height = '42px';
+	};
+	el.onmouseleave = function() {
+		controls.style.height = '0px';
+	};
 
 	mt.onclick = function() {
 		vid.muted = false;
@@ -456,6 +471,9 @@ function prepare_video(el) {
 		fullscreen.call(vid);
 	};
 
+	var dur = Math.floor(vid.duration)
+	total_time.innerHTML = (dur-(dur%=60))/60+(9<dur?':':':0')+dur
+	
 	bar.addEventListener('click', function(e) {
 		var x = e.pageX;
 		var min = this.getBoundingClientRect().left;
@@ -466,7 +484,9 @@ function prepare_video(el) {
 
 	vid.addEventListener('timeupdate', function() {
 		var vidprog = vid.currentTime / vid.duration;
+		var ct = Math.floor(vid.currentTime);
 		prog.style.width = vidprog * 100 + '%';
+		curr_time.innerHTML = (ct-(ct%=60))/60+(9<ct?':':':0')+ct
 	});
 }
 
@@ -478,18 +498,16 @@ function load_vid(el, vid_url) {
 	vid_el.muted = true;
 	vid_container.appendChild(vid_el);
 
-	el.onclick = function() { };
+	el.removeAttribute('onclick');
 	var vid_thumb = el.getElementsByClassName('index-qimg')[0];
 	vid_thumb.remove();
 
 	vid_el.addEventListener('loadeddata', (e) => {
 		if(vid_el.readyState >= 3){
 			prepare_video(el);
-			vid_el.play();
 		}
 	});
 }
-
 
 /*
  * Verifica se tem algum vídeo aparecendo na tela;
@@ -526,9 +544,9 @@ function element_of_load_more_is_visible(elem) {
     } while (pointContainer = pointContainer.parentNode);
     return false;
 }
-// visível se todo o elemento é visível
-function isVisible(element) {
-    const rect = element.getBoundingClientRect();
+
+function is_completely_visible(el) {
+    const rect = el.getBoundingClientRect();
     return (
         rect.top >= 0 &&
         rect.left >= 0 &&
@@ -540,32 +558,40 @@ function isVisible(element) {
 let load_more = document.getElementById('load-more-recent-btn');
 let load_more_popular_btn = document.getElementById('load-more-popular-btn');
 let players = document.getElementsByClassName('index-qvid-btn');
+
 window.onscroll = function () {
-    
     if (element_of_load_more_is_visible(load_more)) {
         load_more_recent();
     }
-    
-    if (element_of_load_more_is_visible(load_more_popular_btn)) {
+    else if (element_of_load_more_is_visible(load_more_popular_btn)) {
         load_more_popular(load_more_popular_btn, load_more_popular_btn.nextElementSibling, popular_page);
     }
-    
-    
+	
     for (let i in players) {
         player = players[i];
-        video = player.getElementsByClassName('qvid-file')[0];
+		if (typeof player === 'object') {
+			video = player.getElementsByClassName('qvid-file')[0];
 
-        player.click();
-        video.pause();
+			player.click();
+			
+			if (typeof video === 'undefined') {
+				continue;
+			}
+			
+			video.pause();
 
-        if (isVisible(video)) {
-            video.play();
-            player.getElementsByClassName('qvplay')[0].classList.add('hidden');
-            player.getElementsByClassName('qvpause')[0].classList.remove('hidden');
-        } else {
-            video.pause();
-            player.getElementsByClassName('qvplay')[0].classList.remove('hidden');
-            player.getElementsByClassName('qvpause')[0].classList.add('hidden');
-        }
+			if (is_completely_visible(video)) {
+				prepare_video(player);
+				var is_vid_muted = player.getElementsByClassName('qvunmt')[0].classList.contains('hidden');
+				video.muted = is_vid_muted;
+				video.play();
+				player.getElementsByClassName('qvplay')[0].classList.add('hidden');
+				player.getElementsByClassName('qvpause')[0].classList.remove('hidden');
+			} else {
+				video.pause();
+				player.getElementsByClassName('qvplay')[0].classList.remove('hidden');
+				player.getElementsByClassName('qvpause')[0].classList.add('hidden');
+			}
+		}
     }
 };

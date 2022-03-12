@@ -543,13 +543,22 @@ def ask(request):
         if len(text) > 181 or len(description) > 5000 or text[-1] != '?':
             return redirect('/news')
 
-        q = Question.objects.create(creator=UserProfile.objects.get(user=request.user), text=text, description=description.replace('\\', '\\\\'))
-
         video = None
         try:
             video = request.FILES['video']
         except:
             pass
+            
+        if video:
+            print(video.size)
+            print(video.size > 3200000)
+            if video.size > 3200000:
+                context = {'error': 'Arquivo não suportado',
+                                   'err_msg': 'O arquivo que você enviou não é suportado. Tamanho máximo de um vídeo: 3mb.',
+                                   'redirect': '/ask'}
+                return render(request, 'error.html', context)
+                
+        q = Question.objects.create(creator=UserProfile.objects.get(user=request.user), text=text, description=description.replace('\\', '\\\\'))
 
         if video:
             video_name = 'media-{}{}'.format(timezone.now().date(), timezone.now().time()).replace(':', '')
@@ -562,8 +571,11 @@ def ask(request):
             
             video_path = 'media/videos/' + video_name
             thumb_path = 'videos/' + video_name + '.jpg'
-            subprocess.call(['ffmpeg', '-i', video_path, '-ss', '00:00:00.000', '-vf', 'scale=320:-2', '-hide_banner', '-loglevel', 'warning', '-vframes', '1', 'media/' + thumb_path])
-            q.videothumb = thumb_path
+            try:
+                subprocess.call(['ffmpeg', '-i', video_path, '-ss', '00:00:00.000', '-vf', 'scale=320:-2', '-hide_banner', '-loglevel', 'warning', '-vframes', '1', 'media/' + thumb_path])
+                q.videothumb = thumb_path
+            except FileNotFoundError:
+                pass
             q.save()
 
         form = UploadFileForm(request.POST, request.FILES)
