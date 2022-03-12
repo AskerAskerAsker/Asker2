@@ -183,6 +183,7 @@ for (let i in descriptions) {
 
 var UPD_INTERVAL = 0;
 async function check_for_update() {
+	console.log('FuckYou'); /*TODO OBVIOUS*/
     try {
         var last_known_q = document.getElementById("novas_questoes").getElementsByClassName("list-group-item")[0].getAttribute("data-id");
         var notif_badge = document.getElementById('notif-badge');
@@ -227,7 +228,7 @@ async function check_for_update() {
 			},
 	});
 }
-UPD_INTERVAL = setInterval(check_for_update, 35000);
+UPD_INTERVAL = setInterval(check_for_update, 5000); /*TODO 35 TO 5*/
 
 function update_recent() {
     var last_known_q = document.getElementById("novas_questoes").getElementsByClassName("list-group-item")[0].getAttribute("data-id");

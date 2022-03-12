@@ -101,7 +101,7 @@ hr {
   color: white;
 }
 .progress {
-  background-color: #454d54 !important;
+  background-color: rgba(0,0,0,0.1) !important;
   border: none;
 }
 /* Question-end */

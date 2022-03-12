@@ -15,13 +15,6 @@
 				opacity: 0;
 			}
 		</style>
-		<style>
-		#msg_txtarea {
-			scrollbar-width: none;
-			-ms-overflow-style: none;
-		}
-		
-		</style>
 		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/css/bootstrap.min.css">
 		<link href="https://fonts.googleapis.com/css?family=Raleway:400,500,500i,700,800i" rel="stylesheet">
         {% include "includes/themehandler.html" %}
@@ -34,14 +27,13 @@
     </head>
 
     <body style="height: 100%;">
-        {% if user.is_authenticated %}
-	       
+
+{% if user.is_authenticated %}      
 <script>
 function voltar() {
 window.history.back();
 }
 </script>
-
 <center>
     <div id="menubar" class="containerem" style="height: 38px; padding: 0px; position: fixed">
         <div class="menu bg-main" style="width: 100%; padding-bottom: 3px; border-radius: 0px 0px 25px 25px; max-width: 200px; align-items: center; justify-content: center;">
@@ -75,53 +67,42 @@ window.history.back();
         </div>
     </div>
 </center>
-        {% endif %}
-        <main style="height: 100%; display: flex; flex-direction: column;">
-			<div>
-				<br><br><br>
-			</div>
-		
-            <section id="chatbox" class="card bg-main" style="overflow-y: scroll; height: 100%;">
-								
+{% endif %}
+        <main class="chmain">
+			<div class="separator-75"></div>
+            <section id="chatbox" class="card bg-main">
 				{% if messages %}
-				<button id="load-old" class="page-btn btn btn-primary vertical-spaced" style="border-radius: 30px; width: 45%; margin-right: auto; margin-left: auto;" onclick="load_old()">Ver Mais</button>
+				<button id="load-old" class="btn btn-primary round vertical-spaced horiz-center w-50pct" onclick="load_old()">Ver Mais</button>
 				{% endif %}
                 <ul id="msg-l" class="list-group">
 					<div class="hidden">
-						<span id="vchk" style="position: absolute; right: 30px; bottom: 20px;">
-							<ion-icon style="background-color: rgba(255,255,255,20%); border-radius:10px;" name="checkmark-outline"></ion-icon>
+						<span id="vchk">
+							<ion-icon name="checkmark-outline"></ion-icon>
 						</span>
 					</div>
 				{% include "base/chat-messages.html" %}
                 </ul>
-			
-				<br><br>
             </section>
-			
-			<div class="card-body" style="padding-left: 30px; padding-right: 30px; padding-bottom: 20px; padding-top: 20px; background: transparent; display: flex; flex-direction: row;">
-				<br>
-				<textarea id="msg_txtarea" maxlength="260" class="form-control large-compact" style="font-size: 11px; font-weight: 600; border-radius: 10px; height: 100%; margin-right: 3px; border: none" placeholder="Fale Aqui..." name="text" onkeypress="txt_v();"></textarea>
-				<div style="display: flex; flex-direction: column; padding-left: 10px">
-
-				<form style="text-align: center;" method="post" enctype="multipart/form-data" id="img-form">
-					{% csrf_token %}
-					<input type="hidden" name="c" value="{{ cid }}">
-					<label style="margin: auto;" for="upload-photo">
-						<i class="fas fa-camera fa-lg"></i>
-						<span id="upload-photo-text"></span>
-					</label>
-					<input type="file" accept="image/*" name="file" id="upload-photo" onchange="add_img();">
-					<img src="/static/images/close-icon.png" width="10px" style="opacity: 0.7; display: none; cursor: pointer;" id="delete-photo-icon" onclick="rm_img();">
+			<div id="chat-controls">
+				<textarea id="msg_txtarea" maxlength="260" class="form-control large-compact" placeholder="Fale Aqui..." name="text" onkeypress="txt_v();"></textarea>
+				<div id="chat-btn-cntr">
+					<form method="post" enctype="multipart/form-data" id="img-form">
+						{% csrf_token %}
+						<input type="hidden" name="c" value="{{ cid }}">
+						<label style="margin: auto;" for="upload-photo">
+							<i class="fas fa-camera fa-lg"></i>
+							<span id="upload-photo-text"></span>
+						</label>
+						<input type="file" accept="image/*" name="file" id="upload-photo" onchange="add_img();">
+						<img class="clickable" src="/static/images/close-icon.png" width="15px" style="display: none;" id="delete-photo-icon" onclick="rm_img();">
+					</form>
 					
-				</form>
-				
-				<button id="send-btn" class="btn btn-primary left-spaced" style="border-radius: 100px; font-size: 18px; font-weight: 800; padding-top: 10px" onclick="send_msg();">
-                    <ion-icon name="send-outline"></ion-icon>
-				</button>
-					
+					<button id="send-btn" class="btn btn-primary round left-spaced" onclick="send_msg();">
+						<ion-icon name="send-outline"></ion-icon>
+					</button>
 				</div>
 			</div>
-			<div style="height: 10px;"></div>
+			<div class="vertical-spaced"></div>
         </main>
 		<script>
 			var CID = {{ cid }};

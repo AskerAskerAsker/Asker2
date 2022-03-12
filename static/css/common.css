@@ -25,10 +25,54 @@ textarea.large-compact {
 	font-size: 14px;
 	background-color: transparent !important;
 }
-@media (min-width: 320px) and (max-width: 580px) {
-  .rmsg, .lmsg {
-	  width: 85%;
-  }
+main.chmain {
+	height: 100%;
+	display: flex;
+	flex-direction: column;
+}
+.vchk {
+	position: absolute;
+	right: 15px;
+	bottom: 20px;
+}
+.vchk-icon {
+	background-color: rgba(255,255,255,20%);
+	border-radius:10px;
+}
+#chatbox {
+	overflow-y: scroll;
+	height: 100%;
+}
+#msg_txtarea {
+	font-size: 11px;
+	font-weight: 600;
+	border-radius: 10px;
+	height: 100%;
+	margin-right: 3px;
+	border: none
+}
+#chat-controls {
+	padding: 20px 10px;
+	background: transparent;
+	display: flex;
+	flex-direction: row;
+}
+#chat-btn-cntr {
+	display: flex;
+	flex-direction: column;
+}
+#img-form {
+	text-align: center;
+	padding-left: 3px;
+}
+#send-btn {
+	font-size: 18px;
+	padding-top: 10px;
+}
+@media (min-width: 320px) and (max-width: 740px) {
+	.rmsg, .lmsg {
+		width: 85%;
+	}
 }
 /* Chat-end */
 
@@ -171,14 +215,27 @@ button font {
     color: white;
 }
 .navegacao {
-    background: rgba(0, 0, 0, 0) linear-gradient(to left, rgb(241, 111, 161), rgb(144, 86, 241));
-    color: white;
     position: fixed;
-    padding: 5px 10px;
-    padding-top: 2px;
-    top: 55px;
-    border-radius: 100px;
-    margin-bottom: 10px;
+    color: white;
+	background: rgba(0, 0, 0, 0) linear-gradient(to left, rgb(241, 111, 161), rgb(144, 86, 241));
+}
+.navegacao.nauth {
+    padding: 8px 10px;
+	height: 75px;
+	top: -5px;
+	border-radius: 0px 0px 20px 20px;
+}
+.navegacao.auth {
+	padding: 4px 16px 9px 16px;
+	margin-top: 20px;
+	box-shadow: 0 0 0.5em rgb(0, 0, 0, 0.4);
+	border-radius: 100px;
+}
+.navegacao a {
+	font-size: 14px;
+}
+.navegacao .left-spaced {
+	padding-left: 10px;
 }
 .qcreator-small {
 	margin-left: 5px;
@@ -465,13 +522,10 @@ button font {
 .heart-comment {
   display: inline;
 }
-.hc-icon {
-  cursor: pointer;
-}
 .response-control {
     float: right;
 }
-@media (min-width: 320px) and (max-width: 580px) {
+@media (min-width: 320px) and (max-width: 740px) {
   .r-question {
     width: 95%;
     margin: auto;
@@ -488,15 +542,6 @@ button font {
   }
 }
 /* Question-end */
-
-/* To generalize */
-.flexbox {
-    display: flex
-}
-.fg-1 {
-    flex-grow: 1;
-}
-/* To generalize-end */
 
 /* Rank */
 .ranked-u-stats {
@@ -518,6 +563,35 @@ button font {
 /* Notification-end */
 
 /* General */
+textarea {
+	scrollbar-width: none;
+	-ms-overflow-style: none;	
+}
+.clickable {
+	cursor: pointer;
+}
+.clickable:hover {
+	text-decoration: none;
+}
+.w-50pct {
+	width: 50%;
+}
+.round {
+	border-radius: 30px;
+}
+.horiz-center {
+	margin-left: auto;
+	margin-right: auto;
+}
+.flexbox {
+    display: flex
+}
+.fg-1 {
+    flex-grow: 1;
+}
+.no-bg {
+	background: transparent;
+}
 .nav-tabs .nav-link.active {
     background: transparent;
     font-weight: 800;
@@ -573,6 +647,12 @@ button font {
 .separator-50 {
     height: 50px;
 }
+.separator-15 {
+	height: 15px;
+}
+.separator-5 {
+	height: 5px;
+}
 main {
     width: 60%;
     max-width: 960px;
@@ -618,7 +698,7 @@ main {
   margin-top: 4px;
   width: 100% !important;
 }
-@media (min-width: 320px) and (max-width: 580px) {
+@media (min-width: 320px) and (max-width: 740px) {
   .inline-input .left-input {
     margin-right: 0px;
   }

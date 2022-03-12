@@ -16,14 +16,16 @@ Comunidade Online!">
 		opacity: 0;
 	}
 </style>
+<style>body { display:none; }</style>
 <meta name="keywords" content="br.asker.fun, asker.fun, askerfun, comunidade, perguntas, respostas, asker">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css">
+<meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#68228B" />
 <meta name="apple-mobile-web-app-status-bar-style" content="#68228B" />
 <meta name="msapplication-navbutton-color" content="#68228B" />
 <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
 <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
-
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css">
 {% include "includes/themehandler.html" %}
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/css/bootstrap.min.css">
 <script>
@@ -32,7 +34,6 @@ Comunidade Online!">
         var user_status = "anonymous";
     {% else %}
         var user_status = "logged";
-        
         {% if user_p.active %}
             var conta_ativa = true;
         {% else %}
@@ -41,18 +42,7 @@ Comunidade Online!">
     {% endif %}
 </script>
 <script>
-    var popular_page = 1;
-</script>
-<style>body{display:none}.navegacao button{font-size:.8em}</style>
-<style>
-    .profile-picture-index img {
-        max-width: 30px;
-    }
-</style>
-
-
-
-<script>
+var popular_page = 1;
 popular_questions_=[
     {% for question in popular_questions %}
         {% if not question.creator.user in user_p.silenced_users.all %}
@@ -71,100 +61,57 @@ popular_questions_=[
     {% endfor %}
 ];
 </script>
-<meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, viewport-fit=cover">
+</head> 
 
-</head>
+<body>
 {% if user.is_authenticated %}
 	{% include "includes/menubar.html" %}
-{% endif %}   
+{% endif %}  
 
-{% if user.is_authenticated %}
-{% else %}
-{% endif %}
-
-<body style="overflow-x: hidden">
 <div class="separator-75"></div>
 <center style="height: 10px;"> 
 	<div class="containerem" style="z-index: 9999;">
-	   {% if not user.is_authenticated %}
-	   <div class="navegacao" style="position: fixed; padding: 10px; margin-top: 20px; padding-top: 10px; padding-bottom: 6px; background-image: linear-gradient(to right, #FF1493, #8A2BE2); height: 75px; top: -25px; border-radius: 0px 0px 20px 20px">
-           
-       <center> <img width="80px" src="https://i.imgur.com/2F4x4ch.png"></img> </center>
-       
-       {% else %}
-    <br><br>
-	   <div class="navegacao" style="padding: 6px; padding-left: 16px; padding-right: 16px; margin-top: 8px; box-shadow: 0 0 0.5em rgb(0, 0, 0, 0.8);">
-      {% endif %}
-			
-       		{% if not user.is_authenticated %}
-			<a id="botao-popular" style="padding-right: 10px; text-decoration: none; outline: none; cursor: pointer; font-size: 14px">Populares</a>
-			{% else %}
-            <a id="botao-popular" style="padding-right: 10px; text-decoration: none; outline: none; cursor: pointer; font-size: 14px">Populares</a>
-       		{% endif %}
-       
-       {% if not user.is_authenticated %}
-       <a class="left-spaced"  id="botao-recentes" style="padding-right: 10px; text-decoration: none; outline: none; cursor: pointer; border none; font-size: 14px">Recentes</a>
-	   {% else %}
-       <a class="left-spaced"  id="botao-recentes" style="padding-right: 10px; text-decoration: none; outline: none; cursor: pointer; border none; font-size: 14px">Recentes</a>
-	   {% endif %}
-       
-       {% if user.is_authenticated %}
-			<a class="left-spaced" id="botao-seguindo" style="padding-right: 10px; text-decoration: none; outline: none; cursor: pointer; border none; font-size: 14px">Seguindo</a>
-       
-       {% else %}
-       <a id="botao-popular" style="font-weight: 700; font-size: 15px; text-decoration: none; color: white; outline: none" href="/signin?redirect={{ request.get_full_path }}">Entrar &#10152;</a>
-       
-			<a class="hidden" id="botao-seguindo" style="padding-right: 8px; text-decoration: none; outline: none; cursor: pointer; border none; font-size: 14px">Seguindo</a>
-			{% endif %}
-   
+		{% if not user.is_authenticated %}
+		<div class="navegacao nauth">
+			<center> <img width="80px" src="https://i.imgur.com/2F4x4ch.png"></img> </center>
+			<a class="clickable" id="botao-popular">Populares</a>
+			<a class="clickable left-spaced"  id="botao-recentes">Recentes</a>
+			<a class="clickable left-spaced" href="/signin?redirect={{ request.get_full_path }}">Entrar &#10152;</a>
+			<a class="hidden" id="botao-seguindo">Seguindo</a>
 		</div>
-
- 
-<div id="new-q-btn" style="position: fixed; top: 115px">
-	<button class="btn" style="padding-left: 13px; padding-right: 13px; box-shadow: 0 0 0.9em rgb(238, 220, 130, 0.6); background-image: linear-gradient(to right, #104E8B, #00B2EE);" onclick="update_recent()">
-	<p style="margin-bottom: 0px; color: white; font-weight: 800">+<span id="new-q-count">0</span> Novas Postagens</p>
-	</button>
-</div>
-       
+		{% else %}
+		<div class="navegacao auth">
+			<a class="clickable" id="botao-popular">Populares</a>
+			<a class="clickable left-spaced"  id="botao-recentes">Recentes</a>
+			<a class="clickable left-spaced" id="botao-seguindo">Seguindo</a>
+		</div>
+		{% endif %}
+	<div id="new-q-btn" style="position: fixed; top: 115px">
+		<button class="btn" style="padding-left: 13px; padding-right: 13px; box-shadow: 0 0 0.9em rgb(238, 220, 130, 0.6); background-image: linear-gradient(to right, #104E8B, #00B2EE);" onclick="update_recent()">
+		<p style="margin-bottom: 0px; color: white; font-weight: 800">+<span id="new-q-count">0</span> Novas Postagens</p>
+		</button>
 	</div>
-
-<br><br><br><br>
-
-
+</div>
 </center>
 
-{% if not user_p.active and not user.is_anonymous %}
-	<style>
-		@media (min-width:801px) {
-			.user-nao-ativo {
-				width: 50%;
-			}
-		}
-	</style>
-
-<br>
-
-	<center>
-		<div class="alert alert-info user-nao-ativo">
-			<p> Confirme seu email abrindo o link enviado para ele.<br>Este é o email usado na tela de cadastro: {{ user.email }} </p>
-			<p> Caso não encontre o email, verifique na pasta de spam. </p> 
-			<b>Edite Seu Perfil <a style="text-decoration: none" href="/user/{{ user.username }}">Aqui</a></b>
-		</div>
-	</center>
-{% endif %}
-
-<br>
-
 {% if user.is_authenticated %}
-<main>
-{% else %}
-<main style="margin-top: -30px;">
+<div class="separator-5 vertical-spaced"></div>
 {% endif %}
 
+<main>
+{% if not user_p.active and not user.is_anonymous %}
+<center>
+	<br>
+	<div class="alert alert-info">
+		<p> Confirme seu email abrindo o link enviado para ele.<br>Este é o email usado na tela de cadastro: {{ user.email }} </p>
+		<p> Caso não encontre o email, verifique na pasta de spam. </p> 
+		<b>Edite Seu Perfil <a style="text-decoration: none" href="/user/{{ user.username }}">Aqui</a></b>
+	</div>
+</center>
+{% endif %}
 <script>
 	var mostrar_primeiro = "{{ initial }}";
 </script>
-
 
 <section class="card" id="novas_questoes"> 
     <center id="top-spinner" style="display: none"><i class="fas fa-spinner fa-3x fa-spin"></i></center>
@@ -174,7 +121,6 @@ popular_questions_=[
     <br><br>
 </section>
 
-
 <section id="questoes_populares" class="card">
 	<ul class="list-group-flush" id="lista_de_questoes_populares" style="border: none"></ul>
 	<button id="load-more-popular-btn" class="btn btn-outline-primary" onclick="popular_page++; load_more_popular(this, this.nextElementSibling, popular_page);" style="margin-left: 30px; border: none; font-size: 13px; color: white;">Ver Mais +</button>
@@ -182,14 +128,12 @@ popular_questions_=[
     <br><br>
 </section>
 
-
 <section id="feed" class="card">
 	<ul class="list-group-flush" id="feed_list" style="border: none"></ul>
 	<button id="load-more-feed-btn" class="btn btn-outline-primary" onclick="load_more_feed(this, this.nextElementSibling);" style="margin-left: 30px; border:none; font-size: 13px"><b>Ver Mais +</b></button>
 	<center style="display: none"><i class="fas fa-spinner fa-3x fa-spin"></i></center>
     <br><br>
 </section>
-
 </main>
 
 <div id="popup-bg" style="display: none; position: fixed; top: 0; bottom: 0; left: 0; right: 0; z-index: 9" onclick="login_toggle();">

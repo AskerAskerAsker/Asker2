@@ -21,53 +21,31 @@
 		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
 		<script src="https://kit.fontawesome.com/1f965a8b94.js"></script>
 		<title>{{ question.text }} | Asker</title>
-		
 		<script>
 			csrf_token = "{{ csrf_token }}";
 		</script>
     <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script> 
     <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
-    
 	</head>
 	<body>
- 
-
-    
-    
     {% if user.is_authenticated %}
 	   {% include "includes/menubar.html" %}
     {% endif %}
-
-    
-    
-
 	<div style="display: none">
     {% include "includes/navbar.html" %}
     </div>
     <div class="separator-75"></div>
     
-    
+	{% if not user.is_authenticated %}
     <center style="height: 10px;"> 
-	<div class="containerem" style="z-index: 9999;">
-	   {% if not user.is_authenticated %}
-	   <div class="navegacao" style="position: fixed; padding: 10px; margin-top: 20px; padding-top: 10px; padding-bottom: 6px; background-image: linear-gradient(to right, #FF1493, #8A2BE2); height: 75px; top: -25px; border-radius: 0px 0px 20px 20px">
-           
-       <center> <img width="80px" src="https://i.imgur.com/2F4x4ch.png"></img> </center>
-       
-      {% endif %}
-			
-    {% if not user.is_authenticated %}
-			<a id="botao-popular" style="padding-right: 10px; text-decoration: none; outline: none; cursor: pointer; font-size: 14px">Populares</a>
-	{% endif %}
-       
-       {% if not user.is_authenticated %}
-       <a class="left-spaced"  id="botao-recentes" style="padding-right: 10px; text-decoration: none; outline: none; cursor: pointer; border none; font-size: 14px">Recentes</a>
-	{% endif %}
-       
-   
+		<div class="containerem" style="z-index: 9999;">
+			<div class="navegacao nauth">
+				<center> <img width="80px" src="https://i.imgur.com/2F4x4ch.png"></img> </center> 
+				<a class="clickable" id="botao-popular" href="/signin?redirect={{ request.get_full_path }}">Entrar &#10152;</a>
+			</div>
 		</div>
     </center>
-    
+	{% endif %}
     
 		<main>
 			<section>
@@ -88,7 +66,6 @@
 						</a>
 					</div>
                
-					
 					<h1 style="font-size: 1.3em; font-weight: 700;">{{ question.text }}</h1>
 					
 					{% if question.description %}
@@ -117,77 +94,77 @@
 					{% if question.has_poll %}
 						{% voted user poll as VOTED %}
 						{% if not VOTED and poll.may_vote and user.is_authenticated %}
-							<div class="card poll poll-chooser bg-inner">
-								<ul class="list-group list-group-flush">
-								{% for choice in poll_choices %}
-									<li class="choice list-group-item bg-inner-when-dark">
-										<div class="chooser">
-											<label>
-												{% if poll.multichoice %}
-													<input class="poll-option" type="checkbox" name="poll-option" value="{{ choice.id }}">
-												{% else %}
-													<input class="poll-option" type="radio" name="poll-option" value="{{ choice.id }}">
-												{% endif %}
-												<span class="left-spaced">{{ choice.text }}</span>
-											</label>
-										</div>
-									</li>
-								{% endfor %}
-								</ul>
-								<div class="card-footer">
-									<button class="btn btn-primary" onclick="voteOnPoll();" >Votar</button>
-									<span class="clickable left-spaced" onclick="openShower();">Ver Resultado</span>
+							<div class="card poll poll-chooser vertical-spaced">
+								<div class="card-body bg-outer-when-dark">
+									<ul class="list-group list-group-flush">
+									{% for choice in poll_choices %}
+										<li class="choice list-group-item no-bg">
+											<div class="chooser">
+												<label>
+													{% if poll.multichoice %}
+														<input class="poll-option" type="checkbox" name="poll-option" value="{{ choice.id }}">
+													{% else %}
+														<input class="poll-option" type="radio" name="poll-option" value="{{ choice.id }}">
+													{% endif %}
+													<span class="left-spaced">{{ choice.text }}</span>
+												</label>
+											</div>
+										</li>
+									{% endfor %}
+									</ul>
+									<div>
+										<button class="btn btn-primary round" onclick="voteOnPoll();">Votar</button>
+										<a href="javascript:void(0);" class="clickable left-spaced" onclick="openShower();">Ver Resultado</a>
+									</div>
 								</div>
 							</div>
 						{% endif %}
 
-						<div class="card poll-shower bg-inner"><div class="card-body">
-							<input type="hidden" name="qpoll" value="{{ poll.id }}">
-							{% for choice in poll_choices %}
-								<div class="choice-show">
-
-									{% if user|has_chosen:choice %}
-									<span class="float-right">
-										<span class="vote-count">{{ choice.votes }}</span> votos
-										<i class="fa fa-check-circle-o" aria-hidden="true"></i> </span>
-									{% else %}
-									<span class="float-right"><span class="vote-count">{{ choice.votes }}</span> votos</span>
-									{% endif %}
-
-									<span>{{ choice.text }}</span>
-
-									<div class="progress progress-striped active">
-										<div class="progress-bar progress-bar-primary" style="width: 0%;"></div>
+						<div class="card poll-shower vertical-spaced">
+							<div class="card-body bg-outer-when-dark">
+								<input type="hidden" name="qpoll" value="{{ poll.id }}">
+								{% for choice in poll_choices %}
+									<div class="choice-show">
+										{% if user|has_chosen:choice %}
+										<span class="float-right">
+											<span class="vote-count">{{ choice.votes }}</span> votos
+											<i class="fa fa-check-circle-o" aria-hidden="true"></i> </span>
+										{% else %}
+										<span class="float-right"><span class="vote-count">{{ choice.votes }}</span> votos</span>
+										{% endif %}
+										<span>{{ choice.text }}</span>
+										<div class="progress round active">
+											<div class="progress-bar" style="width: 0%;"></div>
+										</div>
 									</div>
-								</div>
-							{% endfor %}
-
-						</div>
-							<div class="card-footer">
-							{% if poll.may_vote %}
-								{% if not VOTED and user.is_authenticated %}
-									<span class="clickable left-spaced" onclick="openChooser();">Votar</span>
-								{% elif user.is_authenticated %}
-									<span class="clickable left-spaced" onclick="undoVote();">Retirar Voto</span>
+								{% endfor %}
+								<div>
+									<div class="separator-15"></div>
+								{% if poll.may_vote %}
+									{% if not VOTED and user.is_authenticated %}
+										<span class="clickable left-spaced" onclick="openChooser();">Votar</span>
+									{% elif user.is_authenticated %}
+										<span class="clickable left-spaced" onclick="undoVote();">Retirar Voto</span>
+									{% else %}
+										<span>Faça login ou crie uma conta para responder à enquete.</span>
+									{% endif %}
 								{% else %}
-									<span>Faça login ou crie uma conta para responder à enquete.</span>
+									<span>Votação Encerrada.</span>
 								{% endif %}
-							{% else %}
-								<span>Votação Encerrada.</span>
-							{% endif %}
+								</div>
 							</div>
 						</div>
 					{% endif %}
 
-			{% if question.videofile %}
-				<video style="border-radius: 10px;" src="{{ question.videofile.url }}" width="300" height="150" poster="teste.jpg" controls> </video>
-			{% endif %}
+					{% if question.videofile %}
+						<video style="border-radius: 10px;" src="{{ question.videofile.url }}" width="300" height="150" poster="teste.jpg" controls> </video>
+					{% endif %}
 
 					{% if question.creator.user.username == user.username %}
-						<form method="post" action="/delete_question" onsubmit="if(confirm('Opa! Tem certeza que deseja apagar sua resposta?')) return true; else return false;">
+						<form class="vertical-spaced" method="post" action="/delete_question" onsubmit="if(confirm('Opa! Tem certeza que deseja apagar sua resposta?')) return true; else return false;">
 							{% csrf_token %}
 							<input type="hidden" name="question_id" value="{{ question.id }}">
-				            <button class="btn btn-outline-danger" style="font-size: 11px; font-weight: 600; border-radius: 30px">Apagar Postagem</button><br><br>
+				            <button class="btn btn-outline-danger round" style="font-size: 11px; font-weight: 600;">Apagar Postagem</button><br><br>
 						</form>
 					{% endif %}
 
@@ -209,15 +186,15 @@
                         {% endif %}
 			
 			<div class="badge badge-pill" style="background: rgba(200,200,200,0.1); height: 32px;">			
-	                        {% if question in user_p.followed_questions.all %}
-	                            <a id="unfqa" class="clickable" href="javascript:void(0);" onclick="unfollow_question({{ question.id }});"><ion-icon class="text-success" style="font-size: 24px" title="Deixar de seguir pergunta" name="checkmark-circle-outline"></ion-icon></a> 
-	                            <a id="fqa" class="clickable hidden" href="javascript:void(0);" onclick="follow_question({{ question.id }});"><ion-icon style="font-size: 24px" title="Seguir pergunta" name="add-circle-outline"></ion-icon></a> 
-	                        {% else %}
-	                            <a id="unfqa" class="clickable hidden" href="javascript:void(0);" onclick="unfollow_question({{ question.id }});"><ion-icon class="text-success" style="font-size: 24px" title="Deixar de seguir pergunta" name="checkmark-circle-outline"></ion-icon></a> 
-	                            <a id="fqa" class="clickable" href="javascript:void(0);" onclick="follow_question({{ question.id }});"><ion-icon style="font-size: 24px" title="Seguir pergunta" name="add-circle-outline"></ion-icon></a> 
-	                        {% endif %}
-							
-	                        <a class="clickable" href="javascript:void(0);" onclick="report_question({{ question.id }});"><ion-icon style="font-size: 24px" title="Denunciar pergunta" name="flag-outline"></ion-icon></a>             
+				{% if question in user_p.followed_questions.all %}
+					<a id="unfqa" class="clickable" href="javascript:void(0);" onclick="unfollow_question({{ question.id }});"><ion-icon class="text-success" style="font-size: 24px" title="Deixar de seguir pergunta" name="checkmark-circle-outline"></ion-icon></a> 
+					<a id="fqa" class="clickable hidden" href="javascript:void(0);" onclick="follow_question({{ question.id }});"><ion-icon style="font-size: 24px" title="Seguir pergunta" name="add-circle-outline"></ion-icon></a> 
+				{% else %}
+					<a id="unfqa" class="clickable hidden" href="javascript:void(0);" onclick="unfollow_question({{ question.id }});"><ion-icon class="text-success" style="font-size: 24px" title="Deixar de seguir pergunta" name="checkmark-circle-outline"></ion-icon></a> 
+					<a id="fqa" class="clickable" href="javascript:void(0);" onclick="follow_question({{ question.id }});"><ion-icon style="font-size: 24px" title="Seguir pergunta" name="add-circle-outline"></ion-icon></a> 
+				{% endif %}
+				
+				<a class="clickable" href="javascript:void(0);" onclick="report_question({{ question.id }});"><ion-icon style="font-size: 24px" title="Denunciar pergunta" name="flag-outline"></ion-icon></a>             
 			</div>
                     </div>
                     {% endif %}
@@ -239,10 +216,8 @@ href="/signup?redirect=/question/{{ question.id }}">crie uma conta</a> para resp
                 </div>
             {% endif %}
 
-
 <br>
-        
-        
+          
         {% if user.is_authenticated %}
 				{% if user_p.active %}
 					{% answered user.username question.id as ANSWERED %}
@@ -250,53 +225,40 @@ href="/signup?redirect=/question/{{ question.id }}">crie uma conta</a> para resp
 						{% ablockb question.creator.user.username user.username as BLOCKED %}
 						{% if not BLOCKED %}
 		
-        
-		<form  id="formulario_de_resposta" class="card-body" style="padding: 15px 20px;">
-								{% csrf_token %}
-								<input type="hidden" name="question_id" value="{{ question.id }}">
-				
-  <textarea id="sua-resposta" maxlength="5000" class="form-control large-compact" style="font-size: 13px; font-weight: 600; border: none; border-radius: 10px; margin-bottom: 15px;" placeholder="Digite Sua Resposta Aqui..." name="text" required="required" onclick="$(this).css('height', '60px')"></textarea>
-								
-	<button class="btn btn-primary" type="submit" style="font-size: 14px; width: 110px; font-weight: 700; border-radius: 30px" id="botao_enviar_resposta">
-		<i class="far fa-paper-plane"></i>
-		Enviar
-        </button>
-								
-								<label for="upload-photo">
-									&nbsp;<i class="fas fa-camera fa-lg"></i>
-									<span id="upload-photo-text"></span>
-								</label>
-								
-								<input type="file" accept="image/*" name="file" id="upload-photo" onclick="return veracity_test({{ user_p.total_points }}, {% MINIMUM_POINTS_FOR_POSTING_IMAGES %});">
-								<img src="/static/images/close-icon.png" width="20px" style="display: none; cursor: pointer;" id="delete-photo-icon">
-							</form>
-					
-                        
-                        
-						<img src="/static/images/loading.gif" width="30px" style="display: none;" id="response-loading-gif">
-							
+		<form  id="formulario_de_resposta" class="card">
+			<div class="card-body">
+				{% csrf_token %}
+				<input type="hidden" name="question_id" value="{{ question.id }}">
+
+				<textarea id="sua-resposta" maxlength="5000" class="form-control large-compact" style="font-size: 13px; font-weight: 600; border: none; border-radius: 10px; margin-bottom: 15px;" placeholder="Digite Sua Resposta Aqui..." name="text" required="required"></textarea>
+
+				<button class="btn btn-primary" type="submit" style="font-size: 14px; width: 110px; font-weight: 700; border-radius: 30px" id="botao_enviar_resposta">
+				<i class="far fa-paper-plane"></i>
+				Enviar
+				</button>
+
+				<label for="upload-photo">
+					&nbsp;<i class="fas fa-camera fa-lg"></i>
+					<span id="upload-photo-text"></span>
+				</label>
+
+				<input type="file" accept="image/*" name="file" id="upload-photo" onclick="return veracity_test({{ user_p.total_points }}, {% MINIMUM_POINTS_FOR_POSTING_IMAGES %});">
+				<img src="/static/images/close-icon.png" width="20px" style="display: none; cursor: pointer;" id="delete-photo-icon">
+			</div>
+		</form>
+		<img src="/static/images/loading.gif" width="30px" style="display: none;" id="response-loading-gif">
+			
 						{% else %}
 							Pergunta indisponível.
 						{% endif %}
 					{% endif %}
 				{% endif %}
 			{% endif %}
- 	
 <br>
-        
 <div class="card-header" style="background: transparent; border: none;">				
     	  <span id="total-de-respostas" style="color: #DA70D6; font-weight: 900; font-size: 25px;"></span>
           <span id="total-de-respostas-sentence" style="color: #00CED1; font-weight: 600; font-size: 17px;">
           </span> 💬
-                   
-
-
-
-
-
-
-
-
 </div>
   				
 			<section class="card bg-main" id="responses" style="border: none;">
@@ -310,9 +272,6 @@ href="/signup?redirect=/question/{{ question.id }}">crie uma conta</a> para resp
 				</ul>
 			</section>
 			
-			
-			
-            
             {% if user.is_anonymous %}
                 <div class="text-center bg-main" style="font-size: 13px; margin: 15px">
                     Faça <a href="/signin?redirect=/question/{{ question.id }}">login</a> ou <a 
@@ -320,7 +279,7 @@ href="/signup?redirect=/question/{{ question.id }}">crie uma conta</a> para resp
                 </div>
             {% endif %}
 	</main>
-	<br><br>
+	<br>
 	    <script src="/static/js/common.js?v=1.5.1"></script>
         <script src="https://cdn.jsdelivr.net/npm/linkifyjs@2.1.9/dist/linkify.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/linkifyjs@2.1.9/dist/linkify-jquery.min.js"></script>
@@ -330,7 +289,6 @@ href="/signup?redirect=/question/{{ question.id }}">crie uma conta</a> para resp
             $('.description').linkify();
         </script>
 <script>
-    /* Calcula e mostra o total de respostas da pergunta. */
     respostas = document.getElementsByClassName('resposta');
     document.getElementById('total-de-respostas').innerText = respostas.length;
     document.getElementById('total-de-respostas-sentence').innerText = (respostas.length == 1 ? 'Resposta' : 'Respostas');
