@@ -1,23 +1,21 @@
 {% load main_app_extras %}
 {% load humanize %}
-
-{% if not response.creator.ban %}
-
-	<li class="list-group-item bg-main resposta">
+<!-- kfO1wMuva3hNgh0AhIviPyhEGyoRjDdX -->
+{% for response in responses|pull_best_answer %}
+{% if response.creator.user not in user_p.silenced_users.all or request.user.is_anonymous %}
+{% if response.creator == user_p or not response.creator.ban %}
+	<li class="list-group-item bg-main resposta" data-id="{{ response.id }}">
 		<div class="card-body" style="border: none">
 			<div class="poster-container">
-				<a class="poster-info" href="/user/{{ response.creator.user.username }}">							
-<div class="poster-profile-pic-container" style="border-radius: 100px; width: 59px; height: 57px; background: url({{ response.creator.avatar.url }}); background-size: cover; background-repeat: no-repeat; background-position: center">
-</div>	
-					
-										
+				<a class="poster-info" href="/user/{{ response.creator.user.username }}">
+					<div class="poster-profile-pic-container" style="border-radius: 100px; width: 59px; height: 57px; background: url({{ response.creator.avatar.url }}); background-size: cover; background-repeat: no-repeat; background-position: center"></div>
 					<div class="poster-text-container" style="padding-left: 10px">
 						<div>
 						   <span class="r-username">
 							<font style="font-weight: 700; font-size: 15px">
 								{{ response.creator.user.username }}
 							</font>
-					           </span>
+							   </span>
 							<span title="{{ response.pub_date }}" class="post-pub-date">
 								{% fix_naturaltime response.pub_date|naturaltime %}
 							</span>
@@ -25,7 +23,7 @@
 					</div>
 				</a>
 			</div>
-			
+
 			{% if question.best_answer == response.id %}
 				<div class="best-answer-badge">
 					<span class="badge badge-pill badge-primary" style="font-weight: 800">
@@ -33,11 +31,11 @@
 					</span>
 				</div>
 			{% endif %}
-			
+
 			<p id="response-{{ response.id }}" style="font-size: 15px; font-weight: 500">
 				{{ response.text|linebreaksbr }}
 			</p>
-			
+
 			{% if response.get_embedded_content %}
 				<div class="embedded-content">
 					{{ response.get_embedded_content|safe }}
@@ -53,7 +51,11 @@
 			{% endif %}
 
 			{% if response.creator != user_p %}
+
 			<div class="heart-comment" id="like-counter-{{ response.id }}" onclick="like(this, {{ response.id }})">
+			{% comment %}
+			</div>
+			{% endcomment %}
 			{% else %}
 			<div class="heart-comment" id="like-counter-{{ response.id }}">
 			{% endif %}
@@ -79,7 +81,7 @@
 			<div class="heart-comment" style="border: none">
 				<i><img width="16px" src="/static/images/comments.png?version=3" class="icon hc-icon" onclick="$(this.parentElement.nextElementSibling.nextElementSibling).toggle(200);"></i>
 				<span class="comment">{{ response.id|total_comments }}</span>
-				
+
 				<div class="card comments" style="display: none">
 					<div class="card-body bg-outer">
 						<ul class="comments-ul list-group list-group-flush" style="font-size: 15px; font-weight: 500">
@@ -99,17 +101,16 @@
 						</form>
 					</div>
 				</div>
-				
+
 			</div>
-            {% if 'pap' in user_permissions %}
-                <form style="display: inline" method="post" action="/delete_response" onsubmit="if(confirm('Apagar resposta?')) return true; else return false;">
-                    {% csrf_token %}
-                    <input type="hidden" name="response_id" value="{{ response.id }}">
-                    <button class="btn btn-outline-info btn-sm">Deletar</button>
-                </form>
-            {% endif %}
+			{% if 'pap' in user_permissions %}
+				<form style="display: inline" method="post" action="/delete_response" onsubmit="if(confirm('Apagar resposta?')) return true; else return false;">
+					{% csrf_token %}
+					<input type="hidden" name="response_id" value="{{ response.id }}">
+					<button class="btn btn-outline-info btn-sm">Deletar</button>
+				</form>
+			{% endif %}
 		</div>
-        
 		<form method="post" action="/edit-response" style="display: none;">
 			{% csrf_token %}
 			<input type="hidden" name="response_id" value="{{ response.id }}">
@@ -117,116 +118,6 @@
 			<input class="btn btn-outline-primary" type="submit" value="Salvar">
 		</form>
 	</li>
-
-{% else %}
-
-	{% if response.creator == user_p %}
-	
-	
-		<li class="list-group-item bg-main no-horiz-padding">
-			<div class="card-body">
-				<div class="poster-container">
-					<a class="poster-info" href="/user/{{ response.creator.user.username }}">
-						<div class="poster-profile-pic-container">
-							<img src="{{ response.creator.avatar.url }}" alt="{{ response.creator.user.username }}">
-						</div>
-						
-						<div class="poster-text-container">
-							<div>
-								<span class="r-username">
-									{{ response.creator.user.username }}
-								</span>
-								<span title="{{ response.pub_date }}" class="post-pub-date">
-									{% fix_naturaltime response.pub_date|naturaltime %}
-								</span>
-							</div>
-						</div>
-					</a>
-				</div>
-				
-				{% if question.best_answer == response.id %}
-					<div class="best-answer-badge">
-						<span class="badge badge-pill badge-primary" style="font-weight: 800">
-							🏆 A Melhor Resposta!
-						</span>
-					</div>
-				{% endif %}
-				
-				<p id="response-{{ response.id }}">
-					{{ response.text|linebreaksbr }}
-				</p>
-				
-				{% if response.get_embedded_content %}
-					<div class="embedded-content">
-						{{ response.get_embedded_content|safe }}
-						<br>
-					</div>
-				{% endif %}
-
-				{% if response.image %}
-					<div>
-						<img src="{{ response.image.url }}" class="response-image" alt="Ocorreu um erro ao processar a imagem.">
-						<br>
-					</div>
-				{% endif %}
-
-				<div class="heart-comment" id="like-counter-{{ response.id }}">
-					<i>
-						<img width="16px" src="/static/images/{{ response.id|like_or_not:user.username }}?version=3" class="hc-icon">
-					</i>
-					<span>{{ response.total_likes }}</span>
-				</div>
-				&nbsp;&nbsp;
-
-				{% if response.creator.user.username == user.username %}
-					<div class="btn-group" role="group" style="float: right;">
-						<button class="btn btn-outline-primary btn-sm" onclick="delete_response(this, {{ response.id }})"><i class="fas fa-trash"></i>&nbsp;Apagar</button>
-						<button class="btn btn-outline-primary btn-sm" onclick="$(this.parentElement.parentElement.nextElementSibling).toggle(0);"><i class="fas fa-edit"></i>&nbsp;Editar</button>
-					</div>
-				{% elif question.creator.user.username == user.username %}
-					{% if question.may_choose_answer %}
-					<button class="btn btn-primary btn-sm response-control choose-answer-btn" type="button" onclick="chooseAnswer({{ response.id }})">
-							Definir Melhor Resposta
-					</button>
-					{% endif %}
-				{% endif %}
-
-
-				<div class="heart-comment" style="border: none">
-					<i>
-						<img width="16px" src="/static/images/comments.png?version=3" class="icon hc-icon" onclick="$(this.parentElement.nextElementSibling.nextElementSibling).toggle(200);">
-					</i>
-					<span class="comment">{{ response.id|total_comments }}</span>
-					<!-- Comentários -->
-					<div class="card comments bg-inner" style="display: none; border: none">
-						<ul class="comments-ul list-group list-group-flush">
-							{{ response.id|list_comments:request|safe }}
-						</ul>
-
-						<center style="display: none">
-							<img src="/static/images/loading.gif" width="10%">
-						</center>
-
-						<form class="form-inline comm-form" onsubmit="make_comment(this); return false;">
-							{% csrf_token %}
-							<input type="hidden" name="response_id" value="{{ response.id }}">
-							<input type="hidden" name="question_id" value="{{ question.id }}">
-							<input type="text" maxlength="300" autocomplete="off" class="form-control comment-form bg-innermost-when-dark" name="text" placeholder="Seu Comentário:" required>
-							<br><br><input class="btn btn-primary" type="submit" style="border-radius: 30px" value="Comentar">
-						</form>
-					</div>
-					
-				</div>
-			</div>
-			
-			<form method="post" action="/edit-response" style="display: none;">
-				{% csrf_token %}
-				<input type="hidden" name="response_id" value="{{ response.id }}">
-				<textarea rows="8" maxlength="5000" class="form-control" placeholder="Sua Resposta:" name="text" required>{{ response.text }}</textarea>
-				<input class="btn btn-outline-primary" type="submit" value="Salvar">
-			</form>
-		</li>
-	
-	{% endif %}
-
 {% endif %}
+{% endif %}
+{% endfor %}

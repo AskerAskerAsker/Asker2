@@ -37,24 +37,30 @@
     <div class="separator-75"></div>
     
 	{% if not user.is_authenticated %}
-    <center style="height: 10px;"> 
+    <center style="height: 10px;">
 		<div class="containerem" style="z-index: 9999;">
 			<div class="navegacao nauth">
-				<center> <img width="80px" src="https://i.imgur.com/2F4x4ch.png"></img> </center> 
+				<center> <img width="80px" src="https://i.imgur.com/2F4x4ch.png"> </center>
 				<a class="clickable" id="botao-popular" href="/signin?redirect={{ request.get_full_path }}">Entrar &#10152;</a>
 			</div>
 		</div>
     </center>
 	{% endif %}
+	<center>
+	<div id="new-r-btn" style="position: fixed; top: 70px; z-index: 999; display: none; left: 50%; transform: translate(-50%, 0);">
+		<button class="btn btn-primary round" onclick="load_responses()">
+			<p style="margin-bottom: 0px; font-weight: 800"><span id="new-r-count">0</span> Novas Respostas</p>
+		</button>
+	</div>
+		</center>
     
 		<main>
-			<section>
 			<div class="card bg-main">
 				<div class="card-body">
 					<div class="poster-container">
 						<a class="poster-info" href="/user/{{ question.creator.user.username }}">
 							<div class="poster-profile-pic-container">
-								<div style='width: 61px; height: 60px; border-radius: 100px; background: url("{{ question.creator.avatar.url }}"); background-size: cover; background-repeat: no-repeat; background-position: center' class="poster-profile-pic-popover" alt="{{ question.creator.user.username }}"></div>
+								<div style='width: 61px; height: 60px; border-radius: 100px; background: url("{{ question.creator.avatar.url }}"); background-size: cover; background-repeat: no-repeat; background-position: center' class="poster-profile-pic-popover"></div>
 							</div>
 							<div class="poster-text-container" style="padding-left: 10px;">
 								<div>
@@ -207,7 +213,6 @@
                     {% endif %}
 				</div>
 			</div>
-	</section>
 
             {% if user.is_anonymous %}
                 <div class="text-center bg-main" style="font-size: 13px; margin: 15px">
@@ -264,11 +269,7 @@ href="/signup?redirect=/question/{{ question.id }}">crie uma conta</a> para resp
 			<section class="card bg-main" id="responses" style="border: none;">
   								
 				<ul class="list-group list-group-flush responses" style="border: none;">
-				{% for response in responses|pull_best_answer %}
-					{% if response.creator.user not in user_p.silenced_users.all or request.user.is_anonymous %}
-						{% include "base/response-content.html" %}
-					{% endif %}
-				{% endfor %}
+				{% include "base/response-content.html" %}
 				</ul>
 			</section>
 			
@@ -284,20 +285,19 @@ href="/signup?redirect=/question/{{ question.id }}">crie uma conta</a> para resp
         <script src="https://cdn.jsdelivr.net/npm/linkifyjs@2.1.9/dist/linkify.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/linkifyjs@2.1.9/dist/linkify-jquery.min.js"></script>
 		<script src="/static/js/general_functions.js?version=3"></script>
-		<script src="/static/js/question.js?v=2.2"></script>
+		<script src="/static/js/question.js?v=3"></script>
         <script>
             $('.description').linkify();
-        </script>
-<script>
-    respostas = document.getElementsByClassName('resposta');
-    document.getElementById('total-de-respostas').innerText = respostas.length;
-    document.getElementById('total-de-respostas-sentence').innerText = (respostas.length == 1 ? 'Resposta' : 'Respostas');
-</script>
-<script>
-setInterval(check_for_notifications, 51000);
-$(function () {
-    $('[data-toggle="popover"]').popover();
-});
-</script>
+            var qid = {{ question.id }};
+			respostas = document.getElementsByClassName('resposta');
+			document.getElementById('total-de-respostas').innerText = respostas.length;
+			document.getElementById('total-de-respostas-sentence').innerText = (respostas.length == 1 ? 'Resposta' : 'Respostas');
+		</script>
+		<script>
+		var UPD_INTERVAL = setInterval(new_activity_check, 21000);
+		$(function () {
+			$('[data-toggle="popover"]').popover();
+		});
+		</script>
 	</body>
 </html>

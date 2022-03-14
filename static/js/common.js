@@ -20,11 +20,11 @@ async function check_for_notifications() {
         return 0;
     }
 	$.ajax({
-			url: "/update_index_check",
+			url: "/new_activity_check",
 			type: "get",
 			dataType: "json",
 			data: {
-				last_known_q: 999999,
+				last_known_q: 0,
 			},
 			complete: function(data) {
                 new_notifications = data.responseJSON['nn'];

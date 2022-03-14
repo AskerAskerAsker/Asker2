@@ -1,3 +1,5 @@
+var success_str = 'kfO1wMuva3hNgh0AhIviPyhEGyoRjDdX';
+
 function like(likeElement, response_id) {
 	var like_image = likeElement.getElementsByTagName('img')[0];
 	var span_like_counter = null;
@@ -62,7 +64,6 @@ function delete_response(response_button_dom_el, response_id) {
     }
 }
 
-
 function delete_comment(comment_id) {
 	$.ajax({
 		url: '/delete_comment',
@@ -75,7 +76,6 @@ function delete_comment(comment_id) {
 		}
 	});
 }
-
 
 function report_question(question_id, obj) {
 	function ok() {
@@ -95,7 +95,6 @@ function report_question(question_id, obj) {
 	});
 }
 
-
 function chooseAnswer(id) {
 	$.ajax({
 		url: '/answer/choose',
@@ -111,7 +110,6 @@ function chooseAnswer(id) {
 		}
 	});
 }
-
 
 function voteOnPoll() {
     let userChoicesEls = $("input[name='poll-option']:checked");
@@ -134,7 +132,6 @@ function voteOnPoll() {
     });
 }
 
-
 function undoVote() {
     $.ajax({
       type: "POST",
@@ -149,7 +146,6 @@ function undoVote() {
     });
 }
 
-
 function openChooser() {
     let chooser = document.getElementsByClassName('poll-chooser')[0];
     let shower = document.getElementsByClassName('poll-shower')[0];
@@ -157,14 +153,12 @@ function openChooser() {
     chooser.style.display = 'block';
 }
 
-
 function openShower() {
     let chooser = document.getElementsByClassName('poll-chooser')[0];
     let shower = document.getElementsByClassName('poll-shower')[0];
     chooser.style.display = 'none';
     shower.style.display = 'block';
 }
-
 
 function setPollPercentages() {
     if (document.getElementsByClassName('poll-shower').length == 0) { return 0; }
@@ -187,11 +181,9 @@ function setPollPercentages() {
     }
 }
 setPollPercentages();
-
 if (document.getElementsByClassName('poll-chooser').length == 1) {
    openChooser();
 }
-
 
 function make_comment(form) {
 	$(form.previousElementSibling).toggle(0);
@@ -209,7 +201,6 @@ function make_comment(form) {
 		}
 	});
 }
-
 
 /* Js p/ upload de imagem em respostas */
 document.getElementById('upload-photo').onchange = function () {
@@ -230,7 +221,6 @@ document.getElementById('delete-photo-icon').onclick = function () {
 };
 /* Fim: Js p/ upload de imagem em respostas */
 
-
 function delete_question(id) {
     if (confirm('Opa! Tem certeza que deseja apagar sua resposta?')) {
 		$.ajax({
@@ -247,7 +237,6 @@ function delete_question(id) {
 	}
 }
 
-
 var formbgcolor='bg-white'; var bgcolor='bg-white'; var textcolor='text-dark';
 var commentformbgcolor='bg-white'; var commentbgcolor='bg-light';
 if (getDarkCookie() == 'true') {
@@ -259,18 +248,11 @@ if (getDarkCookie() == 'true') {
     }
 }
 
-
-
-
 var formulario_de_resposta = document.getElementById("formulario_de_resposta");
-
 formulario_de_resposta.onsubmit = function() {
-	
-	/* Desativa o botão de enviar resposta para evitar spam. */
 	document.getElementById("botao_enviar_resposta").disabled = true;
-	
+	last_response = get_last_response();
 	var formData = new FormData(this);
-	
 	$.ajax({
 		url: "/save_answer",
 		method: "post",
@@ -283,7 +265,6 @@ formulario_de_resposta.onsubmit = function() {
 			formulario_de_resposta.remove();
 		},
 	});
-	
 	return false;
 };
 
@@ -343,4 +324,89 @@ function unfollow_question(id) {
             document.getElementById('fqa').classList.remove('hidden');
         }
     });
+}
+
+var last_response = 0;
+function get_last_response() {
+    rlist = document.getElementsByClassName('resposta');
+    var last = 0;
+    for (var i=0;i<rlist.length;i++) {
+        var id = rlist[i].getAttribute('data-id');
+        if (id > last) { last = id; };
+    }
+    return last;
+}
+
+var UPD_INTERVAL = 0;
+var upd_count = 0;
+async function new_activity_check() {
+    upd_count++;
+    if (upd_count > 15) { clearInterval(UPD_INTERVAL); }
+    var notif_badge = document.getElementById('notif-badge');
+    if (!last_response) {
+        last_response = get_last_response();
+    }
+	var button = document.getElementById('new-r-btn');
+	var btn_count = document.getElementById('new-r-count');
+	$.ajax({
+        url: "/new_activity_check",
+        type: "get",
+        dataType: "json",
+        data: {
+            last_known_r: last_response,
+            qid: qid,
+        },
+        complete: function(data) {
+            new_notifications = data.responseJSON['nn'];
+            new_responses = data.responseJSON['nr'];
+            if (new_notifications > 0) {
+                notif_badge.innerHTML = new_notifications;
+                notif_badge.style.display = 'block';
+                document.title = "(" + new_notifications + ") " + org_title;
+            } else {
+                notif_badge.style.display = 'none';
+                document.title = org_title;
+            }
+            if (new_responses > 0) {
+                button.style.display = 'table';
+                btn_count.innerHTML = new_responses;
+            }
+        },
+	});
+}
+
+function load_responses() {
+    var button = document.getElementById('new-r-btn');
+	button.style.display = 'none';
+	var rl = document.getElementsByClassName('resposta');
+	for (var i=0;i<rl.length;i++) {
+        if (rl[i].classList.contains('new')) { rl[i].classList.remove('new'); }
+	    rl[i].classList.add('old');
+	}
+	$.ajax({
+			url: "/update_question",
+			type: "get",
+			dataType: "html",
+			data: {
+				lr: last_response,
+				qid: qid,
+			},
+			complete: function(data) {
+                if (data.responseText == '-1') {
+                    icon.style.display = 'none';
+                } else if (data.responseText.includes(success_str)) {
+                    r_list = document.getElementById('responses');
+                    r_list.innerHTML = r_list.innerHTML + data.responseText;
+                    var rl = document.getElementsByClassName('resposta');
+                    for (var i=0;i<rl.length;i++) {
+                        if (rl[i].classList.contains('old')) {
+                            rl[i].classList.remove('old');
+                        } else { rl[i].classList.add('new'); }
+                    }
+                    window.scrollTo(0,document.body.scrollHeight);
+                    last_response = get_last_response();
+                }
+                icon.style.display = 'none';
+			},
+	});
 }

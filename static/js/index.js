@@ -259,7 +259,7 @@ async function check_for_update() {
 	var button = document.getElementById('new-q-btn');
 	var btn_count = document.getElementById('new-q-count');
 	$.ajax({
-			url: "/update_index_check",
+			url: "/new_activity_check",
 			type: "get",
 			dataType: "json",
 			data: {

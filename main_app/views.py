@@ -188,7 +188,9 @@ def save_answer(request):
 
     return render(request, 'base/response-content.html', {
             'question': question,
-            'response': response,
+            'responses': Response.objects.filter(id=response.id),
+            'user_p': response_creator,
+            'user_permissions': ast.literal_eval(response_creator.permissions),
     })
 
 def index(request):
@@ -253,7 +255,6 @@ def question(request, question_id):
         context['poll_votes'] = PollVote.objects.filter(poll=context['poll'])
 
     return render(request, 'question.html', context)
-
 
 def like(request):
     answer_id = request.GET.get('answer_id')
@@ -550,8 +551,6 @@ def ask(request):
             pass
             
         if video:
-            print(video.size)
-            print(video.size > 3200000)
             if video.size > 3200000:
                 context = {'error': 'Arquivo não suportado',
                                    'err_msg': 'O arquivo que você enviou não é suportado. Tamanho máximo de um vídeo: 3mb.',
@@ -1232,11 +1231,9 @@ def more_questions(request):
     return render(request, 'base/index-recent-q-page.html', context)
 
 def update_index(request):
-    nn = 0
     up = None
     if not request.user.is_anonymous:
         up = UserProfile.objects.get(user=request.user)
-        nn = up.new_notifications
 
     last_known_q = int(request.GET.get('last_known_q'))
     last_q = Question.objects.last().id
@@ -1253,17 +1250,50 @@ def update_index(request):
     
     return render(request, 'base/index-recent-q-page.html', nq_context)
 
-def update_index_check(request):
+def update_question(request):
+    qid = int(request.GET.get('qid'))
+    last_r = int(request.GET.get('lr'))
+    q = Question.objects.get(id=qid)
+    context = {'question': q, }
+    if not request.user.is_anonymous:
+        user_p = UserProfile.objects.get(user=request.user)
+        context['user_permissions'] = ast.literal_eval(user_p.permissions)
+        context['user_p'] = user_p
+        nr = Response.objects.filter(question=q, id__gt=last_r).exclude(creator=user_p).order_by('-total_likes', 'id')
+    else:
+        nr = Response.objects.filter(question=q, id__gt=last_r).order_by('-total_likes', 'id')
+
+    if len(nr) < 1:
+        return HttpResponse('-1')
+
+    context['responses'] = nr
+
+    return render(request, 'base/response-content.html', context)
+
+def new_activity_check(request):
     nn = 0
     if not request.user.is_anonymous:
         up = UserProfile.objects.get(user=request.user)
         nn = up.new_notifications
 
-    last_known_q = int(request.GET.get('last_known_q'))
+    try:
+        last_known_q = int(request.GET.get('last_known_q'))
+    except:
+        last_known_r = int(request.GET.get('last_known_r'))
+        qid = int(request.GET.get('qid'))
+        q = Question.objects.get(id=qid)
+
+        # OBS.: Este sistema deve ser atualizado caso alguma pergunta chegue a ter mais de 200 respostas
+        # para evitar sobrecarregamentos, conforme já é o caso do if-statement no check para novas perguntas!
+        if not request.user.is_anonymous:
+            responses = len(Response.objects.filter(question=q, id__gt=last_known_r).exclude(creator=up))
+        else:
+            responses = len(Response.objects.filter(question=q, id__gt=last_known_r))
+        return JsonResponse({'nn': nn, 'nr': responses})
+
     last_q = Question.objects.last().id
     if last_q - last_known_q > 200 or last_known_q < 1:
          return JsonResponse({'nn': nn, 'nq': -1})
-         
     nq = Question.objects.filter(id__gt=last_known_q).order_by("id")
     
     return JsonResponse({'nn': nn, 'nq': len(nq)})
@@ -1316,6 +1346,7 @@ def get_more_questions(request):
     return JsonResponse(json)
 
 def get_more_responses(request):
+    # Para o profile.html
     page = request.GET.get('r_page', 2)
     user_id = request.GET.get('user_id')
     target = UserProfile.objects.get(user=User.objects.get(id=user_id))

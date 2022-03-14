@@ -226,7 +226,7 @@ button font {
 	border-radius: 0px 0px 20px 20px;
 }
 .navegacao.auth {
-	padding: 4px 16px 9px 16px;
+	padding: 4px 16px 8px 16px;
 	margin-top: 20px;
 	box-shadow: 0 0 0.5em rgb(0, 0, 0, 0.4);
 	border-radius: 100px;
@@ -429,6 +429,9 @@ button font {
 /* Profile-end */
 
 /* Question */
+.resposta.new .card-body {
+    background-color: rgba(0, 123, 255, 15%);
+}
 .qctrl a {
 	display: inline-block;
 }
