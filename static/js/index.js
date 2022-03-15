@@ -198,7 +198,9 @@ function open_recent() {
     document.getElementById("novas_questoes").style.display = "block";
     document.getElementById("feed").style.display = "none";
     window.history.replaceState("object or string", "Title", "/news");
-    if (!recent_exists) { load_more_recent(); }
+    var newqbtn = document.getElementById('new-q-btn');
+    if (!recent_exists) { newqbtn.style.display = 'none'; load_more_recent(); }
+    else if (newqbtn.style.display != 'none' ) { update_recent(); }
 	document.body.scrollTop = document.documentElement.scrollTop = 0;
 }
 function open_feed() {

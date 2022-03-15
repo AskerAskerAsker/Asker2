@@ -76,7 +76,6 @@ def save_img_file(post_file, file_path, max_size):
         return False
     return final_path[final_path.find('media/')+len('media/'):]
 
-
 def get_client_ip(request):
     x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
     if x_forwarded_for:
@@ -87,7 +86,7 @@ def get_client_ip(request):
 
 def calculate_popular_questions():
     last_id = Question.objects.all().last().id
-    id_range = (last_id - 100, last_id)
+    id_range = (last_id - 200, last_id)
     popular_questions = Question.objects.filter(id__range=id_range).order_by('-total_responses')[:40]
     return popular_questions
 
@@ -215,11 +214,9 @@ def index(request):
     if request.user.is_authenticated:
         up = UserProfile.objects.get(user=request.user)
         context['user_p'] = up
-        
         context['feed_questions'] = get_feed_content(up, 1, 0)
 
     return render(request, 'index.html', context)
-
 
 def question(request, question_id):
     q = Question.objects.filter(id=question_id)
@@ -616,7 +613,6 @@ def logout(request):
     django_logout(request)
     return redirect('/')
 
-
 def notification(request):
 
     if request.user.is_anonymous:
@@ -637,7 +633,6 @@ def notification(request):
     }
 
     return render(request, 'notification.html', context)
-
 
 def comment(request):
     if not request.user.is_authenticated:
@@ -699,7 +694,6 @@ def comment(request):
 
     return HttpResponse(comment_creator_template)
 
-
 def rank(request):
     rank = UserProfile.objects.order_by('-total_points')[:50]
     count = 0
@@ -710,7 +704,6 @@ def rank(request):
         context['user_p'] = up
 
     return render(request,'rank.html', context)
-
 
 def edit_response(request):
     response = Response.objects.get(creator=UserProfile.objects.get(user=request.user), id=request.POST.get('response_id'))
@@ -755,7 +748,6 @@ def delete_comment(request):
 
     c.delete()
     return HttpResponse('OK', content_type='text/plain')
-
 
 def edit_profile(request, username):
     from urllib.parse import unquote
@@ -1010,19 +1002,6 @@ def choose_best_answer(request):
 
     return HttpResponse('OK', content_type='text/plain')
 
-def delete_account(request):
-    if not request.user.is_authenticated:
-        return HttpResponse('Proibido.', content_type='text/plain')
-
-    if request.method == 'POST':
-        try:
-            user = request.user
-            user.delete()
-        except:
-            return False
-
-    return render(request, 'delete-account.html')
-
 def rules(request):
     context = {}
 
@@ -1031,9 +1010,6 @@ def rules(request):
         context['user_p'] = up
 
     return render(request, 'rules.html', context)
-
-def activity(request):
-    return redirect('/user/' + request.user.username)
 
 def vote_on_poll(request):
     if request.method != 'POST':
@@ -1823,7 +1799,3 @@ def promo(request):
 
 def novadx(request):
     return render(request, 'novadx.html')
-
-def add(request):
-    return render(request, 'add.html')
-
