@@ -1741,7 +1741,7 @@ def remove_msg(request):
     return HttpResponse('OK', content_type='text/plain')
         
 def modactivity(request):
-    if request.user.id != 82:
+    if not request.user.is_superuser:
         # Nega acesso a usuários
         return redirect('/news')
 

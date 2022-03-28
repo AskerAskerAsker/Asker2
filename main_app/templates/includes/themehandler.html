@@ -1,11 +1,11 @@
 <script src="/static/js/cookieman.js?v=1"></script>
 <link rel="stylesheet" href="/static/css/common.css?v=9.0">
 <script>
-	if (getDarkCookie() == 'none') {
-		if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-			setDarkCookie('true');
-		} else { setDarkCookie('false'); }
-	}
+    if (getDarkCookie() == 'none') {
+        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            setDarkCookie('true');
+        } else { setDarkCookie('false'); }
+    }
     var cssfn = 'light.css';
     var cssversion = '?v=7.0';
     if (getDarkCookie() == 'true') { cssfn = 'dark.css'; }
@@ -15,6 +15,7 @@
     link.type = 'text/css';
     link.href = '/static/css/' + cssfn + cssversion;
     document.head.appendChild(link);
-
-    document.getElementById('wait').remove();
+    
+    var wait = document.getElementById('wait');
+    if (wait) { wait.remove(); }
 </script>

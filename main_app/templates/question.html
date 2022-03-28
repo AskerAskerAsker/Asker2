@@ -27,9 +27,101 @@
     <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script> 
     <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
 	</head>
+
+<script>
+function voltar() {
+window.history.back();
+}
+</script>
+
+
 	<body>
     {% if user.is_authenticated %}
-	   {% include "includes/menubar.html" %}
+	{% load main_app_extras %}
+<div id="barcontainer" style="transition: 0.3s; margin-top: -80px; position: fixed; z-index: 9999999; width: 100%">
+    <div id="searchcontainer" class="bg-outer">
+        <div id="searchcontainer">
+            <form action="/search" class="card-body" style="display: flex">
+                <input id="searchbar" class="form-control" type="text" name="q" style="flex-grow: 1; border-radius: 20px; font-weight: 500" placeholder="Busca:" autocomplete="off" maxlength="180">
+                <button class="btn btn-primary" style="height: 36px; width: 36px; padding: 6px; border-radius: 50px; margin-top: 1px; margin-left: 3px;" onclick='newSearch()'>
+                    <ion-icon name="search"></ion-icon>
+                </button>
+            </form>
+        </div>
+    </div>
+<center>
+    <div id="menubar" class="containerem" style="height: 65px; padding: 0px; align-items: baseline; overflow-y: hidden;">
+        <div class="menu bg-main" style="height: fit-content; width: 100%; padding-bottom: 3px; border-radius: 0px 0px 25px 25px; max-width: 400px; align-items: center; justify-content: center;">
+       
+        <ul class="menu-list" style="margin-top: 5px; align-items: center">
+    
+        <li class="menu-item">
+     <a> <button class="menu-button" onclick="voltar()">
+      <font style="font-size: 19px; font=weight: 900">
+  <ion-icon name="arrow-undo-outline"></ion-icon>
+      </font>
+      </button>
+     </a>
+      </li>
+        
+       <a href="/ask"> <li class="menu-item"><button class="menu-button"><font style="font-size: 19px; font-weight: 900"><ion-icon name="pencil"></ion-icon></font></button></li></a>
+      
+        
+            <li class="menu-item" id="searchbtn"><button class="menu-button"><font style="font-size: 19px; font=weight: 900"><ion-icon name="search-outline"></ion-icon></font></button></li>
+          <a href="/"><li class="menu-item">
+          <button class="menu-button" style="padding-bottom: 8px">
+             <img width="88px" src="https://i.imgur.com/ym4eX3y.png">
+          </button></li>
+          </a>
+            <a href="/notifications">
+                <li class="menu-item">
+                    <button class="menu-button"><font style="font-size: 19px; font-weight: 900">
+                        <ion-icon name="notifications-outline"></ion-icon>
+                        {% if user_p.new_notifications > 0 %}
+                            <div id="notif-badge">{{ user_p.new_notifications }}</div>
+                        {% else %}
+                            <div id="notif-badge" style="display: none;">{{ user_p.new_notifications }}</div>
+                        {% endif %}
+                    </font></button>
+                </li>
+            </a>
+            <a href="/chats">
+               <li class="menu-item">
+                   <button class="menu-button"><font style="font-size: 19px; font-weight: 900">
+					{% check_new_messages user_p as new_m %}
+					{% if new_m %}
+					<ion-icon name="chatbubble-ellipses-outline"></ion-icon>
+					{% else %}
+					<ion-icon name="chatbubble-outline"></ion-icon>
+				    {% endif %}
+                   </font></button>
+               </li>
+           </a>
+         
+      {% if user.is_authenticated %}
+			<a href="/user/{{ user.username }}" class="menu-button" id="botao-seguind" style="text-decoration: none; outline: none; cursor: pointer;">
+       <img src="{{user_p.avatar.url}}" style="border-radius: 300px; width: 25px; height: 25px;"></img>
+            </a>  
+      {% endif %}
+      
+        </ul>
+        </div>
+    </div>
+</center>
+</div>
+<script>
+    var menu_status = 0;
+    document.getElementById('searchbtn').addEventListener('click', function(e) {
+        if (menu_status == 0) {
+            document.getElementById('barcontainer').style.marginTop = '0px';
+            menu_status = 1;
+        } else {
+            document.getElementById('barcontainer').style.marginTop = '-78px';
+            menu_status = 0;
+        }
+    });
+</script>
+
     {% endif %}
 	<div style="display: none">
     {% include "includes/navbar.html" %}
