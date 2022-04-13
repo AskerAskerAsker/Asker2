@@ -25,7 +25,6 @@ import subprocess
 import ipinfo
 from PIL import Image, ImageFile, UnidentifiedImageError, ImageSequence, ImageOps
 
-
 def compress_animated(bio, max_size, max_frames):
     im = Image.open(bio)
     frames = list()
@@ -65,13 +64,13 @@ def save_img_file(post_file, file_path, max_size):
     try:
         im = Image.open(io.BytesIO(img_data))
         final_path = file_path + '.' + im.format
-        im_transp = ImageOps.exif_transpose(im)
-        im = im_transp or im
         if im.format in ('GIF', 'WEBP') and im.is_animated:
             bio = compress_animated(io.BytesIO(img_data), max_size, 80)
             with open(final_path, 'wb+') as destination:
                 destination.write(bio.getbuffer())
         else:
+            im_transp = ImageOps.exif_transpose(im)
+            im = im_transp or im
             im.thumbnail(max_size)
             im.save(final_path, im.format)
     except UnidentifiedImageError:
