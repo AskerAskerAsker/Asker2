@@ -73,7 +73,7 @@ popular_questions_=[
 	<div class="containerem" style="z-index: 9999;">
 		{% if not user.is_authenticated %}
 		<div class="navegacao nauth">
-			<center> <img width="80px" src="https://i.imgur.com/2F4x4ch.png"> </center>
+			<center> <img width="80px" src="/static/images/logo.png"> </center>
 			<a class="clickable" id="botao-popular">Populares</a>
 			<a class="clickable left-spaced"  id="botao-recentes">Recentes</a>
 			<a class="clickable left-spaced" href="/signin?redirect={{ request.get_full_path }}">Entrar &#10152;</a>
