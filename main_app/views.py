@@ -37,11 +37,11 @@ def compress_animated(bio, max_size, max_frames):
         ''' PIL não salvará o canal A! Workaround: salvar em P-mode '''
         compressed_f = frame.convert('RGBA')
 
-        alpha_mask = compressed_f.getchannel('A') # Máscara de transparência
-        compressed_f = compressed_f.convert('RGB').convert('P', colors=255) # Converte para P
-        mask = Image.eval(alpha_mask, lambda a: 255 if a <= 128 else 0) # Eleva pixels transparentes
-        compressed_f.paste(255, mask) # Aplica a máscara
-        compressed_f.info['transparency'] = 255 # O valor da transparência, na paleta, é o 255
+        alpha_mask = compressed_f.getchannel('A')  # Máscara de transparência
+        compressed_f = compressed_f.convert('RGB').convert('P', colors=255)  # Converte para P
+        mask = Image.eval(alpha_mask, lambda a: 255 if a <= 128 else 0)  # Eleva pixels transparentes
+        compressed_f.paste(255, mask)  # Aplica a máscara
+        compressed_f.info['transparency'] = 255  # O valor da transparência, na paleta, é o 255
         if max(im.size[0], im.size[1]) > min_size:
             compressed_f.thumbnail(max_size)
         frames.append(compressed_f)
@@ -50,7 +50,7 @@ def compress_animated(bio, max_size, max_frames):
     im_final = frames[0]
     obio = io.BytesIO()
     im_final.save(obio, format='GIF', save_all=True, append_images=frames[1:], duration=dur, optimize=False, disposal=2)
-    #print('Antes: {}, Depois: {}. Redução: {}%'.format(str(bio.tell()), str(obio.tell()), str(100 - int((obio.tell()*100) / bio.tell())) ))
+    # print('Antes: {}, Depois: {}. Redução: {}%'.format(str(bio.tell()), str(obio.tell()), str(100 - int((obio.tell()*100) / bio.tell())) ))
     if obio.tell() < bio.tell():
         return obio
     return bio
@@ -88,19 +88,19 @@ def get_client_ip(request):
 def calculate_popular_questions():
     last_id = Question.objects.all().last().id
     id_range = (last_id - 200, last_id)
-    popular_questions = Question.objects.filter(id__range=id_range).order_by('-total_responses')[:40]
+    popular_questions = Question.objects.filter(id__range=id_range, active=True).order_by('-total_responses')[:40]
     return popular_questions
 
 def register_ip(ip_addr):
     h = ipinfo.getHandler(secret.IPINFO_TOKEN)
     details = h.getDetails(ip_addr)
     UserIP.objects.create(ip=ip_addr, type=details.country)
-	
+
 def toggle_ip_check(request):
     user_p = UserProfile.objects.get(user=request.user)
     permissions = ast.literal_eval(user_p.permissions)
     if not request.user.is_superuser:
-        if not 'pap' in permissions:
+        if 'pap' not in permissions:
             return HttpResponse('OK')
             
     try:
@@ -110,7 +110,7 @@ def toggle_ip_check(request):
     check_ip.value = 1 - check_ip.value
     check_ip.save()
     
-    return HttpResponse(str(check_ip.value == True), content_type='text/plain')
+    return HttpResponse(str(check_ip.value == 1), content_type='text/plain')
     
 def should_ip_check():    
     try:
@@ -130,7 +130,7 @@ def validate_ip(request):
     if uip_obj.type not in general_rules.ALLOWED_IP_TYPES:
         return False
     return True
-	
+
 def save_answer(request):
     client_ip = get_client_ip(request)
     if Ban.objects.filter(ip=client_ip).exists():
@@ -138,10 +138,14 @@ def save_answer(request):
     elif should_ip_check():
         if not validate_ip(request):
             return HttpResponse('Você não pode responder perguntas.', content_type='text/plain')
+    try:
+        question = Question.objects.get(id=request.POST.get('question_id'))
+    except Question.DoesNotExist:
+        question = None
+    if question is None or not question.active:
+        return HttpResponse('Pergunta não encontrada. Talvez ela tenha sido apagada pelo criador da pergunta.', content_type='text/plain')
 
-    question = Question.objects.get(id=request.POST.get('question_id'))
-
-    response_creator = UserProfile.objects.get(user=request.user) # criador da nova resposta.
+    response_creator = UserProfile.objects.get(user=request.user)  # criador da nova resposta.
 
     '''
     Testa se o usuário já respondeu a pergunta:
@@ -220,19 +224,20 @@ def index(request):
     return render(request, 'index.html', context)
 
 def question(request, question_id):
-    q = Question.objects.filter(id=question_id)
-    if q.exists():
-        q = q.first()
-        q.total_views += 1
-        q.save()
-    else:
+    try:
+        q = Question.objects.get(id=question_id)
+    except Question.DoesNotExist:
+        q = None
+
+    if q is None or not q.active:
         return_to = request.META.get("HTTP_REFERER") if request.META.get("HTTP_REFERER") is not None else '/'
         context = {'error': 'Pergunta não encontrada',
-                                 'err_msg': 'Talvez ela tenha sido apagada pelo criador da pergunta.',
-                                 'redirect': return_to}
+                   'err_msg': 'Talvez ela tenha sido apagada pelo criador da pergunta.', 'redirect': return_to}
         return render(request, 'error.html', context)
 
-    responses = Response.objects.filter(question=q).order_by('-total_likes', 'id')
+    q.total_views += 1
+    q.save()
+    responses = Response.objects.filter(question=q, active=True).order_by('-total_likes', 'id')
 
     context = {'question': q, 'responses': responses}
 
@@ -295,6 +300,9 @@ def delete_response(request):
     creator = r.creator
     q = r.question
 
+    q.total_responses -= 1
+    q.save()
+
     if user_profile != r.creator:
         # checa se modera:
         if 'pap' in ast.literal_eval(user_profile.permissions):
@@ -304,27 +312,20 @@ def delete_response(request):
                                         type='r',
                                         obj_text=r.text,
                                         obj_extra=q.text)
-        else:
-            return HttpResponse('NOK', content_type='text/plain')
-            
-    
+            r.active = False
+            r.save()
+            return HttpResponse('OK', content_type='text/plain')
+        return HttpResponse('NOK', content_type='text/plain')
 
-    ''' Tira 2 pontos do criador da resposta, já que a resposta vai ser apagada por ele mesmo. '''
-    creator.total_points -= 3 # por enquanto vai tirar 3, para alertar trolls.
+    creator.total_points -= 3
     creator.save()
 
     try:
-        ''' Deleta também a imagem do sistema de arquivos para liberar espaço. '''
         os.system('rm ' + r.image.path)
     except:
         pass
-
-    q.total_responses -= 1
-    q.save()
     r.delete()
-
     return HttpResponse('OK', content_type='text/plain')
-
 
 def signin(request):
     r = request.GET.get('redirect')
@@ -354,9 +355,6 @@ def signin(request):
 
 
 def signup(request):
-    '''
-    Bloqueia criação de conta pelo navegador TOR.
-    '''
     from .tor_ips import tor_ips
     client_ip = get_client_ip(request)
     if client_ip in tor_ips:
@@ -478,7 +476,7 @@ def profile(request, username):
         user_p.save()
 
         fq_page = request.GET.get('fq-page', 1)
-        context['followed_questions'] = Paginator(user_p.followed_questions.all().order_by('-id'), 10).page(fq_page).object_list
+        context['followed_questions'] = Paginator(user_p.followed_questions.filter(active=True).order_by('-id'), 10).page(fq_page).object_list
 
     if request.user.username != username:
         up.total_views += 1
@@ -495,8 +493,8 @@ def profile(request, username):
             q_page = request.GET.get('q-page', 1)
             r_page = request.GET.get('r-page', 1)
 
-            context['questions'] = Paginator(Question.objects.filter(creator=up).order_by('-pub_date'), 10).page(q_page).object_list
-            context['responses'] = Paginator(Response.objects.filter(creator=up).order_by('-pub_date'), 10).page(r_page).object_list
+            context['questions'] = Paginator(Question.objects.filter(creator=up, active=True).order_by('-pub_date'), 10).page(q_page).object_list
+            context['responses'] = Paginator(Response.objects.filter(creator=up, active=True).order_by('-pub_date'), 10).page(r_page).object_list
     except KeyError:
         pass
 
@@ -564,7 +562,7 @@ def ask(request):
                 for chunk in video.chunks():
                     destination.write(chunk)
 
-            q.videofile = 'videos/' + video_name;
+            q.videofile = 'videos/' + video_name
             
             video_path = 'media/videos/' + video_name
             thumb_path = 'videos/' + video_name + '.jpg'
@@ -725,18 +723,15 @@ def delete_question(request):
                                         type='q',
                                         obj_text=question.text,
                                         obj_extra=question.description)
-        else:
-            return HttpResponse('NOK', content_type='text/plain')
-        
-    '''
-    Deleta também a imagem e o vídeo do sistema de arquivos:
-    '''
+            question.active = False
+            question.save()
+            return redirect('/news')
+        return HttpResponse('NOK', content_type='text/plain')
 
     if question.image:
         os.system('rm ' + question.image.path)
     if question.videofile:
         os.system('rm ' + question.videofile.path)
-
     question.delete()
 
     return redirect('/news')
@@ -1063,10 +1058,10 @@ def get_feed_content(user_p, page, subpage):
     followed_users = UserProfile.objects.filter(user_id__in=user_p.followed_users.all())
     
     fuq_fur_fqr_proportion = (45, 15, 40)
-    followed_u_questions = Paginator(Question.objects.filter(creator__in=followed_users).order_by('-id'), fuq_fur_fqr_proportion[0]).page(page).object_list
-    followed_u_responses = Paginator(Response.objects.filter(creator__in=followed_users).order_by('-id'), fuq_fur_fqr_proportion[1]).page(page).object_list
+    followed_u_questions = Paginator(Question.objects.filter(creator__in=followed_users, active=True).order_by('-id'), fuq_fur_fqr_proportion[0]).page(page).object_list
+    followed_u_responses = Paginator(Response.objects.filter(creator__in=followed_users, active=True).order_by('-id'), fuq_fur_fqr_proportion[1]).page(page).object_list
     followed_questions = user_p.followed_questions.all()
-    followed_q_responses = Paginator(Response.objects.filter(question__in=followed_questions).order_by('-id'), fuq_fur_fqr_proportion[2]).page(page).object_list
+    followed_q_responses = Paginator(Response.objects.filter(question__in=followed_questions, active=True).order_by('-id'), fuq_fur_fqr_proportion[2]).page(page).object_list
 
     '''
     0: Respostas de perguntas seguidas
@@ -1130,7 +1125,7 @@ def more_popular_questions(request):
             )
     else:
         for q in questions:
-            r = Response.objects.filter(creator=UserProfile.objects.get(user=request.user), question=q)
+            r = Response.objects.filter(creator=UserProfile.objects.get(user=request.user), question=q, active=True)
             answer = 'False' if not r.exists() else r[0].text
 
             para_retornar.append(
@@ -1148,56 +1143,13 @@ def more_popular_questions(request):
 
     return JsonResponse(para_retornar, safe=False)
 
-def more_questions_old(request):
-    #original version - for json
-
-    id_de_inicio = int(request.GET.get('id_de_inicio')) - 20
-    questions = list(Question.objects.filter(id__range=(id_de_inicio, id_de_inicio + 20)))
-    questions.reverse()
-
-    para_retornar = []
-
-    if request.user.is_anonymous:
-        for q in questions:
-            para_retornar.append(
-                    {
-                            "id": q.id,
-                            "text": q.text,
-                            "description": formatar_descricao(q.description),
-                            "total_answers": get_total_answers(q),
-                            "pub_date": fix_naturaltime(naturaltime(q.pub_date)),
-                            "creator": q.creator.user.username,
-                            "user_answer": "False",
-                            "question_creator_avatar": q.creator.avatar.url,
-                    },
-            )
-    else:
-        for q in questions:
-            r = Response.objects.filter(creator=UserProfile.objects.get(user=request.user), question=q)
-            answer = 'False' if not r.exists() else r[0].text
-
-            para_retornar.append(
-                    {
-                            "id": q.id,
-                            "text": q.text,
-                            "description": formatar_descricao(q.description),
-                            "total_answers": get_total_answers(q),
-                            "pub_date": fix_naturaltime(naturaltime(q.pub_date)),
-                            "creator": q.creator.user.username,
-                            "user_answer": answer,
-                            "question_creator_avatar": q.creator.avatar.url,
-                    },
-            )
-
-    return JsonResponse(para_retornar, safe=False)
-
 def more_questions(request):
     # Para a página inicial
     id_de_inicio = int(request.GET.get('id_de_inicio'))
     if id_de_inicio > 0:
-        questions = Question.objects.filter(id__lte=id_de_inicio).order_by('-id')[:20]
+        questions = Question.objects.filter(id__lte=id_de_inicio, active=True).order_by('-id')[:20]
     else:
-        questions = Question.objects.order_by('-id')[:20]
+        questions = Question.objects.filter(active=True).order_by('-id')[:20]
 
     context = {'questions': questions, }
 
@@ -1215,9 +1167,9 @@ def update_index(request):
     last_known_q = int(request.GET.get('last_known_q'))
     last_q = Question.objects.last().id
     if last_q - last_known_q > 200:
-         return HttpResponse('-1')
+        return HttpResponse('-1')
          
-    nq = Question.objects.filter(id__gt=last_known_q).order_by("-id")
+    nq = Question.objects.filter(id__gt=last_known_q, active=True).order_by("-id")
     if len(nq) == 0:
         return HttpResponse('-1')
     elif len(nq) > 29:
@@ -1236,9 +1188,9 @@ def update_question(request):
         user_p = UserProfile.objects.get(user=request.user)
         context['user_permissions'] = ast.literal_eval(user_p.permissions)
         context['user_p'] = user_p
-        nr = Response.objects.filter(question=q, id__gt=last_r).exclude(creator=user_p).order_by('-total_likes', 'id')
+        nr = Response.objects.filter(question=q, id__gt=last_r, active=True).exclude(creator=user_p).order_by('-total_likes', 'id')
     else:
-        nr = Response.objects.filter(question=q, id__gt=last_r).order_by('-total_likes', 'id')
+        nr = Response.objects.filter(question=q, id__gt=last_r, active=True).order_by('-total_likes', 'id')
 
     if len(nr) < 1:
         return HttpResponse('-1')
@@ -1263,15 +1215,15 @@ def new_activity_check(request):
         # OBS.: Este sistema deve ser atualizado caso alguma pergunta chegue a ter mais de 200 respostas
         # para evitar sobrecarregamentos, conforme já é o caso do if-statement no check para novas perguntas!
         if not request.user.is_anonymous:
-            responses = len(Response.objects.filter(question=q, id__gt=last_known_r).exclude(creator=up))
+            responses = len(Response.objects.filter(question=q, id__gt=last_known_r, active=True).exclude(creator=up))
         else:
-            responses = len(Response.objects.filter(question=q, id__gt=last_known_r))
+            responses = len(Response.objects.filter(question=q, id__gt=last_known_r, active=True))
         return JsonResponse({'nn': nn, 'nr': responses})
 
     last_q = Question.objects.last().id
     if last_q - last_known_q > 200 or last_known_q < 1:
          return JsonResponse({'nn': nn, 'nq': -1})
-    nq = Question.objects.filter(id__gt=last_known_q).order_by("id")
+    nq = Question.objects.filter(id__gt=last_known_q, active=True).order_by("id")
     
     return JsonResponse({'nn': nn, 'nq': len(nq)})
 
@@ -1287,9 +1239,9 @@ def get_more_questions(request):
             return 'Proibido.'
 
     if qtype == 'fq':
-        q = target.followed_questions.all().order_by('-id')
+        q = target.followed_questions.filter(active=True).order_by('-id')
     else:
-        q = Question.objects.filter(creator=target).order_by('-pub_date')
+        q = Question.objects.filter(creator=target, active=True).order_by('-pub_date')
 
     p = Paginator(q, 10)
 
@@ -1330,7 +1282,7 @@ def get_more_responses(request):
     if target.hide_activity and not request.user.is_superuser and 'pap' not in ast.literal_eval(UserProfile.objects.get(user=request.user).permissions):
         if target.user.id != request.user.id:
             return 'Proibido.'
-    r = Response.objects.filter(creator=target).order_by('-pub_date')
+    r = Response.objects.filter(creator=target, active=True).order_by('-pub_date')
     p = Paginator(r, 10)
 
     json = {
@@ -1478,13 +1430,21 @@ def search(request):
     page = request.GET.get('page', 1)
 
     '''
+    Pode ser ordenada por, por exemplo, os dois fatores a seguir:
+        1. "-rank" (maior ranking -> mais fidelidade)
+        2. "-pub_date" (maior pub_date -> mais recente)
+        
+    O ideal no futuro é ativar ambas opções na página de busca
+    '''
+    order_factor = "-pub_date"
+    '''
     # Mais resultados, menos omissões, porém usa mais recursos e gera muitos resultados irrelevantes.
-    res_q = Question.objects.annotate(rank=SearchRank(SearchVector('text', 'description'), SearchQuery(userquery))).order_by('-rank')
-    res_r = Response.objects.annotate(rank=SearchRank(SearchVector('text'), SearchQuery(userquery))).order_by('-rank')
+    res_q = Question.objects.annotate(rank=SearchRank(SearchVector('text', 'description'), SearchQuery(userquery))).order_by(order_factor)
+    res_r = Response.objects.annotate(rank=SearchRank(SearchVector('text'), SearchQuery(userquery))).order_by(order_factor)
     '''
     # Menos resultados, mais omissões, porém usa menos recursos e gera menos resultados irrelevantes:
-    res_q = Question.objects.annotate(rank=SearchRank(SearchVector('text', weight='A') + SearchVector('description', weight='B'), SearchQuery(userquery))).filter(rank__gte=0.3).order_by('-pub_date')
-    res_r = Response.objects.annotate(rank=SearchRank(SearchVector('text', weight='A'), SearchQuery(userquery))).filter(rank__gte=0.3).order_by('-pub_date')  # era -rank passa a ser -pub_date
+    res_q = Question.objects.annotate(rank=SearchRank(SearchVector('text', weight='A') + SearchVector('description', weight='B'), SearchQuery(userquery))).filter(rank__gte=0.3, active=True).order_by(order_factor)
+    res_r = Response.objects.annotate(rank=SearchRank(SearchVector('text', weight='A'), SearchQuery(userquery))).filter(rank__gte=0.3, active=True).order_by(order_factor)
 
     ITEMS_PER_PAGE = 40
     qrcount = ITEMS_PER_PAGE//2

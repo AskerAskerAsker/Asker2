@@ -120,7 +120,6 @@ class SilencedUsers(models.Model):
     silencer = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
     expires = models.DateTimeField(default=timezone.now)
 
-
 class Question(models.Model):
     creator = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
     text = models.TextField()
@@ -136,6 +135,7 @@ class Question(models.Model):
 
     videofile = models.FileField(upload_to='videos/', null=True, verbose_name="")
     videothumb = models.ImageField(null=True, blank=True)
+    active = models.BooleanField(default=True)
 
     def get_embedded_content(self):
         return make_embedded_content(self.description)
@@ -152,7 +152,6 @@ class Question(models.Model):
     def __str__(self):
         return self.text
 
-
 class Response(models.Model):
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
     creator = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
@@ -161,6 +160,7 @@ class Response(models.Model):
     likes = models.ManyToManyField(User)
     total_likes = models.IntegerField(default=0)
     image = models.ImageField(null=True, blank=True)
+    active = models.BooleanField(default=True)
 
     def get_naturaltime(self):
         return correct_naturaltime(naturaltime(self.pub_date))
@@ -184,20 +184,20 @@ class Comment(models.Model):
 
 class Notification(models.Model):
     receiver = models.ForeignKey(User, on_delete=models.CASCADE)
-    
+
     '''tipos: question-answered, like-in-response, comment-in-response, got-best-answer'''
     type = models.TextField()
     text = models.TextField(null=True)
     creation_date = models.DateTimeField(default=timezone.now)
 
     '''os campos abaixo são usados caso a notificação seja do tipo like-in-response.'''
-    
+
     # quem deu o like
     liker = models.ForeignKey(User,
                               on_delete=models.CASCADE,
                               null=True,
                               related_name='l')
-    
+
     # qual é a resposta
     response = models.ForeignKey(Response,
                                  on_delete=models.CASCADE,
@@ -205,6 +205,14 @@ class Notification(models.Model):
                                  related_name='r')
 
     read = models.BooleanField(default=False) # this.receiver clicou ou não na notificação.
+
+    def cancel(self):
+        receiver_p = UserProfile.objects.get(user=self.receiver)
+        if receiver_p.new_notifications > 0:
+            # TODO: Checar se a notificação é uma das não lidas (se o index da notificação no set das notificações do user é menor que o total de novas notificações)
+            receiver_p.new_notifications -= 1
+        receiver_p.save()
+        self.remove()
 
     def prepare(self, answer_id=None, comment_id=None):
         receiver_p = UserProfile.objects.get(user=self.receiver)
