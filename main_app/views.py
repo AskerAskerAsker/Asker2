@@ -75,7 +75,7 @@ def save_img_file(post_file, file_path, max_size):
             im.save(final_path, im.format)
     except UnidentifiedImageError:
         return False
-    return final_path[final_path.find('media/')+len('media/'):]
+    return final_path[final_path.find('media/') + len('media/'):]
 
 def get_client_ip(request):
     x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
@@ -102,27 +102,27 @@ def toggle_ip_check(request):
     if not request.user.is_superuser:
         if 'pap' not in permissions:
             return HttpResponse('OK')
-            
+
     try:
         check_ip = Setting.objects.get(setting='check_ip_location')
     except Setting.DoesNotExist:
         check_ip = Setting.objects.create(setting='check_ip_location', value=1)
     check_ip.value = 1 - check_ip.value
     check_ip.save()
-    
+
     return HttpResponse(str(check_ip.value == 1), content_type='text/plain')
-    
-def should_ip_check():    
+
+def should_ip_check():
     try:
         check_ip = Setting.objects.get(setting='check_ip_location').value
         return check_ip == True
     except Setting.DoesNotExist:
         return False
-    
+
 def validate_ip(request):
     try:
         uip_obj = UserIP.objects.get(ip=get_client_ip(request))
-    except:
+    except UserIP.DoesNotExist:
         uip_obj = None
     if not uip_obj:
         register_ip(get_client_ip(request))
@@ -143,7 +143,8 @@ def save_answer(request):
     except Question.DoesNotExist:
         question = None
     if question is None or not question.active:
-        return HttpResponse('Pergunta não encontrada. Talvez ela tenha sido apagada pelo criador da pergunta.', content_type='text/plain')
+        return HttpResponse('Pergunta não encontrada. Talvez ela tenha sido apagada pelo criador da pergunta.',
+                            content_type='text/plain')
 
     response_creator = UserProfile.objects.get(user=request.user)  # criador da nova resposta.
 
@@ -166,7 +167,7 @@ def save_answer(request):
 
     if response_creator.user not in question.creator.silenced_users.all():
         notification = Notification.objects.create(receiver=question.creator.user,
-                                                                                           type='question-answered')
+                                                   type='question-answered')
         notification.prepare(response.id)
         notification.save()
 
@@ -186,19 +187,19 @@ def save_answer(request):
 
     if request.POST.get('from') == 'index':
         return render(request, 'base/response-content-index.html', {
-                'question': question,
-                'ANSWER': response,
+            'question': question,
+            'ANSWER': response,
         })
 
     return render(request, 'base/response-content.html', {
-            'question': question,
-            'responses': Response.objects.filter(id=response.id),
-            'user_p': response_creator,
-            'user_permissions': ast.literal_eval(response_creator.permissions),
+        'question': question,
+        'responses': Response.objects.filter(id=response.id),
+        'user_p': response_creator,
+        'user_permissions': ast.literal_eval(response_creator.permissions),
     })
 
 def index(request):
-    context = {}
+    context = dict()
 
     context['initial'] = 'popular'
     if request.path == '/news':
@@ -306,12 +307,8 @@ def delete_response(request):
     if user_profile != r.creator:
         # checa se modera:
         if 'pap' in ast.literal_eval(user_profile.permissions):
-            ModActivity.objects.create(obj_id=r.id,
-                                        obj_creator=creator.user,
-                                        mod=user_profile.user,
-                                        type='r',
-                                        obj_text=r.text,
-                                        obj_extra=q.text)
+            ModActivity.objects.create(obj_id=r.id, obj_creator=creator.user, mod=user_profile.user,
+                                       type='r', obj_text=r.text, obj_extra=q.text)
             r.active = False
             r.save()
             return HttpResponse('OK', content_type='text/plain')
@@ -330,7 +327,7 @@ def delete_response(request):
 def signin(request):
     r = request.GET.get('redirect')
 
-    if r == None:
+    if r is None:
         r = '/'
 
     if request.method == 'POST':
@@ -340,14 +337,16 @@ def signin(request):
 
         # testa se o email existe:
         if not User.objects.filter(email=email).exists():
-            return render(request, 'signin.html', {'login_error': '''<div class="alert alert-danger error-alert" role="alert"><h4 class="alert-heading">Ops!</h4>Dados de login incorretos.</div>''',
-                                                                                       'redirect': r})
+            return render(request, 'signin.html', {
+                'login_error': '''<div class="alert alert-danger error-alert" role="alert"><h4 class="alert-heading">Ops!</h4>Dados de login incorretos.</div>''',
+                'redirect': r})
 
         user = authenticate(username=User.objects.get(email=email).username, password=password)
 
         if user is None:
-            return render(request, 'signin.html', {'login_error': '''<div class="alert alert-danger error-alert" role="alert"><h4 class="alert-heading">Ops!</h4>Dados de login incorretos.</div>''',
-                                                                                       'redirect': r})
+            return render(request, 'signin.html', {
+                'login_error': '''<div class="alert alert-danger error-alert" role="alert"><h4 class="alert-heading">Ops!</h4>Dados de login incorretos.</div>''',
+                'redirect': r})
         login(request, user)
         return redirect(r)
 
@@ -359,7 +358,6 @@ def signup(request):
     client_ip = get_client_ip(request)
     if client_ip in tor_ips:
         return HttpResponse()
-
 
     if request.method == 'POST':
         r = request.POST.get('redirect')
@@ -377,36 +375,29 @@ def signup(request):
                 continue
 
             html = '<div class="alert alert-danger"><p>O nome de usuário deve conter apenas caracteres alfanuméricos, hífens, underscores e espaços.</p></div>'
-            return render(request, 'signup.html', {'invalid_username': html,
-													 'username': username,
-													 'email': email,
-													 'redirect': r,
-													 'username_error': ' is-invalid'})
+            return render(request, 'signup.html', {'invalid_username': html, 'username': username, 'email': email,
+                                                   'redirect': r, 'username_error': ' is-invalid'})
         if '  ' in username:
             html = '<div class="alert alert-danger"><p>O nome de usuário não pode conter espaços concomitantes.</p></div>'
-            return render(request, 'signup.html', {'invalid_username': html,
-													 'username': username,
-													 'email': email,
-													 'redirect': r,
-													 'username_error': ' is-invalid'})
+            return render(request, 'signup.html', {'invalid_username': html, 'username': username, 'email': email,
+                                                   'redirect': r, 'username_error': ' is-invalid'})
 
         ''' Validação das credenciais: '''
         if not is_a_valid_user(username, email, password):
             return HttpResponse('Proibido.', content_type='text/plain')
 
         if User.objects.filter(username=username).exists():
-            return render(request, 'signup.html', {'error': '''<div class="alert alert-danger error-alert" role="alert"><h4 class="alert-heading">Ops!</h4>Nome de usuário em uso.</div>''',
-                                                                                       'username': username,
-                                                                                       'email': email,
-                                                                                       'redirect': r,
-                                                                                       'username_error': ' is-invalid'})
+            return render(request, 'signup.html', {
+                'error': '''<div class="alert alert-danger error-alert" role="alert"><h4 class="alert-heading">Ops!</h4>Nome de usuário em uso.</div>''',
+                'username': username,
+                'email': email, 'redirect': r,
+                'username_error': ' is-invalid'})
 
         if User.objects.filter(email=email).exists():
-            return render(request, 'signup.html', {'error': '''<div class="alert alert-danger error-alert" role="alert"><h4 class="alert-heading">Ops!</h4>Email em uso. Faça login <a href="/signin">aqui</a>.</div>''',
-                                                                                       'username': username,
-                                                                                       'email': email,
-                                                                                       'redirect': r,
-                                                                                       'email_error': ' is-invalid'})
+            return render(request, 'signup.html', {
+                'error': '''<div class="alert alert-danger error-alert" role="alert"><h4 class="alert-heading">Ops!</h4>Email em uso. Faça login <a href="/signin">aqui</a>.</div>''',
+                'username': username, 'email': email, 'redirect': r,
+                'email_error': ' is-invalid'})
 
         u = User.objects.create_user(username=username, email=email, password=password)
         login(request, u)
@@ -416,19 +407,19 @@ def signup(request):
         new_user_profile.cover_photo = None
         new_user_profile.active = False
         new_user_profile.save()
-        
+
         # geração do código de confirmação:
         from random import SystemRandom
         sr = SystemRandom()
-        
+
         chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
-        
+
         code = ''
         i = 0
         while i < 100:
             code += sr.choice(chars)
             i += 1
-        
+
         ConfirmationCode.objects.create(user=new_user_profile, code=code)
 
         # envia o e-mail de confirmação de conta.
@@ -444,7 +435,7 @@ def signup(request):
         return redirect(r)
 
     context = {
-            'redirect': request.GET.get('redirect', '/'),
+        'redirect': request.GET.get('redirect', '/'),
     }
 
     return render(request, 'signup.html', context)
@@ -453,7 +444,7 @@ def signup(request):
 def user_does_not_exists(request):
     return_to = request.META.get("HTTP_REFERER") if request.META.get("HTTP_REFERER") is not None else '/'
     context = {'error': 'Usuário não encontrado', 'err_msg': 'Este usuário não existe ou alterou seu nome.',
-                       'redirect': return_to}
+               'redirect': return_to}
     return render(request, 'error.html', context)
 
 
@@ -476,7 +467,8 @@ def profile(request, username):
         user_p.save()
 
         fq_page = request.GET.get('fq-page', 1)
-        context['followed_questions'] = Paginator(user_p.followed_questions.filter(active=True).order_by('-id'), 10).page(fq_page).object_list
+        context['followed_questions'] = Paginator(user_p.followed_questions.filter(
+            active=True).order_by('-id'), 10).page(fq_page).object_list
 
     if request.user.username != username:
         up.total_views += 1
@@ -489,12 +481,15 @@ def profile(request, username):
     context['change_profile_picture_form'] = UploadFileForm()
 
     try:
-        if request.user.username == username or not up.hide_activity or 'pap' in context['permissoes_usuario_logado'] or request.user.is_superuser:
+        if request.user.username == username or not up.hide_activity or 'pap' in context[
+            'permissoes_usuario_logado'] or request.user.is_superuser:
             q_page = request.GET.get('q-page', 1)
             r_page = request.GET.get('r-page', 1)
 
-            context['questions'] = Paginator(Question.objects.filter(creator=up, active=True).order_by('-pub_date'), 10).page(q_page).object_list
-            context['responses'] = Paginator(Response.objects.filter(creator=up, active=True).order_by('-pub_date'), 10).page(r_page).object_list
+            context['questions'] = Paginator(Question.objects.filter(
+                creator=up, active=True).order_by('-pub_date'), 10).page(q_page).object_list
+            context['responses'] = Paginator(Response.objects.filter(
+                creator=up, active=True).order_by('-pub_date'), 10).page(r_page).object_list
     except KeyError:
         pass
 
@@ -504,7 +499,6 @@ def profile(request, username):
 
 
 def ask(request):
-
     if request.user.is_anonymous:
         return redirect('/news')
 
@@ -520,12 +514,13 @@ def ask(request):
     '''
     try:
         last_q = Question.objects.filter(creator=UserProfile.objects.get(user=request.user))
-        last_q = last_q[last_q.count()-1] # pega a última questão feita pelo usuário.
+        last_q = last_q[last_q.count() - 1]  # pega a última questão feita pelo usuário.
         if (timezone.now() - last_q.pub_date).seconds < 25:
+            wait_count = 25 - (timezone.now() - last_q.pub_date).seconds
             return_to = request.META.get("HTTP_REFERER") if request.META.get("HTTP_REFERER") is not None else '/'
             context = {'error': 'Ação não autorizada',
-                               'err_msg': 'Você deve esperar {} segundos para perguntar novamente.'.format(25 - (timezone.now() - last_q.pub_date).seconds),
-                               'redirect': return_to}
+                       'err_msg': 'Você deve esperar {} segundos para perguntar novamente.'.format(wait_count),
+                       'redirect': return_to}
             return render(request, 'error.html', context)
     except:
         pass
@@ -545,15 +540,15 @@ def ask(request):
             video = request.FILES['video']
         except:
             pass
-            
+
         if video:
             if video.size > 3200000:
-                context = {'error': 'Arquivo não suportado',
-                                   'err_msg': 'O arquivo que você enviou não é suportado. Tamanho máximo de um vídeo: 3mb.',
-                                   'redirect': '/ask'}
+                context = {'error': 'Arquivo não suportado', 'redirect': '/ask',
+                           'err_msg': 'O arquivo que você enviou excede o tamanho máximo de um vídeo: 3mb.'}
                 return render(request, 'error.html', context)
-                
-        q = Question.objects.create(creator=UserProfile.objects.get(user=request.user), text=text, description=description.replace('\\', '\\\\'))
+
+        q = Question.objects.create(creator=UserProfile.objects.get(user=request.user), text=text,
+                                    description=description.replace('\\', '\\\\'))
 
         if video:
             video_name = 'media-{}{}'.format(timezone.now().date(), timezone.now().time()).replace(':', '')
@@ -563,11 +558,12 @@ def ask(request):
                     destination.write(chunk)
 
             q.videofile = 'videos/' + video_name
-            
+
             video_path = 'media/videos/' + video_name
             thumb_path = 'videos/' + video_name + '.jpg'
             try:
-                subprocess.call(['ffmpeg', '-i', video_path, '-ss', '00:00:00.000', '-vf', 'scale=320:-2', '-hide_banner', '-loglevel', 'warning', '-vframes', '1', 'media/' + thumb_path])
+                subprocess.call(['ffmpeg', '-i', video_path, '-ss', '00:00:00.000', '-vf', 'scale=320:-2',
+                                 '-hide_banner', '-loglevel', 'warning', '-vframes', '1', 'media/' + thumb_path])
                 q.videothumb = thumb_path
             except FileNotFoundError:
                 pass
@@ -589,7 +585,7 @@ def ask(request):
         if ccount.isdigit():
             is_multichoice = request.POST.get('is-multichoice') is not None
             ccount = int(ccount)
-            if ccount <= general_rules.MAXIMUM_POLL_CHOICES and ccount > 1: # Proteção de POST manual
+            if ccount <= general_rules.MAXIMUM_POLL_CHOICES and ccount > 1:  # Proteção de POST manual
                 qpoll = Poll.objects.create(question=q, is_anonymous=True, multichoice=is_multichoice)
                 for i in range(1, ccount + 1):
                     choice = request.POST.get('choice-' + str(i))
@@ -597,7 +593,6 @@ def ask(request):
                         PollChoice.objects.create(poll=qpoll, text=choice)
                     else:
                         PollChoice.objects.create(poll=qpoll, text="...")
-
 
         u = UserProfile.objects.get(user=request.user)
         u.total_points += 1
@@ -613,7 +608,6 @@ def logout(request):
     return redirect('/')
 
 def notification(request):
-
     if request.user.is_anonymous:
         return redirect('/question/%d' % Question.objects.all().last().id)
 
@@ -627,8 +621,8 @@ def notification(request):
         up.save()
 
     context = {
-            'notifications': p.page(page),
-            'user_p': up,
+        'notifications': p.page(page),
+        'user_p': up,
     }
 
     return render(request, 'notification.html', context)
@@ -643,7 +637,7 @@ def comment(request):
     elif should_ip_check():
         if not validate_ip(request):
             return HttpResponse('<p>Você não pode comentar.</p>', content_type='text/plain')
-    
+
     up = UserProfile.objects.get(user=request.user)
     if Comment.objects.filter(creator=up.user).exists():
         if (timezone.now() - Comment.objects.filter(creator=up.user).latest('id').pub_date).seconds < 2:
@@ -655,19 +649,19 @@ def comment(request):
                         </div>
                     </li>
                     '''.format(html.escape(request.POST.get('text')).replace('\n', '<br>'))
-                
+
             return HttpResponse(comment_creator_template, content_type='text/plain')
-            
+
     comment = Comment.objects.create(response=Response.objects.get(id=request.POST.get('response_id')),
-                                                                                             creator=request.user,
-                                                                                             text=html.escape(request.POST.get('text')),
-                                                                                             pub_date=timezone.now())
+                                     creator=request.user, text=html.escape(request.POST.get('text')),
+                                     pub_date=timezone.now())
 
     if not request.user == comment.response.creator.user:
-        n = Notification.objects.create(receiver=comment.response.creator.user,
-                                                                                                                    type='comment-in-response',
-                                                                                                                    text='<p><a href="/user/{}">{}</a> comentou na sua resposta na pergunta: <a href="/question/{}">"{}"</a></p>'.format(comment.creator.username, comment.creator.username, comment.response.question.id, comment.response.question.text),
-                                                                                                                    liker_id = request.user.id)
+        n = Notification.objects.create(receiver=comment.response.creator.user, type='comment-in-response',
+                                        text='<p><a href="/user/{}">{}</a> comentou na sua resposta na pergunta: <a href="/question/{}">"{}"</a></p>'.format(
+                                            comment.creator.username, comment.creator.username,
+                                            comment.response.question.id, comment.response.question.text),
+                                        liker_id=request.user.id)
         n.prepare()
 
     comment_creator_template = '''
@@ -689,23 +683,25 @@ def comment(request):
                                             <p>{}</p>
                             </div>
             </li>
-            '''.format(comment.creator.username, UserProfile.objects.get(user=request.user).avatar.url, comment.creator.username, naturaltime(comment.pub_date), comment.id, comment.text.replace('\n', '<br>'))
+            '''.format(comment.creator.username, UserProfile.objects.get(user=request.user).avatar.url,
+                       comment.creator.username, naturaltime(comment.pub_date), comment.id,
+                       comment.text.replace('\n', '<br>'))
 
     return HttpResponse(comment_creator_template)
 
 def rank(request):
     rank = UserProfile.objects.order_by('-total_points')[:50]
-    count = 0
-    context = {'rank': [{'pos': i+1, 'user': rank[i]} for i in range(len(rank))]}
+    context = {'rank': [{'pos': i + 1, 'user': rank[i]} for i in range(len(rank))]}
 
     if request.user.is_authenticated:
         up = UserProfile.objects.get(user=request.user)
         context['user_p'] = up
 
-    return render(request,'rank.html', context)
+    return render(request, 'rank.html', context)
 
 def edit_response(request):
-    response = Response.objects.get(creator=UserProfile.objects.get(user=request.user), id=request.POST.get('response_id'))
+    response = Response.objects.get(creator=UserProfile.objects.get(user=request.user),
+                                    id=request.POST.get('response_id'))
     response.text = request.POST.get('text')
     response.save()
 
@@ -717,12 +713,8 @@ def delete_question(request):
 
     if user_profile != question.creator:
         if 'pap' in ast.literal_eval(user_profile.permissions):
-            ModActivity.objects.create(obj_id=question.id,
-                                        obj_creator=question.creator.user,
-                                        mod=user_profile.user,
-                                        type='q',
-                                        obj_text=question.text,
-                                        obj_extra=question.description)
+            ModActivity.objects.create(obj_id=question.id, obj_creator=question.creator.user, mod=user_profile.user,
+                                       type='q', obj_text=question.text, obj_extra=question.description)
             question.active = False
             question.save()
             return redirect('/news')
@@ -766,7 +758,8 @@ def edit_profile(request, username):
                 '''
                 Nome da imagem do usuário no sistema de arquivos: nome de usuário atual, data de alteração e horário da alteração.
                 '''
-                file_name = '{}-{}-{}'.format(request.user.username, timezone.now().date(), timezone.now().time()).replace(':', '')
+                file_name = '{}-{}-{}'.format(request.user.username, timezone.now().date(),
+                                              timezone.now().time()).replace(':', '')
 
                 success = save_img_file(f, 'media/avatars/' + file_name, (192, 192))
                 if not success:
@@ -781,47 +774,42 @@ def edit_profile(request, username):
             u.save()
             return redirect('/user/' + username)
         if request.POST.get('type') == 'username':
-
-            username = request.POST.get('username').strip()
+            new_username = request.POST.get('username').strip()
 
             '''
             Validação do nome de usuário: é permitido apenas letras, números, hífens, undercores e espaços.
             '''
             # verificando caractere por caractere:
-
             pode = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZáéíóúâêôäëïöüãõçñÁÉÍÓÚÂÊÔÄËÏÖÜÃÕÇÑ0123456789-_ '
-            
-            for ch in username:
+
+            for ch in new_username:
                 if ch in pode:
                     continue
 
                 html = '<div class="alert alert-danger"><p>O nome de usuário deve conter apenas caracteres alfanuméricos, hífens, underscores e espaços.</p></div>'
-                return render(request, 'edit-profile.html', {'invalid_username_text': html,
-                                                             'username': username,
+                return render(request, 'edit-profile.html', {'invalid_username_text': html, 'username': new_username,
                                                              'invalid_username': ' is-invalid'})
 
-            if '  ' in username:
+            if '  ' in new_username:
                 html = '<div class="alert alert-danger"><p>O nome de usuário não pode conter espaços concomitantes.</p></div>'
-                return render(request, 'edit-profile.html', {'invalid_username_text': html,
-                                                             'username': username,
+                return render(request, 'edit-profile.html', {'invalid_username_text': html, 'username': new_username,
                                                              'invalid_username': ' is-invalid'})
 
-            if len(username) > 30:
+            if len(new_username) > 30:
                 return HttpResponse('Erro.', content_type='text/plain')
 
-            if User.objects.filter(username=username).exists():
-                return render(request, 'edit-profile.html', {'user_p': UserProfile.objects.get(user=User.objects.get(username=username)), 'username_display': 'block', 'invalid_username': ' is-invalid'})
+            if User.objects.filter(username=new_username).exists():
+                return render(request, 'edit-profile.html',
+                              {'user_p': UserProfile.objects.get(user=request.user), 'username_display': 'block',
+                               'invalid_username': ' is-invalid'})
 
             password = request.POST.get('password')
             user = authenticate(username=request.user.username, password=password)
             if user is None:
                 if not User.objects.filter(username=request.POST.get('username')).exists():
-                    try:
-                        return render(request, 'edit-profile.html', {'user_p': UserProfile.objects.get(user=User.objects.get(username=username)), 'password_display': 'block', 'invalid_password': ' is-invalid'})
-                    except:
-                        return render(request, 'edit-profile.html',
-                                                  {'user_p': UserProfile.objects.get(user=User.objects.get(username=request.user.username)),
-                                                   'password_display': 'block', 'invalid_password': ' is-invalid'})
+                    return render(request, 'edit-profile.html',
+                                  {'user_p': UserProfile.objects.get(user=request.user), 'password_display': 'block',
+                                   'invalid_password': ' is-invalid'})
             user.username = request.POST.get('username').strip()
             user.save()
             login(request, user)
@@ -862,7 +850,8 @@ def edit_profile(request, username):
                 '''
                 Nome da imagem do usuário no sistema de arquivos: nome de usuário atual, data de alteração e horário da alteração.
                 '''
-                file_name = '{}-{}-{}'.format(request.user.username, timezone.now().date(), timezone.now().time()).replace(':', '')
+                file_name = '{}-{}-{}'.format(request.user.username, timezone.now().date(),
+                                              timezone.now().time()).replace(':', '')
 
                 success = save_img_file(f, 'media/cover_photos/' + file_name, (900, 300))
                 if not success:
@@ -883,9 +872,8 @@ def edit_profile(request, username):
                 u.save()
 
             return redirect('/user/' + request.user.username)
-
-
-    return render(request, 'edit-profile.html', {'user_p': UserProfile.objects.get(user=User.objects.get(username=username))})
+    return render(request, 'edit-profile.html',
+                  {'user_p': UserProfile.objects.get(user=User.objects.get(username=username))})
 
 
 def block(request, username):
@@ -954,7 +942,8 @@ def is_a_valid_user(username, email, password):
     elif len(password) < 6 or len(password) > 256:
         return False
 
-    emails = ['mail','hotmail','outlook','live','msn','yahoo','icloud','gmail','bol','aol','uol','terra','protonmail','tutanota','yandex','net']
+    emails = ['mail', 'hotmail', 'outlook', 'live', 'msn', 'yahoo', 'icloud', 'gmail', 'bol', 'aol', 'uol', 'terra',
+              'protonmail', 'tutanota', 'yandex', 'net']
     start = email.index('@') + 1
     end = email.index('.', start)
     email = email[start:end]
@@ -992,9 +981,6 @@ def choose_best_answer(request):
         quserp.total_points += 2
         rcuserp.save()
         quserp.save()
-    #else: # P/ testes rápidos - desfaz a MR
-    #    q.best_answer = None
-    #    q.save()
 
     return HttpResponse('OK', content_type='text/plain')
 
@@ -1027,7 +1013,7 @@ def vote_on_poll(request):
         return HttpResponse('Proibido.', content_type='text/plain')
 
     for choice in user_choices:
-        c_query = PollChoice.objects.filter(id=choice, poll=p) # pollchoice.poll == req.poll (poll=p) p/ evitar manipulação de POST
+        c_query = PollChoice.objects.filter(id=choice, poll=p)
         if c_query.exists():
             c = c_query[0]
             PollVote.objects.create(poll=p, choice=c, voter=request.user)
@@ -1056,23 +1042,29 @@ def undo_vote_on_poll(request):
 
 def get_feed_content(user_p, page, subpage):
     followed_users = UserProfile.objects.filter(user_id__in=user_p.followed_users.all())
-    
+
     fuq_fur_fqr_proportion = (45, 15, 40)
-    followed_u_questions = Paginator(Question.objects.filter(creator__in=followed_users, active=True).order_by('-id'), fuq_fur_fqr_proportion[0]).page(page).object_list
-    followed_u_responses = Paginator(Response.objects.filter(creator__in=followed_users, active=True).order_by('-id'), fuq_fur_fqr_proportion[1]).page(page).object_list
+    followed_u_questions = Paginator(Question.objects.filter(creator__in=followed_users, active=True).order_by('-id'),
+                                     fuq_fur_fqr_proportion[0]).page(page).object_list
+    followed_u_responses = Paginator(Response.objects.filter(creator__in=followed_users, active=True).order_by('-id'),
+                                     fuq_fur_fqr_proportion[1]).page(page).object_list
     followed_questions = user_p.followed_questions.all()
-    followed_q_responses = Paginator(Response.objects.filter(question__in=followed_questions, active=True).order_by('-id'), fuq_fur_fqr_proportion[2]).page(page).object_list
+    followed_q_responses = Paginator(
+        Response.objects.filter(question__in=followed_questions, active=True).order_by('-id'),
+        fuq_fur_fqr_proportion[2]).page(page).object_list
 
     '''
     0: Respostas de perguntas seguidas
     1: Respostas de usuários seguidos
     2: Perguntas de usuários seguidos
     '''
-    feed_page = [{'type': 0, 'pub_date': r.pub_date, 'obj': r} for r in followed_q_responses] +  [{'type': 1, 'pub_date': r.pub_date, 'obj': r} for r in followed_u_responses] + [{'type': 2, 'pub_date': q.pub_date, 'obj': q} for q in followed_u_questions]
+    feed_page = [{'type': 0, 'pub_date': r.pub_date, 'obj': r} for r in followed_q_responses] + [
+        {'type': 1, 'pub_date': r.pub_date, 'obj': r} for r in followed_u_responses] + [
+                    {'type': 2, 'pub_date': q.pub_date, 'obj': q} for q in followed_u_questions]
     feed_page = sorted(feed_page, key=lambda x: x['pub_date'], reverse=True)
 
-    return feed_page[subpage*20:subpage*20+20]
-   
+    return feed_page[subpage * 20:subpage * 20 + 20]
+
 def get_index_feed_page(request):
     page = request.GET.get('page')
     subpage = request.GET.get('sp')
@@ -1081,16 +1073,16 @@ def get_index_feed_page(request):
         items = get_feed_content(up, int(page), int(subpage))
     except EmptyPage:
         return HttpResponse('-1', content_type='text/plain')
-        
+
     if len(items) == 0:
         return HttpResponse('0', content_type='text/plain')
-    
+
     context = {
         'items': items,
     }
 
     return render(request, 'base/index-feed-page.html', context)
-    
+
 def more_popular_questions(request):
     page = request.GET.get('page')
 
@@ -1112,16 +1104,16 @@ def more_popular_questions(request):
     if request.user.is_anonymous:
         for q in questions:
             para_retornar.append(
-              {
-                "id": q.id,
-                "text": q.text,
-                "description": q.description,
-                "total_answers": q.total_responses,
-                "pub_date": fix_naturaltime(naturaltime(q.pub_date)),
-                "creator": q.creator.user.username,
-                "question_creator_avatar": q.creator.avatar.url,
-                "user_answer": "False",
-              },
+                {
+                    "id": q.id,
+                    "text": q.text,
+                    "description": q.description,
+                    "total_answers": q.total_responses,
+                    "pub_date": fix_naturaltime(naturaltime(q.pub_date)),
+                    "creator": q.creator.user.username,
+                    "question_creator_avatar": q.creator.avatar.url,
+                    "user_answer": "False",
+                },
             )
     else:
         for q in questions:
@@ -1129,16 +1121,16 @@ def more_popular_questions(request):
             answer = 'False' if not r.exists() else r[0].text
 
             para_retornar.append(
-              {
-                "id": q.id,
-                "text": q.text,
-                "description": q.description,
-                "total_answers": q.total_responses,
-                "pub_date": fix_naturaltime(naturaltime(q.pub_date)),
-                "creator": q.creator.user.username,
-                "question_creator_avatar": q.creator.avatar.url,
-                "user_answer": answer,
-              },
+                {
+                    "id": q.id,
+                    "text": q.text,
+                    "description": q.description,
+                    "total_answers": q.total_responses,
+                    "pub_date": fix_naturaltime(naturaltime(q.pub_date)),
+                    "creator": q.creator.user.username,
+                    "question_creator_avatar": q.creator.avatar.url,
+                    "user_answer": answer,
+                },
             )
 
     return JsonResponse(para_retornar, safe=False)
@@ -1168,7 +1160,7 @@ def update_index(request):
     last_q = Question.objects.last().id
     if last_q - last_known_q > 200:
         return HttpResponse('-1')
-         
+
     nq = Question.objects.filter(id__gt=last_known_q, active=True).order_by("-id")
     if len(nq) == 0:
         return HttpResponse('-1')
@@ -1176,7 +1168,7 @@ def update_index(request):
         return HttpResponse('-1')
 
     nq_context = {'questions': nq, 'user_p': up}
-    
+
     return render(request, 'base/index-recent-q-page.html', nq_context)
 
 def update_question(request):
@@ -1188,7 +1180,8 @@ def update_question(request):
         user_p = UserProfile.objects.get(user=request.user)
         context['user_permissions'] = ast.literal_eval(user_p.permissions)
         context['user_p'] = user_p
-        nr = Response.objects.filter(question=q, id__gt=last_r, active=True).exclude(creator=user_p).order_by('-total_likes', 'id')
+        nr = Response.objects.filter(question=q, id__gt=last_r, active=True).exclude(creator=user_p).order_by(
+            '-total_likes', 'id')
     else:
         nr = Response.objects.filter(question=q, id__gt=last_r, active=True).order_by('-total_likes', 'id')
 
@@ -1201,31 +1194,37 @@ def update_question(request):
 
 def new_activity_check(request):
     nn = 0
+    up = None
     if not request.user.is_anonymous:
         up = UserProfile.objects.get(user=request.user)
         nn = up.new_notifications
 
     try:
-        last_known_q = int(request.GET.get('last_known_q'))
+        last_known_id = int(request.GET.get('last_known_q'))
+        obj_type = 'q'
     except:
-        last_known_r = int(request.GET.get('last_known_r'))
+        last_known_id = int(request.GET.get('last_known_r'))
+        obj_type = 'r'
+
+    if obj_type == 'r':
         qid = int(request.GET.get('qid'))
         q = Question.objects.get(id=qid)
 
         # OBS.: Este sistema deve ser atualizado caso alguma pergunta chegue a ter mais de 200 respostas
         # para evitar sobrecarregamentos, conforme já é o caso do if-statement no check para novas perguntas!
-        if not request.user.is_anonymous:
-            responses = len(Response.objects.filter(question=q, id__gt=last_known_r, active=True).exclude(creator=up))
+        if up is not None:
+            responses = len(Response.objects.filter(question=q, id__gt=last_known_id, active=True).exclude(creator=up))
         else:
-            responses = len(Response.objects.filter(question=q, id__gt=last_known_r, active=True))
+            responses = len(Response.objects.filter(question=q, id__gt=last_known_id, active=True))
         return JsonResponse({'nn': nn, 'nr': responses})
 
-    last_q = Question.objects.last().id
-    if last_q - last_known_q > 200 or last_known_q < 1:
-         return JsonResponse({'nn': nn, 'nq': -1})
-    nq = Question.objects.filter(id__gt=last_known_q, active=True).order_by("id")
-    
-    return JsonResponse({'nn': nn, 'nq': len(nq)})
+    elif obj_type == 'q':
+        last_q = Question.objects.last().id
+        if last_q - last_known_id > 200 or last_known_id < 1:
+            return JsonResponse({'nn': nn, 'nq': -1})
+        nq = Question.objects.filter(id__gt=last_known_id, active=True).order_by("id")
+
+        return JsonResponse({'nn': nn, 'nq': len(nq)})
 
 def get_more_questions(request):
     # Para o profile.html
@@ -1234,7 +1233,8 @@ def get_more_questions(request):
     qtype = request.GET.get('qtype')
 
     target = UserProfile.objects.get(user=User.objects.get(id=user_id))
-    if target.hide_activity and not request.user.is_superuser and 'pap' not in ast.literal_eval(UserProfile.objects.get(user=request.user).permissions):
+    if target.hide_activity and not request.user.is_superuser and 'pap' not in ast.literal_eval(
+            UserProfile.objects.get(user=request.user).permissions):
         if target.user.id != request.user.id:
             return 'Proibido.'
 
@@ -1245,8 +1245,7 @@ def get_more_questions(request):
 
     p = Paginator(q, 10)
 
-    json = {
-    }
+    json = dict()
 
     json['questions'] = {}
 
@@ -1263,10 +1262,10 @@ def get_more_questions(request):
         else:
             best_answer = -1
         json['questions'][count] = {
-                'text': q.text,
-                'id': q.id,
-                'naturalday': naturalday(q.pub_date),
-                'best_answer': best_answer
+            'text': q.text,
+            'id': q.id,
+            'naturalday': naturalday(q.pub_date),
+            'best_answer': best_answer
         }
         count += 1
 
@@ -1279,26 +1278,26 @@ def get_more_responses(request):
     page = request.GET.get('r_page', 2)
     user_id = request.GET.get('user_id')
     target = UserProfile.objects.get(user=User.objects.get(id=user_id))
-    if target.hide_activity and not request.user.is_superuser and 'pap' not in ast.literal_eval(UserProfile.objects.get(user=request.user).permissions):
+    if target.hide_activity and not request.user.is_superuser and 'pap' not in ast.literal_eval(
+            UserProfile.objects.get(user=request.user).permissions):
         if target.user.id != request.user.id:
             return 'Proibido.'
     r = Response.objects.filter(creator=target, active=True).order_by('-pub_date')
     p = Paginator(r, 10)
 
-    json = {
-    }
+    json = dict()
 
     json['responses'] = {}
 
     count = 1
     for r in p.page(page):
         json['responses'][count] = {
-                'text': r.text,
-                'question_text': r.question.text,
-                'question_id': r.question.id,
-                'best_answer': r.id == r.question.best_answer,
-                'creator': r.question.creator.user.username,
-                'naturalday': naturalday(r.question.pub_date)
+            'text': r.text,
+            'question_text': r.question.text,
+            'question_id': r.question.id,
+            'best_answer': r.id == r.question.best_answer,
+            'creator': r.question.creator.user.username,
+            'naturalday': naturalday(r.question.pub_date)
         }
         count += 1
 
@@ -1313,23 +1312,23 @@ def report(request):
     elif should_ip_check():
         if not validate_ip(request):
             return redirect('/news')
-            
+
     type = request.GET.get('type')
     obj_id = request.GET.get('obj_id')
     reporter = request.user
-    
+
     report = Report.objects.filter(obj_id=obj_id)
-    
+
     if report.exists():
         report = report.first()
     else:
         report = Report.objects.create(type=type, obj_id=obj_id)
-    
+
     if not report.reporters.filter(username=reporter.username).exists():
         report.reporters.add(reporter)
         report.total_reports += 1
         report.save()
-    
+
     return HttpResponse('OK')
 
 def report_user(request):
@@ -1339,7 +1338,7 @@ def report_user(request):
     elif should_ip_check():
         if not validate_ip(request):
             return redirect('/news')
-            
+
     type = 'u'
     obj_id = User.objects.get(username=request.POST.get('username')).id
     text = request.POST.get('text')
@@ -1355,25 +1354,24 @@ def manage_reports(request):
     user_permissions = ast.literal_eval(user_profile.permissions)
 
     if not request.user.is_superuser:
-        if not 'pap' in user_permissions:
-            return HttpResponse('Você está logado como {}. Este usuário não tem permissão administrativa.'.format(request.user.username))
+        if 'pap' not in user_permissions:
+            return HttpResponse('{}, você não tem permissão administrativa.'.format(request.user.username))
 
     reports = list(Report.objects.all())
     reports.sort(key=lambda x: x.total_reports, reverse=True)
-    
+
     context = {
         'reports': reports,
     }
-    
-    return render(request, 'manage_reports.html', context)
 
+    return render(request, 'manage_reports.html', context)
 
 def delete_report_and_obj(request):
     if not request.user.is_superuser:
         return HttpResponse('Proibido.', content_type='text/plain')
-    
+
     report = Report.objects.get(obj_id=request.GET.get('obj_id'))
-    
+
     if report.type == 'q':
         '''Tratando report do tipo "pergunta" (obj_id é o ID de uma pergunta, a pergunta foi reportada).'''
         q = Question.objects.filter(id=report.obj_id)
@@ -1381,7 +1379,7 @@ def delete_report_and_obj(request):
             q = q.first()
             q.delete()
         report.delete()
-    
+
     return HttpResponse('OK', content_type='text/plain')
 
 def delete_report(request):
@@ -1392,14 +1390,14 @@ def delete_report(request):
 def confirm_account(request):
     code = request.GET.get('code')
     result = ConfirmationCode.objects.filter(code=code)
-    
+
     if result.exists():
         user_profile = result.first().user
         user_profile.active = True
         user_profile.save()
         result.delete()
         return redirect('/')
-    
+
     return HttpResponse('Erro.')
 
 class SearchRankCD(SearchRank):
@@ -1433,7 +1431,7 @@ def search(request):
     Pode ser ordenada por, por exemplo, os dois fatores a seguir:
         1. "-rank" (maior ranking -> mais fidelidade)
         2. "-pub_date" (maior pub_date -> mais recente)
-        
+
     O ideal no futuro é ativar ambas opções na página de busca
     '''
     order_factor = "-pub_date"
@@ -1443,11 +1441,14 @@ def search(request):
     res_r = Response.objects.annotate(rank=SearchRank(SearchVector('text'), SearchQuery(userquery))).order_by(order_factor)
     '''
     # Menos resultados, mais omissões, porém usa menos recursos e gera menos resultados irrelevantes:
-    res_q = Question.objects.annotate(rank=SearchRank(SearchVector('text', weight='A') + SearchVector('description', weight='B'), SearchQuery(userquery))).filter(rank__gte=0.3, active=True).order_by(order_factor)
-    res_r = Response.objects.annotate(rank=SearchRank(SearchVector('text', weight='A'), SearchQuery(userquery))).filter(rank__gte=0.3, active=True).order_by(order_factor)
+    res_q = Question.objects.annotate(
+        rank=SearchRank(SearchVector('text', weight='A') + SearchVector('description', weight='B'),
+                        SearchQuery(userquery))).filter(rank__gte=0.3, active=True).order_by(order_factor)
+    res_r = Response.objects.annotate(rank=SearchRank(SearchVector('text', weight='A'), SearchQuery(userquery))).filter(
+        rank__gte=0.3, active=True).order_by(order_factor)
 
     ITEMS_PER_PAGE = 40
-    qrcount = ITEMS_PER_PAGE//2
+    qrcount = ITEMS_PER_PAGE // 2
 
     try:
         pq = Paginator(res_q, qrcount).page(page)
@@ -1460,11 +1461,11 @@ def search(request):
         userquery = 'Busca:'  # TODO: provisorio - posteriormente passar a resp ao template
 
     context = {
-            'questions': pq,
-            'responses': pr,
-            'q': userquery,
-            'next': int(page) + 1,
-            'previous': int(page) - 1,
+        'questions': pq,
+        'responses': pr,
+        'q': userquery,
+        'next': int(page) + 1,
+        'previous': int(page) - 1,
     }
 
     if request.user.is_authenticated:
@@ -1477,26 +1478,26 @@ def open_chat(request):
     context = dict()
     uname = request.GET.get('u')
     target_up = UserProfile.objects.get(user=User.objects.get(username=uname))
-        
+
     client_ip = get_client_ip(request)
     if Ban.objects.filter(ip=client_ip).exists():
         return redirect('/user/' + target_up.user.username)
     elif should_ip_check():
         if not validate_ip(request):
             return redirect('/user/' + target_up.user.username)
-    
+
     if request.user.is_authenticated:
         up = UserProfile.objects.get(user=request.user)
         context['user_p'] = up
     else:
         return redirect('/news')
-        
+
     if target_up.blocked_users.filter(userprofile=up).exists() or not target_up.allows_chat:
-        context = {'error': 'Esta página não pode ser exibida', 'err_msg': 'Esta conversa não existe ou não está disponível.'}
+        context = {'error': 'A página não pode ser exibida', 'err_msg': 'A conversa não existe ou está indisponível.'}
         return render(request, 'error.html', context)
-        
+
     # TODO: adicionar handling para users silenciados!
-    
+
     c = Chat.objects.filter(participant=up.user).filter(participant=target_up.user)
     if not c:
         c = Chat.objects.create()
@@ -1504,7 +1505,7 @@ def open_chat(request):
         c.save()
     elif len(c) == 1:
         c = c[0]
-        
+
     return redirect('/chat?c=' + str(c.id))
 
 def chats(request):
@@ -1514,17 +1515,16 @@ def chats(request):
     elif should_ip_check():
         if not validate_ip(request):
             return redirect('/user/' + request.user.username)
-            
+
     context = dict()
     if request.user.is_authenticated:
         up = UserProfile.objects.get(user=request.user)
         context['user_p'] = up
     else:
         return redirect('/news')
-        
-    chats = Chat.objects.filter(participant=up.user).order_by('-last_activity')
-    context['chats'] = chats
-            
+
+    context['chats'] = Chat.objects.filter(participant=up.user).order_by('-last_activity')
+
     return render(request, 'chats.html', context)
 
 def chat(request):
@@ -1539,46 +1539,47 @@ def chat(request):
     chat_id = request.GET.get('c', -1)
     try:
         c = Chat.objects.get(id=chat_id)
-    except:
-        context = {'error': 'Esta página não pode ser exibida', 'err_msg': 'Esta conversa não existe ou não está disponível.'}
+    except Chat.DoesNotExist:
+        context = {'error': 'A página não pode ser exibida', 'err_msg': 'A conversa não existe ou está indisponível.'}
         return render(request, 'error.html', context)
-    
+
     if request.user.is_authenticated:
         up = UserProfile.objects.get(user=request.user)
         context['user_p'] = up
         if not c.participant.filter(userprofile=up).exists():
-            context = {'error': 'Esta página não pode ser exibida', 'err_msg': 'Esta conversa não existe ou não está disponível.'}
+            context = {'error': 'A página não pode ser exibida',
+                       'err_msg': 'A conversa não existe ou está indisponível.'}
             return render(request, 'error.html', context)
     else:
         return redirect('/news')
-                       
+
     counterpart = chat_counterpart(up, c)
     context['counterpart'] = counterpart
-    
+
     last_received = ChatMessage.objects.filter(chat=c, creator=counterpart.user).last()
-    
+
     if last_received:
         if last_received.id > c.last_viewed:
             c.last_viewed = last_received.id
             c.save()
-    
+
     messages = list(reversed(list(ChatMessage.objects.filter(chat=c).order_by('-id')[:10])))
     context['messages'] = messages
-    
+
     context['cid'] = c.id
     context['last_viewed'] = c.last_viewed
-         
+
     return render(request, 'chat.html', context)
-    
+
 def sendmsg(request):
     chat_id = request.POST.get('c')
     text = request.POST.get('text')
-        
+
     try:
         c = Chat.objects.get(id=chat_id)
-    except:
+    except Chat.DoesNotExist:
         return HttpResponse('Proibido', content_type='text/plain')
-    
+
     if request.user.is_authenticated:
         up = UserProfile.objects.get(user=request.user)
         try:
@@ -1588,14 +1589,14 @@ def sendmsg(request):
             pass
         if chat_counterpart(up, c).blocked_users.filter(userprofile=up).exists():
             return HttpResponse('Proibido', content_type='text/plain')
-            
+
         if not c.participant.filter(userprofile=up).exists():
             return HttpResponse('Proibido', content_type='text/plain')
     else:
         return HttpResponse('Proibido', content_type='text/plain')
-        
+
     message = ChatMessage.objects.create(chat=c, creator=up.user)
-    
+
     message.text = text
     if not text:
         if up.total_points < 500:
@@ -1612,32 +1613,32 @@ def sendmsg(request):
                 success = save_img_file(f, 'media/chat_photos/' + file_name, (1200, 1200))
                 if success:
                     message.image = success
-            
+
     message.save()
-    
+
     c.last_activity = timezone.now()
     c.save()
 
     return HttpResponse('OK', content_type='text/plain')
-    
+
 def loadmsgs(request):
     chat_id = request.GET.get('c')
     type = request.GET.get('type')  # old, new
     last_loaded = request.GET.get('last')
     last_known_viewed = request.GET.get('lkv')
-    
+
     try:
         c = Chat.objects.get(id=chat_id)
-    except:
+    except Chat.DoesNotExist:
         return HttpResponse('Proibido', content_type='text/plain')
-    
+
     if request.user.is_authenticated:
         up = UserProfile.objects.get(user=request.user)
         if not c.participant.filter(userprofile=up).exists():
             return HttpResponse('Proibido', content_type='text/plain')
     else:
         return HttpResponse('Proibido', content_type='text/plain')
-    
+
     last_viewed_new = None
     last_deletions = None
     if type == 'old':
@@ -1646,20 +1647,23 @@ def loadmsgs(request):
         messages = list(reversed(list(ChatMessage.objects.filter(id__gt=last_loaded, chat=c).order_by('-id')[:50])))
         if c.last_viewed > int(last_known_viewed):
             last_viewed_new = c.last_viewed
-        last_deletions = ChatMessage.objects.filter(chat=c, hide=True, creator=chat_counterpart(up, c).user, pub_date__gte=timezone.now()-timedelta(hours=1)).order_by('-id')[:5]
-    
-    return render(request, 'base/chat-messages.html', {'messages': messages, 'user_p': up, 'last_viewed': last_viewed_new, 'last_deletions': last_deletions})
-    
+        last_deletions = ChatMessage.objects.filter(chat=c, hide=True, creator=chat_counterpart(up, c).user,
+                                                    pub_date__gte=timezone.now() - timedelta(hours=1)).order_by('-id')[
+                         :5]
+
+    return render(request, 'base/chat-messages.html', {'messages': messages, 'last_viewed': last_viewed_new,
+                                                       'user_p': up, 'last_deletions': last_deletions})
+
 def markviewed(request):
     chat_id = request.GET.get('c')
     msg_id = request.GET.get('m')
-    
+
     try:
         c = Chat.objects.get(id=chat_id)
         m = ChatMessage.objects.get(id=msg_id)
     except:
         return HttpResponse('Proibido', content_type='text/plain')
-    
+
     if m.chat != c:
         return HttpResponse('Proibido', content_type='text/plain')
     if request.user.is_authenticated:
@@ -1671,22 +1675,22 @@ def markviewed(request):
             return HttpResponse('Proibido', content_type='text/plain')
     else:
         return HttpResponse('Proibido', content_type='text/plain')
-        
+
     c.last_viewed = msg_id
     c.save()
-    
+
     return HttpResponse('OK', content_type='text/plain')
-    
+
 def remove_msg(request):
     chat_id = request.GET.get('c')
     msg_id = request.GET.get('m')
-    
+
     try:
         c = Chat.objects.get(id=chat_id)
         m = ChatMessage.objects.get(id=msg_id)
     except:
         return HttpResponse('Proibido', content_type='text/plain')
-    
+
     if m.chat != c:
         return HttpResponse('Proibido', content_type='text/plain')
     if request.user.is_authenticated:
@@ -1695,23 +1699,21 @@ def remove_msg(request):
             return HttpResponse('Proibido', content_type='text/plain')
     else:
         return HttpResponse('Proibido', content_type='text/plain')
-        
+
     m.hide = True
     m.save()
-        
+
     return HttpResponse('OK', content_type='text/plain')
-        
+
 def modactivity(request):
     if not request.user.is_superuser:
         # Nega acesso a usuários
         return redirect('/news')
 
     page = request.GET.get('page', 1)
-    
     activities = ModActivity.objects.order_by('-action_date')
 
     ITEMS_PER_PAGE = 40
-
     try:
         paged_act = Paginator(activities, ITEMS_PER_PAGE).page(page)
     except InvalidPage:
@@ -1719,22 +1721,22 @@ def modactivity(request):
         return render(request, 'error.html', context)
 
     context = {
-            'activities': paged_act,
-            'next': int(page) + 1,
-            'previous': int(page) - 1,
+        'activities': paged_act,
+        'next': int(page) + 1,
+        'previous': int(page) - 1,
     }
     return render(request, 'modactivity.html', context)
-    
+
 def star(request):
     qid = request.GET.get('qid')
-    q = Question.objects.get(id=qid)    
+    q = Question.objects.get(id=qid)
     if q.creator.user == request.user:
         return HttpResponse('Proibido', content_type='text/plain')
-        
+
     if q.stars.filter(username=request.user.username).exists():
-        #q.stars.remove(request.user)
-        #q.total_stars = q.stars.count()
-        #q.save()
+        # q.stars.remove(request.user)
+        # q.total_stars = q.stars.count()
+        # q.save()
         pass
     else:
         q.stars.add(request.user)
