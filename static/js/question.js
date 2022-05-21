@@ -260,10 +260,17 @@ formulario_de_resposta.onsubmit = function() {
 		cache:false,
 		contentType: false,
 		processData: false,
-		complete: function(data) {
-			document.getElementsByClassName("responses")[0].innerHTML += data.responseText;
+		success: function(data) {
+			document.getElementsByClassName("responses")[0].innerHTML += data;
 			formulario_de_resposta.remove();
 		},
+		error: function(data, text, err) {
+		    var err_msg = "Um erro temporário ocorreu. Por favor, tente novamente."
+		    if (data.status == 406) {
+		        err_msg = data.responseText;
+		    }
+		    document.getElementById("r-ctrls").innerHTML = err_msg;
+		}
 	});
 	return false;
 };

@@ -328,19 +328,20 @@ href="/signup?redirect=/question/{{ question.id }}">crie uma conta</a> para resp
 				<input type="hidden" name="question_id" value="{{ question.id }}">
 
 				<textarea id="sua-resposta" maxlength="5000" class="form-control large-compact" style="font-size: 13px; font-weight: 600; border: none; border-radius: 10px; margin-bottom: 15px;" placeholder="Digite Sua Resposta Aqui..." name="text" required="required"></textarea>
+				<div id="r-ctrls">
+					<button class="btn btn-primary" type="submit" style="font-size: 14px; width: 110px; font-weight: 700; border-radius: 30px" id="botao_enviar_resposta">
+					<i class="far fa-paper-plane"></i>
+					Enviar
+					</button>
 
-				<button class="btn btn-primary" type="submit" style="font-size: 14px; width: 110px; font-weight: 700; border-radius: 30px" id="botao_enviar_resposta">
-				<i class="far fa-paper-plane"></i>
-				Enviar
-				</button>
+					<label for="upload-photo">
+						&nbsp;<i class="fas fa-camera fa-lg"></i>
+						<span id="upload-photo-text"></span>
+					</label>
 
-				<label for="upload-photo">
-					&nbsp;<i class="fas fa-camera fa-lg"></i>
-					<span id="upload-photo-text"></span>
-				</label>
-
-				<input type="file" accept="image/*" name="file" id="upload-photo" onclick="return veracity_test({{ user_p.total_points }}, {% MINIMUM_POINTS_FOR_POSTING_IMAGES %});">
-				<img src="/static/images/close-icon.png" width="20px" style="display: none; cursor: pointer;" id="delete-photo-icon">
+					<input type="file" accept="image/*" name="file" id="upload-photo" onclick="return veracity_test({{ user_p.total_points }}, {% MINIMUM_POINTS_FOR_POSTING_IMAGES %});">
+					<img src="/static/images/close-icon.png" width="20px" style="display: none; cursor: pointer;" id="delete-photo-icon">
+				</div>
 			</div>
 		</form>
 		<img src="/static/images/loading.gif" width="30px" style="display: none;" id="response-loading-gif">

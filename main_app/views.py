@@ -134,17 +134,17 @@ def validate_ip(request):
 def save_answer(request):
     client_ip = get_client_ip(request)
     if Ban.objects.filter(ip=client_ip).exists():
-        return HttpResponse('Você não pode responder perguntas.', content_type='text/plain')
+        return HttpResponse('Você não pode responder perguntas.', content_type='text/plain', status=406)
     elif should_ip_check():
         if not validate_ip(request):
-            return HttpResponse('Você não pode responder perguntas.', content_type='text/plain')
+            return HttpResponse('Você não pode responder perguntas.', content_type='text/plain', status=406)
     try:
         question = Question.objects.get(id=request.POST.get('question_id'))
     except Question.DoesNotExist:
         question = None
     if question is None or not question.active:
         return HttpResponse('Pergunta não encontrada. Talvez ela tenha sido apagada pelo criador da pergunta.',
-                            content_type='text/plain')
+                            content_type='text/plain', status=406)
 
     response_creator = UserProfile.objects.get(user=request.user)  # criador da nova resposta.
 
@@ -152,10 +152,10 @@ def save_answer(request):
     Testa se o usuário já respondeu a pergunta:
     '''
     if Response.objects.filter(creator=response_creator, question=question).exists():
-        return HttpResponse('Você já respondeu essa pergunta.', content_type='text/plain')
+        return HttpResponse('Você já respondeu essa pergunta.', content_type='text/plain', status=406)
 
     if question.creator.blocked_users.filter(username=request.user.username).exists():
-        return HttpResponse('Você não pode responder essa pergunta.', content_type='text/plain')
+        return HttpResponse('Você não pode responder essa pergunta.', content_type='text/plain', status=406)
 
     response = Response.objects.create(question=question, creator=response_creator, text=request.POST.get('text'))
 
