@@ -271,13 +271,13 @@ window.history.back();
                     <br>
                         {% if STARRED %}
                             <a id="stqa" class="clickable badge badge-pill" style="font-weight: normal; background: rgba(200,200,200,0.1); text-decoration: none; height: 32px; vertical-align: bottom" href="javascript:void(0);" onclick="star_question(this, {{ question.id }});">
-								<ion-icon class="onstar text-warning" style="font-size: 21px" name="thumbs-up"></ion-icon>
+								<ion-icon class="onstar text-primary" style="font-size: 21px" name="thumbs-up"></ion-icon>
 								<ion-icon class="offstar hidden" style="font-size: 21px" name="thumbs-up-outline"></ion-icon>
 								<span class="starcount">{{ question.total_stars }}</span>
 							</a> 
                         {% else %}
                             <a id="stqa" class="clickable badge badge-pill" style="font-weight: normal; background: rgba(200,200,200,0.1); text-decoration: none; height: 32px; vertical-align: bottom" href="javascript:void(0);" onclick="star_question(this, {{ question.id }});">
-								<ion-icon class="onstar text-warning hidden" style="font-size: 21px" name="thumbs-up"></ion-icon>
+								<ion-icon class="onstar text-primary hidden" style="font-size: 21px" name="thumbs-up"></ion-icon>
 								<ion-icon class="offstar" style="font-size: 21px" name="thumbs-up-outline"></ion-icon>
 								<span class="starcount">{{ question.total_stars }}</span>
 							</a> 
@@ -376,7 +376,7 @@ href="/signup?redirect=/question/{{ question.id }}">crie uma conta</a> para resp
 	    <script src="/static/js/common.js?v=1.6"></script>
         <script src="https://cdn.jsdelivr.net/npm/linkifyjs@2.1.9/dist/linkify.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/linkifyjs@2.1.9/dist/linkify-jquery.min.js"></script>
-		<script src="/static/js/question.js?v=3"></script>
+		<script src="/static/js/question.js?v=3.1"></script>
         <script>
             $('.description').linkify();
             var qid = {{ question.id }};

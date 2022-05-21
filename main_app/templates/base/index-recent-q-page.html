@@ -85,9 +85,9 @@
 				{% if not user.is_anonymous %}
 					{% starred user question as STARRED %}
 					{% if STARRED %}
-					<a style="font-size: 12px; padding-right: 6px; cursor: pointer" onclick="star_question(this, {{ question.id }});"> <ion-icon class="offstar hidden" name="thumbs-up-outline"></ion-icon> <ion-icon class="onstar text-warning" name="thumbs-up"></ion-icon> <span class="starcount" style="font-size: 15px">{{ question.total_stars }}</span> &#8226; </a>
+					<a style="font-size: 12px; padding-right: 6px; cursor: pointer" onclick="star_question(this, {{ question.id }});"> <ion-icon class="offstar hidden" name="thumbs-up-outline"></ion-icon> <ion-icon class="onstar text-primary" name="thumbs-up"></ion-icon> <span class="starcount" style="font-size: 15px">{{ question.total_stars }}</span> &#8226; </a>
 					{% else %}
-					<a style="font-size: 14px; cursor: pointer" onclick="star_question(this, {{ question.id }});"> <ion-icon class="offstar" name="thumbs-up-outline"></ion-icon> <ion-icon class="onstar text-warning hidden" name="thumbs-up"></ion-icon> <span class="starcount warning-text onstar" style="font-size: 15px">{{ question.total_stars }}</span> &#8226; </a>
+					<a style="font-size: 14px; cursor: pointer" onclick="star_question(this, {{ question.id }});"> <ion-icon class="offstar" name="thumbs-up-outline"></ion-icon> <ion-icon class="onstar text-primary hidden" name="thumbs-up"></ion-icon> <span class="starcount warning-text onstar" style="font-size: 15px">{{ question.total_stars }}</span> &#8226; </a>
 					{% endif %}
 				{% endif %}
 				<span id="response-counter-{{ question.id }}" style="color: #00CD66; font-weight: 700">

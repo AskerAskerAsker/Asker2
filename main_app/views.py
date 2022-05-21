@@ -275,6 +275,11 @@ def like(request):
         # diminui total de likes da pergunta:
         q.total_likes -= 1
         q.save()
+        try:
+            n = Notification.objects.get(type='like-in-response', liker=request.user, response=r)
+            n.activate(False)
+        except Notification.DoesNotExist:
+            pass
     else:
         r.likes.add(request.user)
         r.total_likes = r.likes.count()
@@ -283,17 +288,16 @@ def like(request):
         q.total_likes += 1
         q.save()
 
-        if not Notification.objects.filter(type='like-in-response', liker=request.user, response=r).exists():
-            # cria uma notificação para o like (quem recebeu o like será notificado):
+        try:
+            n = Notification.objects.get(type='like-in-response', liker=request.user, response=r)
+            n.activate()
+        except Notification.DoesNotExist:
             n = Notification.objects.create(receiver=Response.objects.get(id=answer_id).creator.user,
-                                            type='like-in-response',
-                                            liker=request.user,
-                                            response=r)
+                                            type='like-in-response', liker=request.user, response=r)
             n.prepare(answer_id)
             n.save()
 
     return HttpResponse('OK', content_type='text/plain')
-
 
 def delete_response(request):
     user_profile = UserProfile.objects.get(user=request.user)
@@ -351,7 +355,6 @@ def signin(request):
         return redirect(r)
 
     return render(request, 'signin.html', {'redirect': r})
-
 
 def signup(request):
     from .tor_ips import tor_ips
@@ -440,13 +443,11 @@ def signup(request):
 
     return render(request, 'signup.html', context)
 
-
 def user_does_not_exists(request):
     return_to = request.META.get("HTTP_REFERER") if request.META.get("HTTP_REFERER") is not None else '/'
     context = {'error': 'Usuário não encontrado', 'err_msg': 'Este usuário não existe ou alterou seu nome.',
                'redirect': return_to}
     return render(request, 'error.html', context)
-
 
 def profile(request, username):
     username = unquote(username)
@@ -481,8 +482,7 @@ def profile(request, username):
     context['change_profile_picture_form'] = UploadFileForm()
 
     try:
-        if request.user.username == username or not up.hide_activity or 'pap' in context[
-            'permissoes_usuario_logado'] or request.user.is_superuser:
+        if request.user.username == username or not up.hide_activity or 'pap' in context['permissoes_usuario_logado'] or request.user.is_superuser:
             q_page = request.GET.get('q-page', 1)
             r_page = request.GET.get('r-page', 1)
 
@@ -496,7 +496,6 @@ def profile(request, username):
     context['total_followers'] = up.user.followed_by.all().count()
 
     return render(request, 'profile.html', context)
-
 
 def ask(request):
     if request.user.is_anonymous:
@@ -515,11 +514,11 @@ def ask(request):
     try:
         last_q = Question.objects.filter(creator=UserProfile.objects.get(user=request.user))
         last_q = last_q[last_q.count() - 1]  # pega a última questão feita pelo usuário.
-        if (timezone.now() - last_q.pub_date).seconds < 25:
-            wait_count = 25 - (timezone.now() - last_q.pub_date).seconds
+        wait_count = (timezone.now() - last_q.pub_date).seconds
+        if wait_count < 25:
             return_to = request.META.get("HTTP_REFERER") if request.META.get("HTTP_REFERER") is not None else '/'
             context = {'error': 'Ação não autorizada',
-                       'err_msg': 'Você deve esperar {} segundos para perguntar novamente.'.format(wait_count),
+                       'err_msg': 'Você deve esperar {} segundos para perguntar novamente.'.format(25 - wait_count),
                        'redirect': return_to}
             return render(request, 'error.html', context)
     except:
@@ -602,7 +601,6 @@ def ask(request):
 
     return render(request, 'ask.html', {'user_p': UserProfile.objects.get(user=request.user)})
 
-
 def logout(request):
     django_logout(request)
     return redirect('/')
@@ -611,14 +609,17 @@ def notification(request):
     if request.user.is_anonymous:
         return redirect('/question/%d' % Question.objects.all().last().id)
 
-    p = Paginator(Notification.objects.filter(receiver=request.user).order_by('-creation_date'), 15)
-
     page = request.GET.get('page', 1)
-
     up = UserProfile.objects.get(user=request.user)
+
+    query = Notification.objects.filter(receiver=request.user, active=True)
+    p = Paginator(query.order_by('-creation_date'), 15)
+
+    if page == 1 and query:
+        up.last_read_notification_id = query.last().id
     if up.new_notifications > 0:
         up.new_notifications = 0
-        up.save()
+    up.save()
 
     context = {
         'notifications': p.page(page),
@@ -874,7 +875,6 @@ def edit_profile(request, username):
             return redirect('/user/' + request.user.username)
     return render(request, 'edit-profile.html',
                   {'user_p': UserProfile.objects.get(user=User.objects.get(username=username))})
-
 
 def block(request, username):
     username = unquote(username)
@@ -1244,18 +1244,14 @@ def get_more_questions(request):
         q = Question.objects.filter(creator=target, active=True).order_by('-pub_date')
 
     p = Paginator(q, 10)
-
     json = dict()
-
     json['questions'] = {}
-
     count = 1
 
     try:
         p.page(page)
     except:
         return HttpResponse(False)
-
     for q in p.page(page):
         if target.user.id == request.user.id:
             best_answer = q.best_answer
@@ -1286,9 +1282,7 @@ def get_more_responses(request):
     p = Paginator(r, 10)
 
     json = dict()
-
     json['responses'] = {}
-
     count = 1
     for r in p.page(page):
         json['responses'][count] = {
@@ -1640,19 +1634,18 @@ def loadmsgs(request):
         return HttpResponse('Proibido', content_type='text/plain')
 
     last_viewed_new = None
-    last_deletions = None
+    last_del = None
     if type == 'old':
         messages = list(reversed(list(ChatMessage.objects.filter(id__lt=last_loaded, chat=c).order_by('-id')[:50])))
     elif type == 'new':
         messages = list(reversed(list(ChatMessage.objects.filter(id__gt=last_loaded, chat=c).order_by('-id')[:50])))
         if c.last_viewed > int(last_known_viewed):
             last_viewed_new = c.last_viewed
-        last_deletions = ChatMessage.objects.filter(chat=c, hide=True, creator=chat_counterpart(up, c).user,
-                                                    pub_date__gte=timezone.now() - timedelta(hours=1)).order_by('-id')[
-                         :5]
+        last_del = ChatMessage.objects.filter(chat=c, hide=True, creator=chat_counterpart(up, c).user,
+                                              pub_date__gte=timezone.now() - timedelta(hours=1)).order_by('-id')[:5]
 
     return render(request, 'base/chat-messages.html', {'messages': messages, 'last_viewed': last_viewed_new,
-                                                       'user_p': up, 'last_deletions': last_deletions})
+                                                       'user_p': up, 'last_deletions': last_del})
 
 def markviewed(request):
     chat_id = request.GET.get('c')
@@ -1734,10 +1727,14 @@ def star(request):
         return HttpResponse('Proibido', content_type='text/plain')
 
     if q.stars.filter(username=request.user.username).exists():
-        # q.stars.remove(request.user)
-        # q.total_stars = q.stars.count()
-        # q.save()
-        pass
+        q.stars.remove(request.user)
+        q.total_stars = q.stars.count()
+        q.save()
+        try:
+            n = Notification.objects.get(liker=request.user, type='start', question=q)
+            n.activate(False)
+        except Notification.DoesNotExist:
+            pass
     else:
         q.stars.add(request.user)
         q.total_stars = q.stars.count()
@@ -1747,13 +1744,14 @@ def star(request):
         qid = q.id
         qtext = q.text
 
-        receiver_p = q.creator
-        receiver_p.new_notifications += 1
-        receiver_p.save()
-
-        n = Notification.objects.create(receiver=q.creator.user, type='start',
-                                        text=f'<a href="/user/{who_gave_a_star}">{who_gave_a_star}</a> curtiu sua pergunta <a href="/question/{qid}">"{qtext}"</a>.')
-        n.save()
+        try:
+            n = Notification.objects.get(liker=request.user, type='start', question=q)
+            n.activate()
+        except Notification.DoesNotExist:
+            n = Notification.objects.create(receiver=q.creator.user, type='start', question=q, liker=request.user,
+                                            text=f'<a href="/user/{who_gave_a_star}">{who_gave_a_star}</a> curtiu sua pergunta <a href="/question/{qid}">"{qtext}"</a>.')
+            n.prepare()
+            n.save()
 
     return HttpResponse(str(q.total_stars), content_type='text/plain')
 

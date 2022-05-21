@@ -9,7 +9,6 @@ from django.utils import timezone
 from django.contrib.auth.models import User
 from django.contrib.humanize.templatetags.humanize import naturaltime
 
-
 def make_embedded_content(text):
     urls = ('https://youtu.be/', 'youtube.com/watch?v=', 'https://voca.ro/', 'vocaroo.com/')
     if urls[0] in text or urls[1] in text:
@@ -69,36 +68,23 @@ class UserProfile(models.Model):
     bio = models.TextField(max_length=2048, blank=True)
     total_points = models.IntegerField(null=True, default=0, blank=True)
     cover_photo = models.ImageField(blank=True, default=None, null=True)
-
     '''
     pap: permissão para apagar perguntas
-    par: permissão para apagar respostas
-    pac: permissão para apagar comentários
     '''
-    permissions = models.TextField(default='[]') # lista Python
+    permissions = models.TextField(default='[]')  # lista Python
     
     ''' total de visualizações desde o dia: 16/04/2021 '''
     total_views = models.IntegerField(default=0, blank=True)
-
     blocked_users = models.ManyToManyField(User, related_name='blocked_by', blank=True)
-
-    active = models.BooleanField(default=False) # conta está ativa ou não.
-
+    active = models.BooleanField(default=False)
     hide_activity = models.BooleanField(default=True)
-
-    ban = models.BooleanField(default=False) # usuário está em shadow ban ou não
-
-    silenced_users = models.ManyToManyField(User,
-                                            through="SilencedUsers",
-                                            related_name='silenced_by',
-                                            blank=True)
-
+    ban = models.BooleanField(default=False)
+    silenced_users = models.ManyToManyField(User, through="SilencedUsers", related_name='silenced_by', blank=True)
     new_notifications = models.IntegerField(default=0, null=False, blank=False)
-
+    last_read_notification_id = models.IntegerField(default=-1, null=False, blank=False)
     followable = models.BooleanField(default=True)
     followed_users = models.ManyToManyField(User, related_name='followed_by', blank=True)
     followed_questions = models.ManyToManyField('Question', related_name='q_followed_by', blank=True)
-    
     allows_chat = models.BooleanField(default=True)
 
     def __str__(self):
@@ -181,43 +167,36 @@ class Comment(models.Model):
     def __str__(self):
         return self.text
 
-
 class Notification(models.Model):
     receiver = models.ForeignKey(User, on_delete=models.CASCADE)
 
-    '''tipos: question-answered, like-in-response, comment-in-response, got-best-answer'''
+    '''tipos: question-answered, like-in-response, comment-in-response, got-best-answer, start'''
     type = models.TextField()
     text = models.TextField(null=True)
     creation_date = models.DateTimeField(default=timezone.now)
 
-    '''os campos abaixo são usados caso a notificação seja do tipo like-in-response.'''
-
     # quem deu o like
-    liker = models.ForeignKey(User,
-                              on_delete=models.CASCADE,
-                              null=True,
-                              related_name='l')
+    liker = models.ForeignKey(User, on_delete=models.CASCADE, null=True, related_name='l')
+    question = models.ForeignKey(Question, on_delete=models.CASCADE, null=True, related_name='q')
+    response = models.ForeignKey(Response, on_delete=models.CASCADE, null=True, related_name='r')
+    read = models.BooleanField(default=False)  # TODO: legado. Remover funcionalidade, passada p/ UserProfile
+    active = models.BooleanField(default=True)
 
-    # qual é a resposta
-    response = models.ForeignKey(Response,
-                                 on_delete=models.CASCADE,
-                                 null=True,
-                                 related_name='r')
-
-    read = models.BooleanField(default=False) # this.receiver clicou ou não na notificação.
-
-    def cancel(self):
+    def count_unread(self):
         receiver_p = UserProfile.objects.get(user=self.receiver)
-        if receiver_p.new_notifications > 0:
-            # TODO: Checar se a notificação é uma das não lidas (se o index da notificação no set das notificações do user é menor que o total de novas notificações)
-            receiver_p.new_notifications -= 1
+        last_read_notification_id = receiver_p.last_read_notification_id
+        unread_notification_count = Notification.objects.filter(receiver=self.receiver, active=True,
+                                                                id__gt=last_read_notification_id).count()
+        receiver_p.new_notifications = unread_notification_count
         receiver_p.save()
-        self.remove()
+
+    def activate(self, bool=True):
+        self.active = bool
+        self.save()
+        self.count_unread()
 
     def prepare(self, answer_id=None, comment_id=None):
-        receiver_p = UserProfile.objects.get(user=self.receiver)
-        receiver_p.new_notifications += 1
-        receiver_p.save()
+        self.count_unread()
 
         if self.text:
             return
@@ -226,38 +205,29 @@ class Notification(models.Model):
             self.text = '''
                             <p>Você recebeu um ❤️ na sua resposta <a href="/question/{}?n={}">"{}"</a>
                             </p>'''.format(Response.objects.get(id=answer_id).question.id,
-                                           self.id,
-                                           Response.objects.get(id=answer_id).text)
+                                           self.id, Response.objects.get(id=answer_id).text)
         elif self.type == 'question-answered':
             response = Response.objects.get(id=answer_id)
             self.text = '''
                             <p><a href="/user/{}">{}</a> respondeu sua pergunta <a href="/question/{}?n={}">"{}"</a>
-                            </p>'''.format(response.creator.user.username,
-                                           response.creator.user.username,
-                                           response.question.id,
-                                           self.id,
-                                           response.question.text)
+                            </p>'''.format(response.creator.user.username, response.creator.user.username,
+                                           response.question.id, self.id, response.question.text)
 
         elif self.type == 'comment-in-response':
             response = Response.objects.get(id=answer_id)
             comment = Comment.objects.get(response=response, id=comment_id)
             self.text = '''
                             <p><a href="/user/{}">{}</a> comentou na sua resposta na pergunta: <a href="/question/{}?n={}">"{}"</a></p>
-                        '''.format(comment.creator.username,
-                                   comment.creator.username,
-                                   comment.response.question.id,
-                                   self.id,
-                                   comment.response.question.text)
+                        '''.format(comment.creator.username, comment.creator.username,
+                                   comment.response.question.id, self.id, comment.response.question.text)
 
         elif self.type == 'got-best-answer':
             response = Response.objects.get(id=answer_id)
             self.text = '''
                             <p>Sua resposta foi escolhida a melhor resposta da pergunta: <a href="/question/{}?n={}">"{}"</a></p>
-                        '''.format(response.question.id,
-                                   self.id,
-                                   response.question.text)
+                        '''.format(response.question.id, self.id, response.question.text)
 
-class Ban(models.Model): # todos os IP's banidos:
+class Ban(models.Model):  # todos os IP's banidos:
     ip = models.TextField(null=False, primary_key=True)
 
 class Poll(models.Model):
