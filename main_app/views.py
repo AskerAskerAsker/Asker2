@@ -452,6 +452,9 @@ def user_does_not_exists(request):
 def profile(request, username):
     username = unquote(username)
 
+    if request.user.is_anonymous or request.user.username != username:
+        return redirect('/news')
+    
     user = User.objects.get(username=username)
     up = UserProfile.objects.get(user=user)
 
@@ -527,7 +530,6 @@ def ask(request):
     if request.method == 'POST':
         description = request.POST.get('description')
         description = description.replace('\r', '')
-        description = html.escape(description)
 
         text = request.POST.get('question')
 

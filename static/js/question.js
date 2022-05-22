@@ -1,5 +1,22 @@
 var success_str = 'kfO1wMuva3hNgh0AhIviPyhEGyoRjDdX';
 
+var resp_count = document.getElementsByClassName('resposta').length;
+document.getElementById('total-de-respostas').innerText = resp_count
+document.getElementById('total-de-respostas-sentence').innerText = (resp_count == 1 ? 'Resposta' : 'Respostas');
+
+var description = document.getElementsByClassName('description');
+if (description.length === 1) {
+    fix_double_escape(description[0]);
+    anchor_urls(description[0]);
+}
+function make_r_links() {
+    var r_els = document.getElementsByClassName('r-p');
+    for (var i = 0; i < r_els.length; i++) {
+        anchor_urls(r_els[i]);
+    }
+}
+make_r_links();
+
 function like(likeElement, response_id) {
 	var like_image = likeElement.getElementsByTagName('img')[0];
 	var span_like_counter = null;
@@ -26,28 +43,28 @@ function like(likeElement, response_id) {
 
 function star_question(el, qid) {
 	$.ajax({
-			url: "/question/star",
-			type: "get",
-			dataType: "html",
-			data: {
-				qid: qid,
-			},
-			complete: function(data) {
-			    var total_stars = parseInt(data.responseText);
-                if (total_stars || total_stars == 0) {
-					el.getElementsByClassName('starcount')[0].innerHTML = total_stars;
-					var off = el.getElementsByClassName('offstar')[0];
-					var on = el.getElementsByClassName('onstar')[0];
-					if (el.getElementsByClassName('offstar')[0]['classList'].contains('hidden')) {
-						off['classList'].remove('hidden');
-						on['classList'].add('hidden');
-					} else {
-						off['classList'].add('hidden');
-						on['classList'].remove('hidden');					
-					}
-				}
-			}
-		});
+        url: "/question/star",
+        type: "get",
+        dataType: "html",
+        data: {
+            qid: qid,
+        },
+        complete: function(data) {
+            var total_stars = parseInt(data.responseText);
+            if (total_stars || total_stars == 0) {
+                el.getElementsByClassName('starcount')[0].innerHTML = total_stars;
+                var off = el.getElementsByClassName('offstar')[0];
+                var on = el.getElementsByClassName('onstar')[0];
+                if (el.getElementsByClassName('offstar')[0]['classList'].contains('hidden')) {
+                    off['classList'].remove('hidden');
+                    on['classList'].add('hidden');
+                } else {
+                    off['classList'].add('hidden');
+                    on['classList'].remove('hidden');
+                }
+            }
+        }
+    });
 }
 
 function delete_response(response_button_dom_el, response_id) {
@@ -202,27 +219,31 @@ function make_comment(form) {
 	});
 }
 
-/* Js p/ upload de imagem em respostas */
-document.getElementById('upload-photo').onchange = function () {
-	var text = document.getElementById('upload-photo-text');
-	var delete_photo_icon = document.getElementById('delete-photo-icon');
-	var input = document.getElementById('upload-photo');
-	text.innerText = input.value.slice(12);
-	delete_photo_icon.style.display = 'inline';
-};
+var upload_photo_btn = document.getElementById('upload-photo');
+if (upload_photo_btn) {
+    document.getElementById('upload-photo').onchange = function () {
+        var text = document.getElementById('upload-photo-text');
+        var delete_photo_icon = document.getElementById('delete-photo-icon');
+        var input = document.getElementById('upload-photo');
+        text.innerText = input.value.slice(12);
+        delete_photo_icon.style.display = 'inline';
+    };
+}
 
-document.getElementById('delete-photo-icon').onclick = function () {
-	var delete_photo_icon = document.getElementById('delete-photo-icon');
-	var input = document.getElementById('upload-photo');
-	var text = document.getElementById('upload-photo-text');
-	delete_photo_icon.style.display = 'none';
-	text.innerText = '';
-	input.value = null;
-};
-/* Fim: Js p/ upload de imagem em respostas */
+var delete_photo_btn = document.getElementById('delete-photo-icon');
+if (delete_photo_btn) {
+    document.getElementById('delete-photo-icon').onclick = function () {
+        var delete_photo_icon = document.getElementById('delete-photo-icon');
+        var input = document.getElementById('upload-photo');
+        var text = document.getElementById('upload-photo-text');
+        delete_photo_icon.style.display = 'none';
+        text.innerText = '';
+        input.value = null;
+    };
+}
 
 function delete_question(id) {
-    if (confirm('Opa! Tem certeza que deseja apagar sua resposta?')) {
+    if (confirm('Opa! Tem certeza que deseja apagar sua pergunta?')) {
 		$.ajax({
 			url: '/delete_question',
 			type: 'post',
@@ -239,47 +260,34 @@ function delete_question(id) {
 
 var formbgcolor='bg-white'; var bgcolor='bg-white'; var textcolor='text-dark';
 var commentformbgcolor='bg-white'; var commentbgcolor='bg-light';
-if (getDarkCookie() == 'true') {
-    try {
-        document.getElementsByClassName('navbar')[0].classList.remove("navbar-light");
-        document.getElementsByClassName('navbar')[0].classList.add("navbar-dark");
-    } catch (err) {
-        console.log(err);
-    }
-}
 
 var formulario_de_resposta = document.getElementById("formulario_de_resposta");
-formulario_de_resposta.onsubmit = function() {
-	document.getElementById("botao_enviar_resposta").disabled = true;
-	last_response = get_last_response();
-	var formData = new FormData(this);
-	$.ajax({
-		url: "/save_answer",
-		method: "post",
-		data: formData,
-		cache:false,
-		contentType: false,
-		processData: false,
-		success: function(data) {
-			document.getElementsByClassName("responses")[0].innerHTML += data;
-			formulario_de_resposta.remove();
-		},
-		error: function(data, text, err) {
-		    var err_msg = "Um erro temporário ocorreu. Por favor, tente novamente."
-		    if (data.status == 406) {
-		        err_msg = data.responseText;
-		    }
-		    document.getElementById("r-ctrls").innerHTML = err_msg;
-		}
-	});
-	return false;
-};
-
-try {
-    var description = document.getElementsByClassName('description')[0];
-    description.innerText = description.innerText.replaceAll('&quot;', '"').replaceAll('&lt;', '<').replaceAll('&gt;', '>').replaceAll('&#x27;', "'").replaceAll('&amp;', '&');
-} catch (e) {
-    console.log(e);
+if (formulario_de_resposta) {
+    formulario_de_resposta.onsubmit = function() {
+        document.getElementById("botao_enviar_resposta").disabled = true;
+        last_response = get_last_response();
+        var formData = new FormData(this);
+        $.ajax({
+            url: "/save_answer",
+            method: "post",
+            data: formData,
+            cache:false,
+            contentType: false,
+            processData: false,
+            success: function(data) {
+                document.getElementsByClassName("responses")[0].innerHTML += data;
+                formulario_de_resposta.remove();
+            },
+            error: function(data, text, err) {
+                var err_msg = "Um erro temporário ocorreu. Por favor, tente novamente."
+                if (data.status == 406) {
+                    err_msg = data.responseText;
+                }
+                document.getElementById("r-ctrls").innerHTML = err_msg;
+            }
+        });
+        return false;
+    };
 }
 
 function report_question(id) {
@@ -410,6 +418,7 @@ function load_responses() {
                             rl[i].classList.remove('old');
                         } else { rl[i].classList.add('new'); }
                     }
+                    make_r_links();
                     window.scrollTo(0,document.body.scrollHeight);
                     last_response = get_last_response();
                 }

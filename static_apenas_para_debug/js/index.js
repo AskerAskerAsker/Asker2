@@ -1,15 +1,7 @@
-if (getDarkCookie() == 'true') {
-	document.getElementsByClassName('navbar')[0].classList.remove("navbar-light");
-	document.getElementsByClassName('navbar')[0].classList.add("navbar-dark");
-}
-
-
-
 function enviar_resposta_pergunta(form) {
-	
 	form.style.opacity = 0.5;
 	form.submit_btn.disabled = true;
-	
+
 	$.ajax({
 		url: '/save_answer',
 		type: 'post',
@@ -17,23 +9,19 @@ function enviar_resposta_pergunta(form) {
 		complete: function(data) {
 			var response_counter = document.getElementById('response-counter-' + form.question_id.value);
 			response_counter.innerText = Number(response_counter.innerText) + 1;
-            
+
             if (response_counter.innerText == '1') {
                 document.getElementById('response-sentence-' + form.question_id.value).innerText = 'Resposta';
             } else {
                 document.getElementById('response-sentence-' + form.question_id.value).innerText = 'Respostas';
             }
-            
+
 			form.parentElement.innerHTML = data.responseText;
 		},
 	});
-	
+
 	return false;
 }
-
-
-/*
- * Renderiza as questÃµes recentes. */
 
 var questoes_recentes = document.getElementById("lista_de_questoes_recentes");
 
@@ -80,12 +68,9 @@ function renderizar_questoes(questions) {
 																	'</li>'; } catch (e) {
 																	}
 	}
-    $('.description').linkify();
 }
-
 renderizar_questoes(recent_questions);
 
-/* Renderiza as questÃµes populares. */
 var questoes_populares = document.getElementById("lista_de_questoes_populares");
 
 function renderizar_questoes_populares(popular_questions) {
@@ -135,8 +120,6 @@ function renderizar_questoes_populares(popular_questions) {
 
 renderizar_questoes_populares(popular_questions_);
 
-
-
 if (mostrar_primeiro == 'popular') {
 	document.getElementById('novas_questoes').style.display = 'none';
 	document.getElementById('questoes_populares').style.display = 'block';
@@ -163,13 +146,12 @@ function load_more(button, icon) {
 				icon.style.display = 'none';
 				button.style.display = 'block';
 				renderizar_questoes(data.responseJSON);
+				anchor_descriptions();
 			},
 	});
 }
 
-
 function load_more_popular(button, icon, page) {
-    
 	button.style.display = 'none';
 	icon.style.display = 'block';
 	$.ajax({
@@ -190,22 +172,11 @@ function load_more_popular(button, icon, page) {
                         icon.style.display = 'none';
                         button.style.display = 'block';
                         renderizar_questoes_populares(data.responseJSON);
+				        anchor_descriptions();
                     }
                 } catch (e) {
                     console.log(e);
                 }
 			},
 	});
-}
-
-
-/* Desativa o botão de responder para quem não confirmou o e-mail. */
-if (!conta_ativa) {
-    var botoes_responder = document.getElementsByClassName('botao_responder');
-    for (var i = 0; i < botoes_responder.length; ++i) {
-        botoes_responder[i].onclick = function () {
-            alert('Confirme sua conta pelo e-mail enviado para responder perguntas.');
-            return 0;
-        };
-    }
 }

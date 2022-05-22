@@ -248,5 +248,7 @@ function unfollow_listed_question(listEl, qid) {
     }
 }
 
-/* Linkify */
-$('#bio').linkify();
+var bio = document.getElementById('bio');
+if (bio) {
+    anchor_urls(bio);
+}

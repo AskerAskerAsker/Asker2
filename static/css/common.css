@@ -429,6 +429,9 @@ button font {
 /* Profile-end */
 
 /* Question */
+.r-p {
+    font-size: 15px;
+}
 .resposta.new .card-body {
     background-color: rgba(0, 123, 255, 15%);
 }

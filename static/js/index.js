@@ -2,6 +2,15 @@ var success_str = 'kfO1wMuva3hNgh0AhIviPyhEGyoRjDdX';
 var should_hide = false;
 var org_title = document.title;
 
+function anchor_descriptions() {
+    var d_els = document.getElementsByClassName('description');
+    for (var i = 0; i < d_els.length; i++) {
+        if (d_els[i].getAttribute('data-escaped') == '1') continue;
+        fix_double_escape(d_els[i]);
+        d_els[i].setAttribute('data-escaped', '1')
+    }
+}
+
 function hide_questions() {
     qtitles = document.getElementsByClassName('q-title');
     for (var i = 0; i < qtitles.length; i++) {
@@ -162,13 +171,8 @@ function load_more_recent() {
                     button.style.display = 'block';
                     q_list = document.getElementById('lista_de_questoes_recentes');
                     q_list.innerHTML += data.responseText;
-                let descriptions = document.getElementsByClassName('description');
-				for (let i in descriptions) {
-					try {
-						descriptions[i].innerText = descriptions[i].innerText.replaceAll('&quot;', '"');
-					} catch {}
-				}
-                recent_exists = true;
+                    recent_exists = true;
+                    anchor_descriptions();
                 }
 				icon.style.display = 'none';
 				button.style.display = 'block';
@@ -245,6 +249,7 @@ function update_recent() {
                 if (should_hide) {
                     hide_questions();
                 }
+                anchor_descriptions();
 			},
 	});
 }
@@ -292,11 +297,11 @@ async function check_for_update() {
 					};
                     button.style.display = 'table';
                     btn_count.innerHTML = 'Ver';
-				} else if (new_questions > 29) {
+				} else if (new_questions > 19) {
                     button.getElementsByTagName('button')[0].removeAttribute('onclick');
                     button.addEventListener('click', function(e) { location.reload(); });
                     button.style.display = 'table';
-                    btn_count.innerHTML = '30+';
+                    btn_count.innerHTML = '20+';
                     clearInterval(UPD_INTERVAL);
                 } else if (new_questions > 0) {
                     button.style.display = 'table';
@@ -305,10 +310,9 @@ async function check_for_update() {
 			},
 	});
 }
-UPD_INTERVAL = setInterval(check_for_update, 35000);
+UPD_INTERVAL = setInterval(check_for_update, 38000);
 
 function load_more_popular(button, icon, page) {
-
 	button.style.display = 'none';
 	icon.style.display = 'block';
 	$.ajax({
@@ -332,6 +336,7 @@ function load_more_popular(button, icon, page) {
                         if (should_hide) {
                             hide_questions();
                         }
+                        anchor_descriptions();
                     }
                 } catch (e) {
                     console.log(e);

@@ -368,28 +368,19 @@ href="/signup?redirect=/question/{{ question.id }}">crie uma conta</a> para resp
 			
             {% if user.is_anonymous %}
                 <div class="text-center bg-main" style="font-size: 13px; margin: 15px">
-                    Faça <a href="/signin?redirect=/question/{{ question.id }}">login</a> ou <a 
-href="/signup?redirect=/question/{{ question.id }}">crie uma conta</a> para responder essa pergunta.
+                    Faça <a href="/signin?redirect=/question/{{ question.id }}">login</a> ou <a href="/signup?redirect=/question/{{ question.id }}">crie uma conta</a> para responder essa pergunta.
                 </div>
             {% endif %}
 	</main>
 	<br>
 	    <script src="/static/js/common.js?v=1.6"></script>
-        <script src="https://cdn.jsdelivr.net/npm/linkifyjs@2.1.9/dist/linkify.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/linkifyjs@2.1.9/dist/linkify-jquery.min.js"></script>
-		<script src="/static/js/question.js?v=3.1"></script>
+		<script src="/static/js/question.js?v=3.2"></script>
         <script>
-            $('.description').linkify();
             var qid = {{ question.id }};
-			respostas = document.getElementsByClassName('resposta');
-			document.getElementById('total-de-respostas').innerText = respostas.length;
-			document.getElementById('total-de-respostas-sentence').innerText = (respostas.length == 1 ? 'Resposta' : 'Respostas');
-		</script>
-		<script>
-		var UPD_INTERVAL = setInterval(new_activity_check, 38000);
-		$(function () {
-			$('[data-toggle="popover"]').popover();
-		});
+		    var UPD_INTERVAL = setInterval(new_activity_check, 38000);
+		    $(function () {
+			    $('[data-toggle="popover"]').popover();
+		    });
 		</script>
 	</body>
 </html>
