@@ -452,9 +452,6 @@ def user_does_not_exists(request):
 def profile(request, username):
     username = unquote(username)
 
-    if request.user.is_anonymous or request.user.username != username:
-        return redirect('/news')
-    
     user = User.objects.get(username=username)
     up = UserProfile.objects.get(user=user)
 
@@ -743,6 +740,9 @@ def delete_comment(request):
 def edit_profile(request, username):
     from urllib.parse import unquote
     username = unquote(username)
+
+    if request.user.is_anonymous or request.user.username != username:
+        return redirect('/news')
 
     if request.method == 'POST':
         if request.POST.get('type') == 'profile-pic':
@@ -1140,30 +1140,37 @@ def more_popular_questions(request):
 def more_questions(request):
     # Para a página inicial
     id_de_inicio = int(request.GET.get('id_de_inicio'))
-    if id_de_inicio > 0:
-        questions = Question.objects.filter(id__lte=id_de_inicio, active=True).order_by('-id')[:20]
-    else:
-        questions = Question.objects.filter(active=True).order_by('-id')[:20]
+    context = dict()
 
-    context = {'questions': questions, }
-
+    silenced = []
     if request.user.is_authenticated:
         up = UserProfile.objects.get(user=request.user)
         context['user_p'] = up
+        silenced = [UserProfile.objects.get(user=u) for u in up.silenced_users.all()]
+
+    if id_de_inicio > 0:
+        questions = Question.objects.filter(id__lte=id_de_inicio, active=True).exclude(
+            creator__in=silenced).order_by('-id')[:20]
+    else:
+        questions = Question.objects.filter(active=True).exclude(creator__in=silenced).order_by('-id')[:20]
+
+    context['questions'] = questions
 
     return render(request, 'base/index-recent-q-page.html', context)
 
 def update_index(request):
     up = None
+    silenced = []
     if not request.user.is_anonymous:
         up = UserProfile.objects.get(user=request.user)
+        silenced = [UserProfile.objects.get(user=u) for u in up.silenced_users.all()]
 
     last_known_q = int(request.GET.get('last_known_q'))
     last_q = Question.objects.last().id
     if last_q - last_known_q > 200:
         return HttpResponse('-1')
 
-    nq = Question.objects.filter(id__gt=last_known_q, active=True).order_by("-id")
+    nq = Question.objects.filter(id__gt=last_known_q, active=True).exclude(creator__in=silenced).order_by("-id")
     if len(nq) == 0:
         return HttpResponse('-1')
     elif len(nq) > 29:
@@ -1178,14 +1185,14 @@ def update_question(request):
     last_r = int(request.GET.get('lr'))
     q = Question.objects.get(id=qid)
     context = {'question': q, }
+    excluded = []
     if not request.user.is_anonymous:
-        user_p = UserProfile.objects.get(user=request.user)
-        context['user_permissions'] = ast.literal_eval(user_p.permissions)
-        context['user_p'] = user_p
-        nr = Response.objects.filter(question=q, id__gt=last_r, active=True).exclude(creator=user_p).order_by(
-            '-total_likes', 'id')
-    else:
-        nr = Response.objects.filter(question=q, id__gt=last_r, active=True).order_by('-total_likes', 'id')
+        up = UserProfile.objects.get(user=request.user)
+        excluded = [up] + [UserProfile.objects.get(user=u) for u in up.silenced_users.all()]
+        context['user_permissions'] = ast.literal_eval(up.permissions)
+        context['user_p'] = up
+    nr = Response.objects.filter(question=q, id__gt=last_r, active=True).exclude(creator__in=excluded).order_by(
+        '-total_likes', 'id')
 
     if len(nr) < 1:
         return HttpResponse('-1')
@@ -1197,9 +1204,12 @@ def update_question(request):
 def new_activity_check(request):
     nn = 0
     up = None
+    silenced = []
     if not request.user.is_anonymous:
         up = UserProfile.objects.get(user=request.user)
         nn = up.new_notifications
+
+        silenced = [UserProfile.objects.get(user=u) for u in up.silenced_users.all()]
 
     try:
         last_known_id = int(request.GET.get('last_known_q'))
@@ -1215,7 +1225,8 @@ def new_activity_check(request):
         # OBS.: Este sistema deve ser atualizado caso alguma pergunta chegue a ter mais de 200 respostas
         # para evitar sobrecarregamentos, conforme já é o caso do if-statement no check para novas perguntas!
         if up is not None:
-            responses = len(Response.objects.filter(question=q, id__gt=last_known_id, active=True).exclude(creator=up))
+            responses = len(Response.objects.filter(question=q, id__gt=last_known_id,
+                                                    active=True).exclude(creator__in=[up] + silenced))
         else:
             responses = len(Response.objects.filter(question=q, id__gt=last_known_id, active=True))
         return JsonResponse({'nn': nn, 'nr': responses})
@@ -1224,7 +1235,7 @@ def new_activity_check(request):
         last_q = Question.objects.last().id
         if last_q - last_known_id > 200 or last_known_id < 1:
             return JsonResponse({'nn': nn, 'nq': -1})
-        nq = Question.objects.filter(id__gt=last_known_id, active=True).order_by("id")
+        nq = Question.objects.filter(id__gt=last_known_id, active=True).exclude(creator__in=silenced).order_by('id')
 
         return JsonResponse({'nn': nn, 'nq': len(nq)})
 
