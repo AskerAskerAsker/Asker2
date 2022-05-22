@@ -1,1 +1,0 @@
-Em desenvolvimento (DEBUG = True) usar essa página para armazenar os arquivos de mídia. Em um servidor cPanel, por exemplo, pode ser necessário usar outra pasta.

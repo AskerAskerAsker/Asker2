@@ -1,1 +1,0 @@
-Em desenvolvimento (DEBUG = True) usar essa página para armazenar os arquivos estáticos. Quando terminar de editar um arquivo estático aqui, mover ele para o local correto (em um servidor cPanel, por exemplo, mover para public_html).
