@@ -9,13 +9,13 @@ if (description.length === 1) {
     fix_double_escape(description[0]);
     anchor_urls(description[0]);
 }
-function make_r_links() {
+function anchor_responses() {
     var r_els = document.getElementsByClassName('r-p');
     for (var i = 0; i < r_els.length; i++) {
         anchor_urls(r_els[i]);
     }
 }
-make_r_links();
+anchor_responses();
 
 function like(likeElement, response_id) {
 	var like_image = likeElement.getElementsByTagName('img')[0];
@@ -418,7 +418,7 @@ function load_responses() {
                             rl[i].classList.remove('old');
                         } else { rl[i].classList.add('new'); }
                     }
-                    make_r_links();
+                    anchor_responses();
                     window.scrollTo(0,document.body.scrollHeight);
                     last_response = get_last_response();
                 }
