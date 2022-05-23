@@ -45,19 +45,17 @@ Comunidade Online!">
 var popular_page = 1;
 popular_questions_=[
     {% for question in popular_questions %}
-        {% if not question.creator.user in user_p.silenced_users.all %}
-            {"question_creator_avatar": "{{ question.creator.avatar.url }}",
-             "id":{{ question.id }},
-            "text":"{{ question.text }}",
-            "description":"{{ question.description|formatar_descricao|safe|linebreaksbr }}",
-            "total_answers":{{ question.total_responses }},
-            "total_views": {{ question.total_views }},
-            "pub_date":"{% fix_naturaltime question.pub_date|naturaltime %}",
-            "creator":"{{ question.creator.user.username }}",
-            {% answer user_p question as ANSWER %}
-            "user_answer":"{{ ANSWER|linebreaksbr }}",
-        },
-        {% endif %}
+		{"question_creator_avatar": "{{ question.creator.avatar.url }}",
+		 "id":{{ question.id }},
+		"text":"{{ question.text }}",
+		"description":"{{ question.description|formatar_descricao|safe|linebreaksbr }}",
+		"total_answers":{{ question.total_responses }},
+		"total_views": {{ question.total_views }},
+		"pub_date":"{% fix_naturaltime question.pub_date|naturaltime %}",
+		"creator":"{{ question.creator.user.username }}",
+		{% answer user_p question as ANSWER %}
+		"user_answer":"{{ ANSWER|linebreaksbr }}",
+	},
     {% endfor %}
 ];
 </script>

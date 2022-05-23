@@ -2,7 +2,6 @@
 {% load humanize %}
 <!-- kfO1wMuva3hNgh0AhIviPyhEGyoRjDdX -->
 {% for response in responses|pull_best_answer %}
-{% if response.creator.user not in user_p.silenced_users.all or request.user.is_anonymous %}
 {% if response.creator == user_p or not response.creator.ban %}
 	<li class="list-group-item bg-main resposta" data-id="{{ response.id }}">
 		<div class="card-body" style="border: none">
@@ -118,6 +117,5 @@
 			<input class="btn btn-outline-primary" type="submit" value="Salvar">
 		</form>
 	</li>
-{% endif %}
 {% endif %}
 {% endfor %}
