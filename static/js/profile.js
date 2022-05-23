@@ -153,11 +153,13 @@ function block_user(username) {
 	    type: 'get',
 	    url: '/user/' + username + '/block',
 	    complete: function(data) {
-		    if(data.responseText == 'Bloqueado') {
-			    button.innerHTML = 'Bloqueado'
-		    } else
-			    button.innerHTML = 'Bloquear'
-		    button.disabled = false
+		    if (data.responseText == 'Bloqueado')
+			    button.innerHTML = 'Bloqueado';
+			else if (data.responseText == 'Proibido')
+			    alert('Limite atingido. Você não pode bloquear mais usuários.');
+		    else
+			    button.innerHTML = 'Bloquear';
+		    button.disabled = false;
 	    }
     })
 }
@@ -168,11 +170,13 @@ function silence_user(username) {
 	    type: 'get',
 	    url: '/user/' + username + '/silence',
 	    complete: function(data) {
-		    if (data.responseText == 'Removed') {
-			    button.innerHTML = 'Silenciar'
-		    } else
-			    button.innerHTML = 'Silenciado'
-		    button.disabled = false
+		    if (data.responseText == 'Removed')
+			    button.innerHTML = 'Silenciar';
+			else if (data.responseText == 'Proibido')
+			    alert('Limite atingido. Você não pode silenciar mais usuários.');
+			else
+			    button.innerHTML = 'Silenciado';
+		    button.disabled = false;
 	    }
     })
 }
@@ -184,10 +188,10 @@ function follow_user(username) {
 	    url: '/user/' + username + '/follow',
 	    complete: function(data) {
 		    if (data.responseText == 'Removed') {
-			    button.innerHTML = 'Seguir'
+			    button.innerHTML = 'Seguir';
 		    } else
-			    button.innerHTML = 'Seguindo'
-		    button.disabled = false
+			    button.innerHTML = 'Seguindo';
+		    button.disabled = false;
 	    }
     })
 }

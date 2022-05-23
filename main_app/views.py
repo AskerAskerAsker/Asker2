@@ -139,10 +139,10 @@ def save_answer(request):
         if not validate_ip(request):
             return HttpResponse('Você não pode responder perguntas.', content_type='text/plain', status=406)
     try:
-        question = Question.objects.get(id=request.POST.get('question_id'))
+        q = Question.objects.get(id=request.POST.get('question_id'))
     except Question.DoesNotExist:
-        question = None
-    if question is None or not question.active:
+        q = None
+    if q is None or not q.active:
         return HttpResponse('Pergunta não encontrada. Talvez ela tenha sido apagada pelo criador da pergunta.',
                             content_type='text/plain', status=406)
 
@@ -151,25 +151,24 @@ def save_answer(request):
     '''
     Testa se o usuário já respondeu a pergunta:
     '''
-    if Response.objects.filter(creator=response_creator, question=question).exists():
+    if Response.objects.filter(creator=response_creator, question=q).exists():
         return HttpResponse('Você já respondeu essa pergunta.', content_type='text/plain', status=406)
 
-    if question.creator.blocked_users.filter(username=request.user.username).exists():
+    if q.creator.blocked_users.filter(username=request.user.username).exists():
         return HttpResponse('Você não pode responder essa pergunta.', content_type='text/plain', status=406)
 
-    response = Response.objects.create(question=question, creator=response_creator, text=request.POST.get('text'))
+    response = Response.objects.create(question=q, creator=response_creator, text=request.POST.get('text'))
 
-    question.total_responses += 1
-    question.save()
+    q.total_responses += 1
+    q.save()
 
     response_creator.total_points += 2
     response_creator.save()
 
-    if response_creator.user not in question.creator.silenced_users.all():
-        notification = Notification.objects.create(receiver=question.creator.user,
-                                                   type='question-answered')
-        notification.prepare(response.id)
-        notification.save()
+    if response_creator.user not in q.creator.silenced_users.all():
+        n = Notification.objects.create(receiver=q.creator.user, type='question-answered')
+        n.prepare(response.id)
+        n.save()
 
     form = UploadFileForm(request.POST, request.FILES)
     if form.is_valid():
@@ -187,12 +186,12 @@ def save_answer(request):
 
     if request.POST.get('from') == 'index':
         return render(request, 'base/response-content-index.html', {
-            'question': question,
+            'question': q,
             'ANSWER': response,
         })
 
     return render(request, 'base/response-content.html', {
-        'question': question,
+        'question': q,
         'responses': Response.objects.filter(id=response.id),
         'user_p': response_creator,
         'user_permissions': ast.literal_eval(response_creator.permissions),
@@ -652,16 +651,14 @@ def comment(request):
 
             return HttpResponse(comment_creator_template, content_type='text/plain')
 
-    comment = Comment.objects.create(response=Response.objects.get(id=request.POST.get('response_id')),
-                                     creator=request.user, text=html.escape(request.POST.get('text')),
-                                     pub_date=timezone.now())
+    c = Comment.objects.create(response=Response.objects.get(id=request.POST.get('response_id')), creator=request.user,
+                               text=html.escape(request.POST.get('text')), pub_date=timezone.now())
 
-    if not request.user == comment.response.creator.user:
-        n = Notification.objects.create(receiver=comment.response.creator.user, type='comment-in-response',
+    if not request.user == c.response.creator.user:
+        n = Notification.objects.create(receiver=c.response.creator.user, type='comment-in-response',
                                         text='<p><a href="/user/{}">{}</a> comentou na sua resposta na pergunta: <a href="/question/{}">"{}"</a></p>'.format(
-                                            comment.creator.username, comment.creator.username,
-                                            comment.response.question.id, comment.response.question.text),
-                                        liker_id=request.user.id)
+                                            c.creator.username, c.creator.username, c.response.question.id,
+                                            c.response.question.text), liker_id=request.user.id)
         n.prepare()
 
     comment_creator_template = '''
@@ -690,8 +687,8 @@ def comment(request):
     return HttpResponse(comment_creator_template)
 
 def rank(request):
-    rank = UserProfile.objects.order_by('-total_points')[:50]
-    context = {'rank': [{'pos': i + 1, 'user': rank[i]} for i in range(len(rank))]}
+    order = UserProfile.objects.order_by('-total_points')[:50]
+    context = {'rank': [{'pos': i + 1, 'user': order[i]} for i in range(len(order))]}
 
     if request.user.is_authenticated:
         up = UserProfile.objects.get(user=request.user)
@@ -881,20 +878,24 @@ def edit_profile(request, username):
 def block(request, username):
     username = unquote(username)
     u_p = UserProfile.objects.get(user=request.user)
+    bcount = u_p.blocked_users.count()
     if u_p.blocked_users.filter(username=username).exists():
         u_p.blocked_users.remove(User.objects.get(username=username))
         return HttpResponse('Bloquear', content_type='text/plain')
+    if username == u_p.user.username or bcount >= general_rules.MAXIMUM_BLOCKED_USERS:
+        return HttpResponse('Proibido', content_type='text/plain')
     u_p.blocked_users.add(User.objects.get(username=username))
     return HttpResponse('Bloqueado', content_type='text/plain')
 
 def silence(request, username):
     username = unquote(username)
     u_p = UserProfile.objects.get(user=request.user)
-    if username == u_p.user.username:
-        return HttpResponse('Proibido', content_type='text/plain')
+    scount = u_p.silenced_users.count()
     if u_p.silenced_users.filter(username=username).exists():
         u_p.silenced_users.remove(User.objects.get(username=username))
         return HttpResponse('Removed', content_type='text/plain')
+    if username == u_p.user.username or scount >= general_rules.MAXIMUM_SILENCED_USERS:
+        return HttpResponse('Proibido', content_type='text/plain')
     u_p.silenced_users.add(User.objects.get(username=username))
     return HttpResponse('Added', content_type='text/plain')
 
@@ -949,7 +950,7 @@ def is_a_valid_user(username, email, password):
     start = email.index('@') + 1
     end = email.index('.', start)
     email = email[start:end]
-    if not email in emails:
+    if email not in emails:
         return False
 
     return True
@@ -1324,17 +1325,17 @@ def report(request):
     obj_id = request.GET.get('obj_id')
     reporter = request.user
 
-    report = Report.objects.filter(obj_id=obj_id)
+    r = Report.objects.filter(obj_id=obj_id)
 
-    if report.exists():
-        report = report.first()
+    if r.exists():
+        r = r.first()
     else:
-        report = Report.objects.create(type=type, obj_id=obj_id)
+        r = Report.objects.create(type=type, obj_id=obj_id)
 
-    if not report.reporters.filter(username=reporter.username).exists():
-        report.reporters.add(reporter)
-        report.total_reports += 1
-        report.save()
+    if not r.reporters.filter(username=reporter.username).exists():
+        r.reporters.add(reporter)
+        r.total_reports += 1
+        r.save()
 
     return HttpResponse('OK')
 
@@ -1350,9 +1351,9 @@ def report_user(request):
     obj_id = User.objects.get(username=request.POST.get('username')).id
     text = request.POST.get('text')
 
-    report = Report.objects.create(type=type, obj_id=obj_id, text=text, total_reports=1)
-    report.reporters.add(request.user)
-    report.save()
+    r = Report.objects.create(type=type, obj_id=obj_id, text=text, total_reports=1)
+    r.reporters.add(request.user)
+    r.save()
 
     return HttpResponse('OK')
 
@@ -1377,21 +1378,21 @@ def delete_report_and_obj(request):
     if not request.user.is_superuser:
         return HttpResponse('Proibido.', content_type='text/plain')
 
-    report = Report.objects.get(obj_id=request.GET.get('obj_id'))
+    r = Report.objects.get(obj_id=request.GET.get('obj_id'))
 
-    if report.type == 'q':
+    if r.type == 'q':
         '''Tratando report do tipo "pergunta" (obj_id é o ID de uma pergunta, a pergunta foi reportada).'''
-        q = Question.objects.filter(id=report.obj_id)
+        q = Question.objects.filter(id=r.obj_id)
         if q.exists():
             q = q.first()
             q.delete()
-        report.delete()
+        r.delete()
 
     return HttpResponse('OK', content_type='text/plain')
 
 def delete_report(request):
-    report = Report.objects.get(obj_id=request.GET.get('obj_id'))
-    report.delete()
+    r = Report.objects.get(obj_id=request.GET.get('obj_id'))
+    r.delete()
     return HttpResponse('OK', content_type='text/plain')
 
 def confirm_account(request):
