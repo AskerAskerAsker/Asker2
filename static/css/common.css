@@ -431,6 +431,7 @@ button font {
 /* Question */
 .r-p {
     font-size: 15px;
+    font-weight: 500;
 }
 .resposta.new .card-body {
     background-color: rgba(0, 123, 255, 15%);
