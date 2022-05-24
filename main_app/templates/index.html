@@ -50,7 +50,7 @@ popular_questions_=[
 		{"question_creator_avatar": "{{ question.creator.avatar.url }}",
 		 "id":{{ question.id }},
 		"text":"{{ question.text }}",
-		"description":"{{ question.description }}",
+		"description":'{{ question.description }}',
 		"total_answers":{{ question.total_responses }},
 		"total_views": {{ question.total_views }},
 		"pub_date":"{% fix_naturaltime question.pub_date|naturaltime %}",

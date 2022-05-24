@@ -101,8 +101,12 @@ def list_comments(response_id, request):
 				</div>
 		</li>
 		'''
-	
-	comments = Comment.objects.filter(response=Response.objects.get(id=response_id))
+
+	silenced = []
+	if request.user.is_authenticated:
+		up = UserProfile.objects.get(user=request.user)
+		silenced = [UserProfile.objects.get(user=u) for u in up.silenced_users.all()]
+	comments = Comment.objects.filter(response=Response.objects.get(id=response_id)).exclude(creator__in=silenced).order_by('id')
 	
 	if comments.exists():
 		comments_page = ''
