@@ -228,6 +228,14 @@ def question(request, question_id):
         q = Question.objects.get(id=question_id)
     except Question.DoesNotExist:
         q = None
+        
+    context = dict()
+    silenced = []
+    if request.user.is_authenticated:
+        up = UserProfile.objects.get(user=request.user)
+        context['user_permissions'] = ast.literal_eval(up.permissions)
+        context['user_p'] = up
+        silenced = [UserProfile.objects.get(user=u) for u in up.silenced_users.all()]
 
     if q is None or not q.active:
         return_to = request.META.get("HTTP_REFERER") if request.META.get("HTTP_REFERER") is not None else '/'
@@ -237,16 +245,13 @@ def question(request, question_id):
 
     q.total_views += 1
     q.save()
-    responses = Response.objects.filter(question=q, active=True).order_by('-total_likes', 'id')
+    responses = Response.objects.filter(question=q, active=True).exclude(creator__in=silenced).order_by('-total_likes', 'id')
 
-    context = {'question': q, 'responses': responses}
+    context['question'] = q
+    context['responses'] = responses
 
-    if not request.user.is_anonymous:
-        user_p = UserProfile.objects.get(user=request.user)
-        context['user_permissions'] = ast.literal_eval(user_p.permissions)
-        context['user_p'] = user_p
+    if request.user.is_authenticated:
         context['answered'] = False
-
         for response in responses:
             if response.id == request.user.id:
                 context['answered'] = True
