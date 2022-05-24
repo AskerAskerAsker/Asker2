@@ -680,9 +680,9 @@ def comment(request):
                                             <p>{}</p>
                             </div>
             </li>
-            '''.format(comment.creator.username, UserProfile.objects.get(user=request.user).avatar.url,
-                       comment.creator.username, naturaltime(comment.pub_date), comment.id,
-                       comment.text.replace('\n', '<br>'))
+            '''.format(c.creator.username, UserProfile.objects.get(user=request.user).avatar.url,
+                       c.creator.username, naturaltime(c.pub_date), c.id,
+                       c.text.replace('\n', '<br>'))
 
     return HttpResponse(comment_creator_template)
 
