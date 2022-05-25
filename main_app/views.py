@@ -24,6 +24,8 @@ import io
 import subprocess
 import ipinfo
 from PIL import Image, ImageFile, UnidentifiedImageError, ImageSequence, ImageOps
+from random import SystemRandom
+from django.core.mail import send_mail
 
 def compress_animated(bio, max_size, max_frames):
     im = Image.open(bio)
@@ -333,10 +335,7 @@ def delete_response(request):
     return HttpResponse('OK', content_type='text/plain')
 
 def signin(request):
-    r = request.GET.get('redirect')
-
-    if r is None:
-        r = '/'
+    r = request.GET.get('redirect', '/')
 
     if request.method == 'POST':
         r = request.POST.get('redirect')
@@ -345,20 +344,16 @@ def signin(request):
 
         # testa se o email existe:
         if not User.objects.filter(email=email).exists():
-            return render(request, 'signin.html', {
-                'login_error': '''<div class="alert alert-danger error-alert" role="alert"><h4 class="alert-heading">Ops!</h4>Dados de login incorretos.</div>''',
-                'redirect': r})
+            return render(request, 'auth.html', {'error': 'Ops! Dados de login incorretos.', 'redirect': r})
 
         user = authenticate(username=User.objects.get(email=email).username, password=password)
 
         if user is None:
-            return render(request, 'signin.html', {
-                'login_error': '''<div class="alert alert-danger error-alert" role="alert"><h4 class="alert-heading">Ops!</h4>Dados de login incorretos.</div>''',
-                'redirect': r})
+            return render(request, 'auth.html', {'error': 'Ops! Dados de login incorretos.', 'redirect': r})
         login(request, user)
         return redirect(r)
 
-    return render(request, 'signin.html', {'redirect': r})
+    return render(request, 'auth.html', {'redirect': r})
 
 def signup(request):
     from .tor_ips import tor_ips
@@ -367,7 +362,7 @@ def signup(request):
         return HttpResponse()
 
     if request.method == 'POST':
-        r = request.POST.get('redirect')
+        r = request.POST.get('redirect', '/')
         username = request.POST.get('username').strip()
         email = request.POST.get('email').strip()
         password = request.POST.get('password')
@@ -381,30 +376,30 @@ def signup(request):
             if ch in pode:
                 continue
 
-            html = '<div class="alert alert-danger"><p>O nome de usuário deve conter apenas caracteres alfanuméricos, hífens, underscores e espaços.</p></div>'
-            return render(request, 'signup.html', {'invalid_username': html, 'username': username, 'email': email,
-                                                   'redirect': r, 'username_error': ' is-invalid'})
+            html = 'O nome de usuário deve conter apenas caracteres alfanuméricos, hífens, underscores e espaços.'
+            return render(request, 'auth.html', {'error': html, 'username': username, 'email': email,
+                                                 'redirect': r, 'username_error': ' is-invalid', 'type': 'signup'})
         if '  ' in username:
-            html = '<div class="alert alert-danger"><p>O nome de usuário não pode conter espaços concomitantes.</p></div>'
-            return render(request, 'signup.html', {'invalid_username': html, 'username': username, 'email': email,
-                                                   'redirect': r, 'username_error': ' is-invalid'})
+            html = 'O nome de usuário não pode conter espaços concomitantes.'
+            return render(request, 'auth.html', {'error': html, 'username': username, 'email': email,
+                                                 'redirect': r, 'username_error': ' is-invalid', 'type': 'signup'})
 
         ''' Validação das credenciais: '''
-        if not is_a_valid_user(username, email, password):
-            return HttpResponse('Proibido.', content_type='text/plain')
+        is_valid = is_a_valid_user(username, email, password)
+        if not is_valid[0]:
+            msg = 'O {} inserido é inválido. Por favor, tente novamente.'.format(is_valid[1])
+            return render(request, 'auth.html', {'error': msg, 'username': username, 'email': email,
+                                                 'redirect': r, 'username_error': ' is-invalid', 'type': 'signup'})
 
         if User.objects.filter(username=username).exists():
-            return render(request, 'signup.html', {
-                'error': '''<div class="alert alert-danger error-alert" role="alert"><h4 class="alert-heading">Ops!</h4>Nome de usuário em uso.</div>''',
-                'username': username,
-                'email': email, 'redirect': r,
-                'username_error': ' is-invalid'})
+            return render(request, 'auth.html', {
+                'error': 'Ops! Nome de usuário em uso. Por favor, escolha outro.',
+                'username': username, 'type': 'signup', 'email': email, 'redirect': r, 'username_error': ' is-invalid'})
 
         if User.objects.filter(email=email).exists():
-            return render(request, 'signup.html', {
-                'error': '''<div class="alert alert-danger error-alert" role="alert"><h4 class="alert-heading">Ops!</h4>Email em uso. Faça login <a href="/signin">aqui</a>.</div>''',
-                'username': username, 'email': email, 'redirect': r,
-                'email_error': ' is-invalid'})
+            return render(request, 'auth.html', {
+                'error': 'Email em uso. Por favor, faça login ou recupere sua senha.',
+                'username': username, 'email': email, 'redirect': r, 'type': 'signup', 'email_error': ' is-invalid'})
 
         u = User.objects.create_user(username=username, email=email, password=password)
         login(request, u)
@@ -416,36 +411,144 @@ def signup(request):
         new_user_profile.save()
 
         # geração do código de confirmação:
-        from random import SystemRandom
         sr = SystemRandom()
 
         chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
 
         code = ''
         i = 0
-        while i < 100:
+        while i < general_rules.CONFIRMATION_CODE_LENGTH:
             code += sr.choice(chars)
             i += 1
-
+        
         ConfirmationCode.objects.create(user=new_user_profile, code=code)
 
         # envia o e-mail de confirmação de conta.
-        from django.core.mail import send_mail
         send_mail(
             'Confirmação de conta | Asker',
-            f'Olá! Um Registro no Asker Foi Associada ao Seu Email. Para Confirmar Sua Conta, Copie e Cole Este URL no Seu Navegador: https://asker.fun/confirm-account?code={code}',
+            f'Olá! Um registro no Asker foi associado ao seu email. Para confirmar sua conta, por favor, acesse o seguinte endereço: https://asker.fun/confirm-account?code={code}',
             'noreply.mail.asker.fun@gmail.com',
             [u.email],
             fail_silently=False,
         )
-
         return redirect(r)
 
     context = {
         'redirect': request.GET.get('redirect', '/'),
     }
 
-    return render(request, 'signup.html', context)
+    return render(request, 'auth.html', context)
+
+def recover(request):
+    if request.method == 'POST':
+        email = request.POST.get('email', '')
+        r = request.POST.get('redirect', '/')
+        try:
+            user = User.objects.get(email=email)
+        except User.DoesNotExist:
+            user = None
+
+        if user is not None:
+            uname = user.username
+            up = UserProfile.objects.get(user=user)
+            sr = SystemRandom()
+            chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
+
+            code = ''
+            i = 0
+            while i < general_rules.RECOVER_PW_CODE_LENGTH:
+                code += sr.choice(chars)
+                i += 1
+
+            try:
+                cc = ConfirmationCode.objects.get(user=up)
+                cc.code = code
+                cc.retries += 1
+                cc.save()
+            except ConfirmationCode.DoesNotExist:
+                cc = ConfirmationCode.objects.create(user=up, code=code, retries=1)
+
+            if cc.retries < 4:
+                mail_text = f'Olá, {user.username}! Você solicitou a alteração da senha da sua conta Asker. ' +\
+                            f'Para continuar, acesse o endereço a seguir: https://asker.fun/auth?t=change_pw&c={code}'
+
+                send_mail('Alteração de senha | Asker', mail_text, 'noreply.mail.asker.fun@gmail.com', [u.email],
+                          fail_silently=False)
+            else:
+                return render(request, 'auth.html', {
+                    'error': 'Limite de tentativas de alteração de senha excedido. Contate a administração para continuar.',
+                    'email': email, 'redirect': r, 'type': 'recover'})
+
+        return render(request, 'auth.html', {
+            'msg': 'Se o endereço de e-mail estiver cadastrado, enviaremos um e-mail com um endereço. Acesse-o para alterar sua senha.',
+            'email': email, 'redirect': r, 'type': 'recover'})
+
+def change_password(request):
+    if request.method == 'POST':
+        code = request.POST.get('code')
+        pw = request.POST.get('p')
+        r = request.POST.get('redirect')
+        confirm_pw = request.POST.get('confirm')
+
+        if pw != confirm_pw:
+            return render(request, 'auth.html', {
+                'error': 'As senhas digitadas são conferem. Por favor, tente novamente.',
+                'redirect': r, 'type': 'change_pw', 'code': code})
+
+        try:
+            cc = ConfirmationCode.objects.get(code=code)
+        except ConfirmationCode.DoesNotExist:
+            return render(request, 'auth.html', {'error': 'Um erro inesperado ocorreu. Por favor, tente novamente.',
+                                                 'redirect': r, 'type': 'recover'})
+
+        user = cc.user.user
+        user.set_password(pw)
+        user.save()
+        return render(request, 'auth.html', {
+            'msg': 'Senha alterada com sucesso. Faça login para continuar.', 'redirect': r, 'type': 'signin'})
+
+def auth(request):
+    if request.method == 'POST':
+        type = request.POST.get('type')
+        if type == 'signup':
+            return signup(request)
+        elif type == 'signin':
+            return signin(request)
+        elif type == 'recover':
+            return recover(request)
+        elif type == 'change_pw':
+            return change_password(request)
+
+    type = request.GET.get('t', 'signin')
+    r = request.GET.get('redirect', '/')
+    context = {'type': type, 'redirect': r}
+
+    if type == 'change_pw':
+        code = request.GET.get('c')
+        context['code'] = code
+        if not code:
+            context['type'] = 'recover'
+            return render(request, 'auth.html', context)
+
+        if len(code) != general_rules.RECOVER_PW_CODE_LENGTH:
+            return render(request, 'auth.html', {
+                'error': 'Seu código não é válido. Por favor, tente novamente.',
+                'redirect': r, 'type': 'recover'})
+
+        try:
+            ConfirmationCode.objects.get(code=code)
+        except ConfirmationCode.DoesNotExist:
+            return render(request, 'auth.html', {
+                'error': 'Seu código não é válido. Por favor, tente novamente.',
+                'redirect': r, 'type': 'recover'})
+    elif type == 'recover':
+        context['title'] = ''
+    elif type == 'signup':
+        context['title'] = ''
+    else:
+        context['title'] = 'Asker | Fazer login'
+
+    return render(request, 'auth.html', context)
 
 def user_does_not_exists(request):
     return_to = request.META.get("HTTP_REFERER") if request.META.get("HTTP_REFERER") is not None else '/'
@@ -943,22 +1046,25 @@ def follow_question(request, question_id):
 
 ''' A função abaixo faz a validação das credenciais de novos usuários. '''
 def is_a_valid_user(username, email, password):
-    if len(username) > 30:
-        return False
-    elif len(email) > 60:
-        return False
+    if len(username) > 30 or not username:
+        return False, 'nome de usuário'
+    elif len(email) > 60 or not email:
+        return False, 'e-mail'
     elif len(password) < 6 or len(password) > 256:
-        return False
+        return False, 'código/senha'
 
     emails = ['mail', 'hotmail', 'outlook', 'live', 'msn', 'yahoo', 'icloud', 'gmail', 'bol', 'aol', 'uol', 'terra',
               'protonmail', 'tutanota', 'yandex', 'net']
-    start = email.index('@') + 1
-    end = email.index('.', start)
+    try:
+        start = email.index('@') + 1
+        end = email.index('.', start)
+    except ValueError:
+        return False, 'e-mail'
+
     email = email[start:end]
     if email not in emails:
-        return False
-
-    return True
+        return False, 'e-mail'
+    return True, None
 
 ''' A função abaixo faz a validação de um novo comentário. '''
 def is_a_valid_comment(text):

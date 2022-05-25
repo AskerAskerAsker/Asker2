@@ -267,6 +267,7 @@ class ModActivity(models.Model):
 class ConfirmationCode(models.Model):
     user = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
     code = models.CharField(max_length=256)
+    retries = models.IntegerField(default=0)
 
 class Chat(models.Model):
     participant = models.ManyToManyField(User, related_name='made_by')
