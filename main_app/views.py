@@ -344,12 +344,14 @@ def signin(request):
 
         # testa se o email existe:
         if not User.objects.filter(email=email).exists():
-            return render(request, 'auth.html', {'error': 'Ops! Dados de login incorretos.', 'redirect': r})
+            return render(request, 'auth.html', {'error': 'Ops! Dados de login incorretos.', 'redirect': r,
+                                                 'type': 'signin'})
 
         user = authenticate(username=User.objects.get(email=email).username, password=password)
 
         if user is None:
-            return render(request, 'auth.html', {'error': 'Ops! Dados de login incorretos.', 'redirect': r})
+            return render(request, 'auth.html', {'error': 'Ops! Dados de login incorretos.', 'redirect': r,
+                                                 'type': 'signin'})
         login(request, user)
         return redirect(r)
 
@@ -412,9 +414,7 @@ def signup(request):
 
         # geração do código de confirmação:
         sr = SystemRandom()
-
         chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
-
         code = ''
         i = 0
         while i < general_rules.CONFIRMATION_CODE_LENGTH:
@@ -449,7 +449,6 @@ def recover(request):
             user = None
 
         if user is not None:
-            uname = user.username
             up = UserProfile.objects.get(user=user)
             sr = SystemRandom()
             chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
@@ -471,8 +470,7 @@ def recover(request):
             if cc.retries < 4:
                 mail_text = f'Olá, {user.username}! Você solicitou a alteração da senha da sua conta Asker. ' +\
                             f'Para continuar, acesse o endereço a seguir: https://asker.fun/auth?t=change_pw&c={code}'
-
-                send_mail('Alteração de senha | Asker', mail_text, 'noreply.mail.asker.fun@gmail.com', [u.email],
+                send_mail('Alteração de senha | Asker', mail_text, 'noreply.mail.asker.fun@gmail.com', [user.email],
                           fail_silently=False)
             else:
                 return render(request, 'auth.html', {
@@ -541,12 +539,6 @@ def auth(request):
             return render(request, 'auth.html', {
                 'error': 'Seu código não é válido. Por favor, tente novamente.',
                 'redirect': r, 'type': 'recover'})
-    elif type == 'recover':
-        context['title'] = ''
-    elif type == 'signup':
-        context['title'] = ''
-    else:
-        context['title'] = 'Asker | Fazer login'
 
     return render(request, 'auth.html', context)
 

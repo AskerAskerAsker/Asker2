@@ -14,3 +14,8 @@ SECONDS_TO_CHOOSE_BEST_ANSWER = 3600
 ALLOWED_IP_TYPES = 'ABR'
 MAXIMUM_SILENCED_USERS = 300
 MAXIMUM_BLOCKED_USERS = 300
+CONFIRMATION_CODE_LENGTH = 100
+RECOVER_PW_CODE_LENGTH = 120
+
+if CONFIRMATION_CODE_LENGTH == RECOVER_PW_CODE_LENGTH:
+    raise ValueError('general_rules.py: os códigos de confirmação de e-mail e de recuperação de senha devem ter tamanho diferente')
