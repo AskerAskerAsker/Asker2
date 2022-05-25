@@ -4,6 +4,47 @@ textarea.large-compact {
 	border-radius: 20px;
 }
 
+/* Auth */
+.authbox {
+    padding: 0px !important;
+    color: #f8f9f0;
+    margin: 0px 5px;
+}
+.authcontainer {
+    background-color: #7330c1;
+}
+.authstyler {
+    padding: 1.25rem;
+    background: radial-gradient(#6027a6 0%, #6027a6 20%, #662aaf 20%, #662aaf 40%, #6d2db8 40%, #6d2db8 60%, #7330c1 60%, #7330c1 100%);
+    background-repeat: no-repeat;
+    background-size: 50vh 50vh;
+    background-position: center;
+}
+.authbox a {
+    color: #90c5ff;
+}
+.authbox a:hover {
+    color: #409cff;
+}
+.authlogo {
+    height: 70px;
+    border-radius: 50px;
+    padding: 20px 40px;
+}
+.autherr {
+    background-color: #a92d33;
+    border: solid 1px #cb4146;
+}
+.authmsg {
+    background-color: #4F7942;
+    border: solid 1px #5F8575;
+}
+.authmsg, .autherr {
+    border-radius: 20px;
+    padding: 12px 24px;
+}
+/* Auth-end */
+
 /* Chat */
 .rmsg, .lmsg {
 	width: 70%;
@@ -584,7 +625,7 @@ textarea {
 	width: 50%;
 }
 .round {
-	border-radius: 30px;
+	border-radius: 30px !important;
 }
 .horiz-center {
 	margin-left: auto;

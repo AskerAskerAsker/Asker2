@@ -101,7 +101,7 @@
 				<span> &#8226; <ion-icon name="eye"></ion-icon> {{ question.total_views }} </span>
             </small>
 			    {% if user.is_anonymous %}
-				    <p>Faça <a href="/signin?redirect=/question/{{ question.id }}">login</a> ou <a href="/signup?redirect=/question/{{ question.id }}">crie uma conta</a> para responder essa pergunta.</p>
+				    <p>Faça <a href="/auth?t=signin&redirect=/question/{{ question.id }}">login</a> ou <a href="/auth?t=signup&redirect=/question/{{ question.id }}">crie uma conta</a> para responder essa pergunta.</p>
 			    {% else %}
 				    {% answer user question as ANSWER %}
 				    {% if ANSWER %}

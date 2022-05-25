@@ -44,6 +44,7 @@ urlpatterns = [
   path('ask', views.ask, name='ask'),
   path('signin', views.signin, name='signin'),
   path('signup', views.signup, name='signup'),
+  path('auth', views.auth, name='auth'),
   path('logout', views.logout, name='logout'),
   path('notifications', views.notification, name='notification'),
   path('delete_question', views.delete_question, name='delete_question'),
