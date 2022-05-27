@@ -105,7 +105,7 @@ def list_comments(response_id, request):
 	silenced = []
 	if request.user.is_authenticated:
 		up = UserProfile.objects.get(user=request.user)
-		silenced = [UserProfile.objects.get(user=u) for u in up.silenced_users.all()]
+		silenced = up.silenced_users.all()  # Creator em objetos comment é user (26 mai 2022)
 	comments = Comment.objects.filter(response=Response.objects.get(id=response_id)).exclude(creator__in=silenced).order_by('id')
 	
 	if comments.exists():

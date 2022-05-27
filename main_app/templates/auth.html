@@ -81,11 +81,11 @@
 							{% if type != 'recover' %}
 							<div class="form-group">
 								{% if type == 'change_pw' %}
-								<label for="pw_input"><b>Nova senha:</b></label>
-								<input type="password" name="p" class="form-control bg-main round" id="pw_input" placeholder="Sua nova senha:" minlength="6" maxlength="256" required="required">
+								<label for="new_pw_input"><b>Nova senha:</b></label>
+								<input type="password" name="p" class="form-control bg-main round" id="new_pw_input" placeholder="Sua nova senha:" minlength="6" maxlength="256" required="required">
 								{% else %}
-								<label for="new_pw_input"><b>Senha:</b></label>
-								<input type="password" name="password" class="form-control bg-main round" id="new_pw_input" placeholder="Sua senha:" minlength="6" maxlength="256" required="required">
+								<label for="pw_input"><b>Senha:</b></label>
+								<input type="password" name="password" class="form-control bg-main round" id="pw_input" placeholder="Sua senha:" maxlength="256" required="required">
 								<small class="form-text"><a href="/auth?t=recover">Recuperar/alterar minha senha</a></small>
 								{% endif %}
 							</div>

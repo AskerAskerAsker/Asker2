@@ -173,19 +173,19 @@ window.history.back();
 						</div>
 					{% endif %}
 
-					{% if question.get_embedded_content %}
-						<div class="emb">
-							{{ question.get_embedded_content|safe }}
-						</div>
-						<br>
-					{% endif %}
-
 					{% if question.image %}
 						<div>
                             <br>
 							<img style="display: block; border-radius: 10px; margin-left: auto; margin-right: auto;" width="75%" src="{{ question.image.url }}">
 							<br>
 						</div>
+					{% endif %}
+
+					{% if question.get_embedded_content %}
+						<div class="emb">
+							{{ question.get_embedded_content|safe }}
+						</div>
+						<br>
 					{% endif %}
 
 					{% starred user question as STARRED %}
@@ -377,7 +377,7 @@ href="/auth?t=signup&redirect=/question/{{ question.id }}">crie uma conta</a> pa
 		<script src="/static/js/question.js?v=3.2"></script>
         <script>
             var qid = {{ question.id }};
-		    var UPD_INTERVAL = setInterval(new_activity_check, 38000);
+		    var UPD_INTERVAL = setInterval(new_activity_check, 61000);
 		    $(function () {
 			    $('[data-toggle="popover"]').popover();
 		    });

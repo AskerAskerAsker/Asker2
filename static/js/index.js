@@ -310,7 +310,7 @@ async function check_for_update() {
 			},
 	});
 }
-UPD_INTERVAL = setInterval(check_for_update, 38000);
+UPD_INTERVAL = setInterval(check_for_update, 61000);
 
 function load_more_popular(button, icon, page) {
 	button.style.display = 'none';
