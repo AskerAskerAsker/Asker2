@@ -11,11 +11,11 @@
 					<div class="poster-text-container" style="padding-left: 10px">
 						<div>
 						   <span class="r-username">
-							<span style="font-weight: 700; font-size: 15px">
+							<span class="right-spaced" style="font-weight: 700; font-size: 15px">
 								{{ response.creator.user.username }}
 							</span>
-							   <span data-value={{response.creator.total_points}} class="left-spaced ubadge"> </span>
-							   </span>
+                                                        <span data-value={{response.creator.total_points}} style="margin-left: -2px;" class="ubadge"> </span>
+                                                   </span>
 							<span title="{{ response.pub_date }}" class="post-pub-date">
 								{% fix_naturaltime response.pub_date|naturaltime %}
 							</span>

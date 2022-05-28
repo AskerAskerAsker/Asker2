@@ -10,7 +10,9 @@ function update_user_badges() {
 				ubadges[i].style.display = 'inline';
 			if (badge_val > 40000)
 				ubadges[i].style.color = 'white';
-			
+			else
+				ubadges[i].style.color = 'black';
+
 			if (badge_val > 500000) {
 				// 1m+ (futuramente)
 				ubadges[i].style.background = 'linear-gradient(to left, rgb(241, 111, 161), rgb(144, 86, 241))';
@@ -27,7 +29,7 @@ function update_user_badges() {
 			} else if (badge_val > 10000) {
 				ubadges[i].style.backgroundColor = '#9fecc6';
 			}
-			
+
 			ubadges[i].innerHTML = badge_val.toLocaleString('pt-BR') + ' pontos';
 		}
 	}

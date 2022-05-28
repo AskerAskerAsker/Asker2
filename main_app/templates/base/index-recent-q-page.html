@@ -13,8 +13,9 @@
 				<div class="profile-pic-small" style="background: url('{{ question.creator.avatar.url }}');">
 				</div>
 				<span class="qcreator-small">
-					{{ question.creator }} <span data-value={{question.creator.total_points}} class="left-spaced ubadge"> </span>
+					{{ question.creator }}
 				</span>
+                                <span data-value={{question.creator.total_points}} class="left-spaced ubadge"> </span>
 			</div>
 			<h2 class="question-title fg-1" style="overflow: hidden; font-size: 16px">
 				<a class="q-title" style="text-decoration: none; outline: none" href="/question/{{ question.id }}">

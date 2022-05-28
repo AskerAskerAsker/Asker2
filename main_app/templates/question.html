@@ -156,8 +156,8 @@ window.history.back();
 							</div>
 							<div class="poster-text-container" style="padding-left: 10px;">
 								<div>
-									<span>{{ question.creator.user.username }}</span>
-									<span data-value={{question.creator.total_points}} class="left-spaced ubadge"> </span>
+									<span class="right-spaced">{{ question.creator.user.username }}</span>
+									<span data-value={{question.creator.total_points}} style="margin-left: -2px;" class="ubadge"> </span>
 									<br>
 									<span title="{{ question.pub_date }}" class="post-pub-date">{% fix_naturaltime question.pub_date|naturaltime %}</span>
 								</div>
