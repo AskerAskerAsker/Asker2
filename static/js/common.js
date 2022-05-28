@@ -1,6 +1,38 @@
 var darkbtn = document.getElementById('dark-mode');
 var org_title = document.title;
 
+function update_user_badges() {
+	var ubadges = document.getElementsByClassName('ubadge');
+	for (var i = 0; i < ubadges.length; i++) {
+		var badge_val = parseInt(ubadges[i].getAttribute('data-value'));
+		if (badge_val) {
+			if (badge_val > 10000)
+				ubadges[i].style.display = 'inline';
+			if (badge_val > 40000)
+				ubadges[i].style.color = 'white';
+			
+			if (badge_val > 500000) {
+				// 1m+ (futuramente)
+				ubadges[i].style.background = 'linear-gradient(to left, rgb(241, 111, 161), rgb(144, 86, 241))';
+			} else if (badge_val > 500000) {
+				ubadges[i].style.backgroundColor = '#562491';
+			} else if (badge_val > 200000) {
+				ubadges[i].style.backgroundColor = '#7330c1';
+			} else if (badge_val > 100000) {
+				ubadges[i].style.backgroundColor = '#9664d1';
+			} else if (badge_val > 40000) {
+				ubadges[i].style.backgroundColor = '#9664d1';
+			} else if (badge_val > 20000) {
+				ubadges[i].style.backgroundColor = '#60e09f';
+			} else if (badge_val > 10000) {
+				ubadges[i].style.backgroundColor = '#9fecc6';
+			}
+			
+			ubadges[i].innerHTML = badge_val.toLocaleString('pt-BR') + ' pontos';
+		}
+	}
+}
+
 function fix_double_escape(el) {
     /* Em perguntas antigas, o HTML era escapado na descrição e guardado assim na DB.
        Em um servidor novo com uma nova DB esta função poderá ser descartada.

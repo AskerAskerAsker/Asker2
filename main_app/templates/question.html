@@ -157,6 +157,7 @@ window.history.back();
 							<div class="poster-text-container" style="padding-left: 10px;">
 								<div>
 									<span>{{ question.creator.user.username }}</span>
+									<span data-value={{question.creator.total_points}} class="left-spaced ubadge"> </span>
 									<br>
 									<span title="{{ question.pub_date }}" class="post-pub-date">{% fix_naturaltime question.pub_date|naturaltime %}</span>
 								</div>
@@ -373,8 +374,8 @@ href="/auth?t=signup&redirect=/question/{{ question.id }}">crie uma conta</a> pa
             {% endif %}
 	</main>
 	<br>
-	    <script src="/static/js/common.js?v=1.7"></script>
-		<script src="/static/js/question.js?v=3.2"></script>
+	    <script src="/static/js/common.js?v=1.8"></script>
+		<script src="/static/js/question.js?v=3.3"></script>
         <script>
             var qid = {{ question.id }};
 		    var UPD_INTERVAL = setInterval(new_activity_check, 61000);

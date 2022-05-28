@@ -1,5 +1,6 @@
 var success_str = 'kfO1wMuva3hNgh0AhIviPyhEGyoRjDdX';
 
+update_user_badges();
 var resp_count = document.getElementsByClassName('resposta').length;
 document.getElementById('total-de-respostas').innerText = resp_count
 document.getElementById('total-de-respostas-sentence').innerText = (resp_count == 1 ? 'Resposta' : 'Respostas');
@@ -419,6 +420,7 @@ function load_responses() {
                         } else { rl[i].classList.add('new'); }
                     }
                     anchor_responses();
+                    update_user_badges();
                     window.scrollTo(0,document.body.scrollHeight);
                     last_response = get_last_response();
                 }

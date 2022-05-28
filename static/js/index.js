@@ -173,6 +173,7 @@ function load_more_recent() {
                     q_list.innerHTML += data.responseText;
                     recent_exists = true;
                     anchor_descriptions();
+					update_user_badges();
                 }
 				icon.style.display = 'none';
 				button.style.display = 'block';
@@ -243,6 +244,7 @@ function update_recent() {
                     q_list = document.getElementById('lista_de_questoes_recentes');
                     q_list.innerHTML = data.responseText + q_list.innerHTML;
                     window.scrollTo(0, 0);
+					update_user_badges();
                 }
                 icon.style.display = 'none';
                 activate_img_btns();
@@ -333,6 +335,7 @@ function load_more_popular(button, icon, page) {
                         icon.style.display = 'none';
                         button.style.display = 'block';
                         renderizar_questoes_populares(data.responseJSON);
+						update_user_badges();
                         if (should_hide) {
                             hide_questions();
                         }
@@ -375,6 +378,7 @@ function load_more_feed() {
                     feedlist = document.getElementById('feed_list');
                     feedlist.innerHTML += data.responseText;
                     feed_sp += 1;
+					update_user_badges();
                 }
 			},
 	});
