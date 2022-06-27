@@ -66,7 +66,8 @@
                                 </div>
                                 <div class="poster-container">
                                     <a class="poster-info" href="/user/{{ activity.obj_creator }}">
-                                        <div class="poster-profile-pic-container" style="border-radius: 100px; width: 59px; height: 57px; background: url({{ activity.obj_creator.avatar.url }}); background-size: cover; background-repeat: no-repeat">
+                                        {% get_profile_from_user activity.obj_creator as UP %}
+                                        <div class="poster-profile-pic-container" style="border-radius: 100px; width: 59px; height: 57px; background: url({{ UP.avatar.url }}); background-size: cover; background-repeat: no-repeat">
                                         </div>
                                         <div class="poster-text-container" style="padding-left: 10px">
                                             <div>

@@ -26,6 +26,12 @@ def get_total_answers(question):
     '''Retorna um inteiro representando o total de respostas obtidas pela pergunta.'''
     return Response.objects.filter(question=question).count()
 
+@register.simple_tag
+def get_profile_from_user(user):
+    try:
+        return UserProfile.objects.get(user=user)
+    except:
+        return None
 
 @register.simple_tag
 def get_username_from_id(id):
