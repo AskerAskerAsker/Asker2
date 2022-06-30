@@ -15,7 +15,11 @@
         <div class="menu bg-main" style="height: fit-content; width: 100%; padding-bottom: 3px; border-radius: 0px 0px 25px 25px; max-width: 400px; align-items: center; justify-content: center;">
        
         <ul class="menu-list" style="margin-top: 5px; align-items: center">
-       <li class="menu-item"><button id='dark-mode' class="menu-button"><font style="font-size: 19px; font-weight: 900"><ion-icon name="bulb-outline"></ion-icon></font></button></li>
+       <a href="/rank"> 
+       <li class="menu-item">
+        <button class="menu-button"><font style="font-size: 19px; font-weight: 900"><ion-icon name="trophy-outline"></ion-icon></font></button>
+       </li>
+       </a>
         
        <a href="/ask"> <li class="menu-item"><button class="menu-button"><font style="font-size: 19px; font-weight: 900"><ion-icon name="pencil"></ion-icon></font></button></li></a>
       
@@ -62,6 +66,13 @@
     </div>
 </center>
 </div>
+
+
+<div style="opacity: 0.8; width: 45px; height: 45px; padding: 5px; border-radius: 100px; background: #CFCFCF; position: fixed; bottom: 50px; left: 82%; z-index: 99999">
+<button id='dark-mode' class="menu-button"><font style="font-size: 19px; font-weight: 900"><ion-icon name="bulb-outline"></ion-icon></font></button>
+</div>
+
+
 <script>
     var menu_status = 0;
     document.getElementById('searchbtn').addEventListener('click', function(e) {

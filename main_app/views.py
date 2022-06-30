@@ -89,7 +89,7 @@ def get_client_ip(request):
 
 def calculate_popular_questions():
     last_id = Question.objects.all().last().id
-    id_range = (last_id - 200, last_id)
+    id_range = (last_id - 150, last_id)
     popular_questions = Question.objects.filter(id__range=id_range, active=True).order_by('-total_responses')[:40]
     return popular_questions
 
@@ -268,7 +268,6 @@ def question(request, question_id):
 
 def like(request):
     answer_id = request.GET.get('answer_id')
-
     r = Response.objects.get(id=answer_id)
     if r.creator.user == request.user:
         return HttpResponse('Proibido', content_type='text/plain')
@@ -409,28 +408,9 @@ def signup(request):
         new_user_profile = UserProfile.objects.create(user=u)
         new_user_profile.ip = get_client_ip(request)
         new_user_profile.cover_photo = None
-        new_user_profile.active = False
+        new_user_profile.active = True
         new_user_profile.save()
 
-        # geração do código de confirmação:
-        sr = SystemRandom()
-        chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
-        code = ''
-        i = 0
-        while i < general_rules.CONFIRMATION_CODE_LENGTH:
-            code += sr.choice(chars)
-            i += 1
-        
-        ConfirmationCode.objects.create(user=new_user_profile, code=code)
-
-        # envia o e-mail de confirmação de conta.
-        send_mail(
-            'Confirmação de conta | Asker',
-            f'Olá! Um registro no Asker foi associado ao seu email. Para confirmar sua conta, por favor, acesse o seguinte endereço: https://asker.fun/confirm-account?code={code}',
-            'noreply.mail.asker.fun@gmail.com',
-            [u.email],
-            fail_silently=False,
-        )
         return redirect(r)
 
     context = {
